@@ -12,5 +12,6 @@ public class MainController {
     @ResponseBody
     public String index() {
         return "홈 화면입니다.";
+        // index가 홈 화면인가요 ?
     }
 }
