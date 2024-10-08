@@ -20,7 +20,8 @@ public class SecurityConfig {
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
-                        .requestMatchers(new AntPathRequestMatcher("/**")).permitAll())
+                        .requestMatchers("/", "/user/login", "/error", "/oauth2/**").permitAll()
+                        .anyRequest().authenticated())
                 .formLogin((formLogin) -> formLogin
                         .loginPage("/user/login")
                         .defaultSuccessUrl("/"))
@@ -28,7 +29,10 @@ public class SecurityConfig {
                         .logoutRequestMatcher(new AntPathRequestMatcher("/user/logout"))
                         .logoutSuccessUrl("/")
                         .invalidateHttpSession(true))
-        ;
+                .oauth2Login((oauth2) -> oauth2
+                        .defaultSuccessUrl("/loginSuccess")
+                        .failureUrl("/login?error=true"));
+
         return http.build();
     }
 

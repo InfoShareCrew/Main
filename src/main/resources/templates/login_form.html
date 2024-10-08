@@ -1,0 +1,47 @@
+<html layout:decorate="~{layout}">
+<head>
+    <!-- 카카오 JavaScript SDK -->
+    <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
+    <script>
+        Kakao.init('417286d7f44c1925fffa003529f1bef8');
+        function loginWithKakao() {
+            Kakao.Auth.login({
+                success: function(authObj) {
+                    location.href = '/login/oauth2/callback/kakao';
+                },
+                fail: function(err) {
+                    alert(JSON.stringify(err));
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+<div layout:fragment="content" class="container my-3">
+    <form th:action="@{/user/login}" method="post">
+        <div th:if="${param.error}">
+            <div class="alert alert-danger">
+                사용자ID 또는 비밀번호를 확인해 주세요.
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="username" class="form-label">사용자ID</label>
+            <input type="text" name="username" id="username" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">비밀번호</label>
+            <input type="password" name="password" id="password" class="form-control">
+        </div>
+        <button type="submit" class="btn btn-primary">로그인</button>
+    </form>
+
+    <div class="my-3">
+        <button class="btn btn-warning" onclick="loginWithKakao()">카카오로 로그인</button>
+    </div>
+
+    <div class="my-3">
+        <a href="/oauth2/authorization/google" class="btn btn-danger">구글로 로그인</a>
+    </div>
+</div>
+</body>
+</html>

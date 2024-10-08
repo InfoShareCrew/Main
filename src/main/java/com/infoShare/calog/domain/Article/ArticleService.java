@@ -9,6 +9,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.swing.text.html.Option;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -32,5 +33,18 @@ public class ArticleService {
         } else {
             throw new DataNotFoundException("Article not found");
         }
+    }
+
+    public void createArticle(String title, String content) {
+        Article article = new Article();
+        article.setTitle(title);
+        article.setContent(content);
+        article.setCreateDate(LocalDateTime.now());
+        this.articleRepository.save(article);
+    }
+
+    public void viewUp(Article article) {
+        article.setView(article.getView()+1);
+        this.articleRepository.save(article);
     }
 }
