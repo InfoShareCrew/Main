@@ -8,10 +8,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class MainController {
     @RequestMapping("/")
-//    @GetMapping("index")
-    @ResponseBody
+//    기본 홈 화면
     public String index() {
-        return "홈 화면입니다.";
-        // index가 홈 화면인가요 ?
+        return "index";
     }
 }
