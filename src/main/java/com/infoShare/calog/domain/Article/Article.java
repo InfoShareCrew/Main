@@ -28,7 +28,8 @@ public class Article {
 
     private LocalDateTime modifyDate;
 
-    private Long view;
+    @Column(columnDefinition = "default 0")
+    private Long view = 0L;
 
     @OneToMany(mappedBy = "article", cascade = CascadeType.REMOVE)
     private List<Comment> commentList;
