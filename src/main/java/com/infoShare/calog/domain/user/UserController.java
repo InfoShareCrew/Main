@@ -3,12 +3,14 @@ package com.infoShare.calog.domain.user;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequiredArgsConstructor
@@ -71,5 +73,11 @@ public class UserController {
 
         model.addAttribute("userName", nickname);
         return "welcome"; // 사용자 환영 페이지
+    }
+
+    @PostMapping("/assign-role")
+    public ResponseEntity<String> assignRole(@RequestParam String email, @RequestParam UserRole role) {
+        userService.assignRoleToUser(email, role);
+        return ResponseEntity.ok("권한이 부여되었습니다.");
     }
 }

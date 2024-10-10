@@ -2,16 +2,17 @@ package com.infoShare.calog.domain.user;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-
-
 
     public SiteUser create(String email, String password, String nickname) {
         SiteUser user = new SiteUser();
@@ -56,6 +57,17 @@ public class UserService {
             // 기존 사용자 업데이트 (필요한 경우)
             user.setNickname(nickname);
             userRepository.save(user);
+        }
+    }
+
+    public void assignRoleToUser(String email, UserRole role) {
+        Optional<SiteUser> optionalUser = userRepository.findByEmail(email);
+        if (optionalUser.isPresent()) {
+            SiteUser user = optionalUser.get();
+            user.getRoles().add(role);
+            userRepository.save(user);
+        } else {
+            throw new UsernameNotFoundException("사용자를 찾을 수 없습니다.");
         }
     }
 }

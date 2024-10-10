@@ -3,15 +3,14 @@ package com.infoShare.calog.domain.user;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -20,17 +19,17 @@ public class UserSecurityService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Optional<SiteUser> _siteUser = this.userRepository.findByEmail(email);
-        if (_siteUser.isEmpty()) {
+        Optional<SiteUser> optionalSiteUser = userRepository.findByEmail(email);
+        if (optionalSiteUser.isEmpty()) {
             throw new UsernameNotFoundException("사용자를 찾을 수 없습니다.");
         }
-        SiteUser siteUser = _siteUser.get();
-        List<GrantedAuthority> authorities = new ArrayList<>();
-        if ("admin".equals(email)) {
-            authorities.add(new SimpleGrantedAuthority(UserRole.ADMIN.getValue()));
-        } else {
-            authorities.add(new SimpleGrantedAuthority(UserRole.USER.getValue()));
-        }
-        return new User(siteUser.getEmail(), siteUser.getPassword(), authorities);
+        SiteUser siteUser = optionalSiteUser.get();
+
+        // 사용자의 권한을 가져옴
+        Collection<GrantedAuthority> authorities = siteUser.getRoles().stream()
+                .map(role -> new SimpleGrantedAuthority(role.getValue()))
+                .collect(Collectors.toList());
+
+        return new org.springframework.security.core.userdetails.User(siteUser.getEmail(), siteUser.getPassword(), authorities);
     }
 }
