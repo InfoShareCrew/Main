@@ -2,7 +2,7 @@
 <head>
     <!-- 카카오 JavaScript SDK -->
     <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
-    
+
 </head>
 <body>
 <div layout:fragment="content" class="main-contents center-box">
@@ -31,23 +31,23 @@
             <div class="menu-box">
                 <a href="" class="f-size-13">비밀번호 변경</a>
                 <span>|</span>
-                <a th:href="@{/user/signup}" class="f-size-14">회원가입</a>
+                <a href="/user/signup" class="f-size-13">회원가입</a>
             </div>
         </div>
     </div>
 </div>
 </body>
 <script layout:fragment="script" type='text/javascript'>
-  Kakao.init('417286d7f44c1925fffa003529f1bef8');
-    function loginWithKakao() {
-        Kakao.Auth.login({
-            success: function(authObj) {
-                location.href = '/login/oauth2/callback/kakao';
-            },
-            fail: function(err) {
-                alert(JSON.stringify(err));
-            }
-        });
-    }
+    Kakao.init('417286d7f44c1925fffa003529f1bef8');
+      function loginWithKakao() {
+          Kakao.Auth.login({
+              success: function(authObj) {
+                  location.href = '/login/oauth2/callback/kakao';
+              },
+              fail: function(err) {
+                  alert(JSON.stringify(err));
+              }
+          });
+      }
 </script>
 </html>

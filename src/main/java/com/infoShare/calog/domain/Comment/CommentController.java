@@ -6,7 +6,7 @@ import com.infoShare.calog.domain.Suggestion.Suggestion;
 import com.infoShare.calog.domain.Suggestion.SuggestionForm;
 import com.infoShare.calog.domain.Suggestion.SuggestionService;
 import com.infoShare.calog.domain.user.SiteUser;
-import com.infoShare.calog.domain.user.UserService;
+import com.infoShare.calog.domain.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
