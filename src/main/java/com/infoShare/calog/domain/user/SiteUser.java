@@ -7,7 +7,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.checkerframework.common.aliasing.qual.Unique;
 
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -31,4 +33,9 @@ public class SiteUser {
 
     @Column(length = 2000)
     private String address;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "siteuser_roles", joinColumns = @JoinColumn(name = "siteuser_id"))
+    @Enumerated(EnumType.STRING)
+    private Set<UserRole> roles = new HashSet<>();
 }
