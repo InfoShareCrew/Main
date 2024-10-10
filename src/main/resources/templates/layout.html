@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <link rel="stylesheet" type="text/css" th:href="@{/bootstrap.min.css}">
+  <link rel="stylesheet" type="text/css" th:href="@{/lib.css}">
+  <link rel="stylesheet" type="text/css" th:href="@{/styleguide.css}">
   <link rel="stylesheet" type="text/css" th:href="@{/style.css}">
   <title>인포쉐어</title>
 </head>
@@ -13,7 +14,7 @@
 <nav th:replace="~{navbar :: navbarFragment}"></nav>
 
 <!--기본 템플릿 안에 삽입될 박스-->
-<th:block layout:fragment="content"></th:block>
+<th:block layout:fragment="content" class="main-contents"></th:block>
 
 <!-- 자바스크립트 -->
 <!-- 각 템플릿에서 작성 -->

@@ -1,3 +1,21 @@
-<nav th:fragment="navbarFragment" class="navbar">
-  네비게이션
+<!--<link rel="stylesheet" href="../static/bootstrap.min.css">-->
+<!--<link rel="stylesheet" href="../static/lib.css">-->
+<!--<link rel="stylesheet" href="../static/styleguide.css">-->
+<!--<link rel="stylesheet" href="../static/style.css">-->
+<nav th:fragment="navbarFragment" class="nav">
+  <div class="container">
+    <div class="left-box">
+      <div class="home-box"><a class="f-size-28 f-weight-6" th:href="@{/}">InfoShare</a></div>
+      <div class="search-container">
+        <div class="search-box">
+          <input type="text" placeholder="검색" class="f-size-14">
+          <img th:src="@{/img/search.png}" alt="검색 아이콘">
+        </div>
+      </div>
+    </div>
+    <div class="right-box user-box">
+      <a href="" class="f-size-14">로그인</a>
+      <a href="" class="f-size-14">회원가입</a>
+    </div>
+  </div>
 </nav>

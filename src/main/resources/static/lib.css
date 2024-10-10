@@ -1,0 +1,25 @@
+/** font **/
+/* font-size */
+.f-size-13 {font-size: 13px;}
+.f-size-14 {font-size: 14px;}
+.f-size-16 {font-size: 16px;}
+.f-size-18 {font-size: 18px;}
+.f-size-21 {font-size: 21px;}
+.f-size-28 {font-size: 28px;}
+/* font-weight */
+.f-weight-4 {font-weight: 400;}
+.f-weight-5 {font-weight: 500;}
+.f-weight-6 {font-weight: 600;}
+.f-weight-7 {font-weight: 700;}
+/* border */
+.border-1 {border: #d5d5d5 solid 1px;}
+
+
+.dp-flex-clmb {display: flex; flex-direction: column;}
+.full-w {width: 100%;}
+.full-h {height: 100%;}
+
+/* 컴포넌트 */
+.btn {display: block; padding: 8px 4px; border-radius: 5px;}
+.btn-b {display: block; padding: 8px 4px; border-radius: 5px; border: 1px solid #d5d5d5;}
+.img-box {display: flex;}

@@ -1,0 +1,45 @@
+@font-face {
+  font-family: 'Pretendard-Regular';
+  src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+}
+
+body {margin:0; padding: 0;font-family: 'Pretendard-Regular'; display: flex; align-items: center; flex-direction: column;}
+a {text-decoration: none; color: var(--x-000000);}
+a:hover {color: var(--d-3d-3d-3);}
+ul,li {margin: 0; padding: 0; list-style: none;}
+input {border: none;}
+img {border: 1px solid var(--x000000-5);}
+
+
+/**** 컴포넌트 ****/
+/** box **/
+.comp-box {border-radius: 10px; padding: 8px;}
+
+
+.home-img {height: 33px;}
+.user-box {display: flex; gap: 8px;}
+
+/* 네비게이션 */
+nav {display: flex; align-items: center; justify-content: center; width: 100%; margin: 0 auto; padding: 0 16px;}
+nav > div {display: flex; width: 100%;}
+.nav > .container {width: 1110px; display: flex; justify-content: space-between;}
+.nav .left-box {display: flex; gap: 32px;}
+.nav .search-container {display: flex; align-items: center; gap: 8px;}
+.nav .search-container .search-box {border: 1px solid var(--x000000-5); padding: 4px 8px; border-radius: 17px;};
+.nav .search-box img {width: 18px; height: 18px;}
+.nav .user-box {display: flex; align-items: center; gap: 8px;}
+.main-contents {display: flex; padding: 32px 0; width: 1110px; margin: 0 auto; gap: 32px;}
+.main-contents > .left-side {width: 160px;}
+.main-contents > .left-side ul {display: flex; flex-direction: column; gap: 8px;}
+.main-contents > .left-side ul:first-child > a {background-color: var(--colourmainblue-100);}
+.main-contents > .center {border-left: 1px solid var(--x000000-5); padding: 0 32px; display: flex; flex-direction: column; gap: 16px; flex-grow: 1;}
+.center > .my-cafe-box {display: flex; flex-direction: column; gap: 16px;}
+.my-cafe-box .category {display: flex; gap: 16px;}
+.my-cafe-box .category > div {cursor: pointer;}
+.my-cafe-box .cafe-list > div {display: flex; gap: 16px;}
+.my-cafe-box .cafe-list .profile-img {width: 64px; height: 64px;}
+.my-cafe-box .cafe-list .content {display: flex; flex-direction: column; gap: 8px; flex-grow: 1;}
+.my-cafe-box .cafe-list .list > div {display: flex; justify-content: space-between;}
+.main-contents > .right-side {width: 160px;}
