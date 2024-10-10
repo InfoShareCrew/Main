@@ -2,13 +2,16 @@ package com.infoShare.calog.domain.Article;
 
 import com.infoShare.calog.domain.BoardType.BoardType;
 import com.infoShare.calog.domain.Comment.Comment;
+import com.infoShare.calog.domain.user.SiteUser;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.checkerframework.checker.units.qual.C;
+import org.springframework.security.core.userdetails.User;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -36,6 +39,14 @@ public class Article {
 
     @ManyToOne
     private BoardType boardType;
+
+    @ManyToOne
+    private SiteUser author;
+
+    /* 추천기능 작업중
+    @ManyToOne
+    Set<SiteUser> voter;
+*/
 
     // TODO: 유저 엔티티 생기면 추천, 글쓴이 추가하기
 }

@@ -1,7 +1,16 @@
 <html layout:decorate="~{layout}">
+<!-- 아이콘 넣을라고 한번 넣어 봤어용 -->
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>문서 제목</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+</head>
+<!--아이콘 넣을라고 한번 넣어 봤어용-->
+<body>
 <div layout:fragment="content" class="container my-3">
 
-  <!--본문-->
+  <!-- 본문 -->
   <h2 class="border-bottom py-2" th:text="${article.title}">제목</h2>
   <div class="card my-3">
     <div class="card-body">
@@ -10,33 +19,56 @@
         <div class="badge bg-light text-dark p-2 text-start">
           <div th:text="${#temporals.format(article.createDate, 'yyyy-MM-dd HH:mm')}"></div>
         </div>
+        <a onclick="return confirm('정말 추천하시겠습니까?')"
+           class="btn btn-primary">
+          <i class="bi bi-hand-thumbs-up"></i> 추천
+        </a>
+        <a onclick="return confirm('정말 수정하시겠습니까?')"
+           th:href="|/article/modify/${article.id}|" class="btn btn-primary">
+          수정
+        </a>
+        <a onclick="return confirm('정말 삭제하시겠습니까?')"
+           th:href="|/article/delete/${article.id}|" class="btn btn-primary">
+          삭제
+        </a>
       </div>
     </div>
   </div>
 
-  <!--답글 개수-->
+  <!-- 답글 개수 -->
   <h5 class="border-bottom my-3 py-2" th:text="|${#lists.size(article.commentList)}개의 답변이 있습니다.|"></h5>
-  <!--답글 목록-->
+  <!-- 답글 목록 -->
   <div class="card my-3" th:each="comment: ${article.commentList}">
     <div class="card-body">
       <div class="card-text" style="white-space: pre-line;" th:text="${comment.content}"></div>
       <div class="d-flex justify-content-end">
         <div class="badge bg-light text-dark p-2 text-start">
-          <div th:text="${#temporals.format(article.createDate, 'yyyy-MM-dd HH:mm')}"></div>
+          <div th:text="${#temporals.format(comment.createDate, 'yyyy-MM-dd HH:mm')}"></div>
         </div>
         <div class="badge bg-light text-dark p-2 text-start">
           <div th:text="${article.view}"></div>
         </div>
       </div>
+      <a onclick="return confirm('정말 추천하시겠습니까?')"
+         class="btn btn-primary">
+        <i class="bi bi-hand-thumbs-up"></i> 추천
+      </a>
+      <a onclick="return confirm('정말 수정하시겠습니까?')"
+         th:href="|/comment/modify/${comment.id}|" class="btn btn-primary">
+        수정
+      </a>
+      <a onclick="return confirm('정말 삭제하시겠습니까?')"
+         th:href="|/comment/delete/${comment.id}|" class="btn btn-primary">
+        삭제
+      </a>
     </div>
   </div>
 
-  <!--답글 폼-->
+  <!-- 답글 폼 -->
   <form th:action="@{|/comment/create/${article.id}|}" th:object="${commentForm}" method="post">
-    <!--오류메세지-->
-    <div class="alert alert-danger"
-         role="alert" th:if="${#fields.hasAnyErrors()}">
-      <div th:each="err : ${#fields.allErrors()}" th:text="${err}" />
+    <!-- 오류 메시지 -->
+    <div class="alert alert-danger" role="alert" th:if="${#fields.hasAnyErrors()}">
+      <div th:each="err : ${#fields.allErrors()}" th:text="${err}"></div>
     </div>
     <textarea th:field="*{content}" rows="10" class="form-control"></textarea>
     <input type="submit" value="답글달기">
@@ -44,4 +76,5 @@
 
   <a th:href="|/article/list|" class="btn btn-primary">목록</a>
 </div>
+</body>
 </html>

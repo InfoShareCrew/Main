@@ -1,11 +1,13 @@
 package com.infoShare.calog.domain.Comment;
 
 import com.infoShare.calog.domain.Article.Article;
+import com.infoShare.calog.domain.user.SiteUser;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -24,4 +26,8 @@ public class Comment {
 
     @ManyToOne
     private Article article;
+
+    @ManyToOne
+    private SiteUser author;
+
 }

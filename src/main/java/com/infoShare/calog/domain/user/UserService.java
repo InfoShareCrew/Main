@@ -1,5 +1,6 @@
 package com.infoShare.calog.domain.user;
 
+import com.infoShare.calog.domain.DataNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
