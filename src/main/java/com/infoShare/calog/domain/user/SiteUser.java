@@ -33,9 +33,4 @@ public class SiteUser {
 
     @Column(length = 2000)
     private String address;
-
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "siteuser_roles", joinColumns = @JoinColumn(name = "siteuser_id"))
-    @Enumerated(EnumType.STRING)
-    private Set<UserRole> roles = new HashSet<>();
 }

@@ -23,19 +23,25 @@ public class UserService {
         return user;
     }
 
+    public SiteUser findByEmail(String email) {
+        return userRepository.findByEmail(email).orElse(null); // Optional을 null로 변환
+    }
+
+    public boolean validateUser(String email, String password) {
+        SiteUser user = findByEmail(email);
+        return user != null && passwordEncoder.matches(password, user.getPassword());
+    }
+
     @Transactional
     public SiteUser processKakaoUser(String email, String nickname) {
-        // 사용자 조회
-        SiteUser user = userRepository.findByEmail(email).get();
+        SiteUser user = userRepository.findByEmail(email).orElse(null);
 
-        // 사용자가 존재하지 않으면 새 사용자 생성
         if (user == null) {
             user = new SiteUser();
             user.setEmail(email);
             user.setNickname(nickname);
             userRepository.save(user);
         } else {
-            // 이미 존재하는 사용자 정보 업데이트
             user.setNickname(nickname);
             userRepository.save(user);
         }
@@ -45,29 +51,15 @@ public class UserService {
 
     @Transactional
     public void processGoogleUser(String email, String nickname) {
-        // 사용자 정보를 데이터베이스에 저장 또는 업데이트
-        SiteUser user = userRepository.findByEmail(email).get();
+        SiteUser user = userRepository.findByEmail(email).orElse(null);
         if (user == null) {
-            // 새로운 사용자 등록
             user = new SiteUser();
             user.setEmail(email);
-            user.setNickname(nickname); // 혹은 다른 필드에 맞게 수정
-            userRepository.save(user);
-        } else {
-            // 기존 사용자 업데이트 (필요한 경우)
             user.setNickname(nickname);
             userRepository.save(user);
-        }
-    }
-
-    public void assignRoleToUser(String email, UserRole role) {
-        Optional<SiteUser> optionalUser = userRepository.findByEmail(email);
-        if (optionalUser.isPresent()) {
-            SiteUser user = optionalUser.get();
-            user.getRoles().add(role);
-            userRepository.save(user);
         } else {
-            throw new UsernameNotFoundException("사용자를 찾을 수 없습니다.");
+            user.setNickname(nickname);
+            userRepository.save(user);
         }
     }
 }
