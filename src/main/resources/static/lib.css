@@ -22,4 +22,9 @@
 /* 컴포넌트 */
 .btn {display: block; padding: 8px 4px; border-radius: 5px;}
 .btn-b {display: block; padding: 8px 4px; border-radius: 5px; border: 1px solid #d5d5d5;}
-.img-box {display: flex;}
+.btn-primary {background-color: var(--x-0d-6efd); color: var(--ffffff);}
+
+/* 박스 box */
+.img-box {display: flex; overflow: hidden;}
+.comp-box {border-radius: 10px; padding: 8px;}
+.center-box {display: flex; justify-content: center; align-items: center;}
