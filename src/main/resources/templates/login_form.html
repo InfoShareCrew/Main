@@ -7,30 +7,31 @@
 <body>
 <div layout:fragment="content" class="main-contents center-box">
     <div class="login-container">
+        <div class="text-box"><span class="f-size-21 f-weight-5">InfoShare에 오신 걸 환영합니다.</span></div>
         <div class="login-box">
-            <div class="text-box"><span class="f-size-28 f-weight-6">InfoShare에 오신 걸 환영합니다.</span></div>
+            <div class="text-box"><span class="f-size-21 f-weight-5">로그인</span></div>
             <form th:action="@{/user/login}" method="post" class="form-box">
                 <div th:if="${param.error}">
                     <div class="alert alert-danger">
                         사용자ID 또는 비밀번호를 확인해 주세요.
                     </div>
                 </div>
-                <div class="mb-3">
+                <div class="input-box">
                     <!-- <label for="username" class="form-label">사용자ID</label> -->
-                    <input type="text" name="username" id="username" class="form-control" placeholder="사용자 Email">
-                </div>
-                <div class="mb-3">
+                    <input type="text" name="username" id="username" class="input f-size-14 f-weight-5" placeholder="사용자 Email">
                     <!-- <label for="password" class="form-label">비밀번호</label> -->
-                    <input type="password" name="password" id="password" class="form-control" placeholder="비밀번호">
+                    <input type="password" name="password" id="password" class="input f-size-14 f-weight-5" placeholder="비밀번호">
                 </div>
-                <button type="submit" class="btn btn-primary">로그인</button>
+                <div class="btn-box">
+                    <button type="submit" class="btn btn-primary"><span class="f-size-14 f-weight-5">로그인</span></button>
+                    <button class="btn kakao" onclick="loginWithKakao()"><span class="f-size-14 f-weight-5">카카오로 로그인</span></button>
+                    <a href="/oauth2/authorization/google" class="btn-b f-size-14 f-weight-5">구글로 로그인</a>
+                </div>
             </form>
-
-            <div class="my-3">
-                <button class="btn btn-warning" onclick="loginWithKakao()">카카오로 로그인</button>
-            </div>
-            <div class="my-3">
-                <a href="/oauth2/authorization/google" class="btn btn-danger">구글로 로그인</a>
+            <div class="menu-box">
+                <a href="" class="f-size-13">비밀번호 변경</a>
+                <span>|</span>
+                <a href="" class="f-size-13">회원가입</a>
             </div>
         </div>
     </div>
@@ -48,18 +49,5 @@
             }
         });
     }
-
-    function adjustBoxSize() {
-            const box = document.querySelector('.main-contents');
-            const nav = document.querySelector('nav');
-            console.log(nav.style.width);
-            box.style.height = `${window.innerHeight - nav.style.height - 50}px`;
-        }
-
-        // 초기 크기 조정
-        adjustBoxSize();
-
-        // 윈도우 크기 변경 시 크기 조정
-        window.addEventListener('resize', adjustBoxSize);
 </script>
 </html>
