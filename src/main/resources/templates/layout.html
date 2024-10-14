@@ -3,8 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <link rel="stylesheet" type="text/css" th:href="@{/bootstrap.min.css}">
+  <link rel="stylesheet" type="text/css" th:href="@{/lib.css}">
+  <link rel="stylesheet" type="text/css" th:href="@{/styleguide.css}">
   <link rel="stylesheet" type="text/css" th:href="@{/style.css}">
+    <!-- 스와이퍼 -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
   <title>인포쉐어</title>
 </head>
 <body>
@@ -13,7 +18,7 @@
 <nav th:replace="~{navbar :: navbarFragment}"></nav>
 
 <!--기본 템플릿 안에 삽입될 박스-->
-<th:block layout:fragment="content"></th:block>
+<th:block layout:fragment="content" class="main-contents"></th:block>
 
 <!-- 자바스크립트 -->
 <!-- 각 템플릿에서 작성 -->
