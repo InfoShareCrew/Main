@@ -27,7 +27,7 @@ public class ArticleService {
     private final ArticleRepository articleRepository;
     public Page<Article> getList(int page) {
         List<Sort.Order> sorts = new ArrayList<>();
-        sorts.add(Sort.Order.desc("createDate"));
+        sorts.add(Sort.Order.desc("createdDate"));
         Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
         return this.articleRepository.findAll(pageable);
     }
@@ -45,7 +45,6 @@ public class ArticleService {
         Article article = new Article();
         article.setTitle(title);
         article.setContent(content);
-        article.setCreateDate(LocalDateTime.now());
         this.articleRepository.save(article);
     }
 

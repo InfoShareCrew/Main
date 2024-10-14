@@ -1,8 +1,7 @@
 package com.infoShare.calog.global.jpa;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -20,7 +19,39 @@ public class BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @CreatedDate
-    private LocalDateTime createdDate;
+    private LocalDateTime createdDate = LocalDateTime.now();
     @LastModifiedDate
     private LocalDateTime modifiedDate;
+
+    private BaseEntity(Builder builder) {
+        this.id  = builder().id;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public LocalDateTime getCreatedDate() {
+        return createdDate;
+    }
+
+    public LocalDateTime getModifiedDate() {
+        return modifiedDate;
+    }
+
+    public static class Builder {
+        private Long id;
+        private LocalDateTime createdDate;
+        private LocalDateTime modifiedDate;
+
+        public Builder modifiedDate(LocalDateTime modifiedDate) {
+            this.modifiedDate = modifiedDate; // 수정
+            return this;
+        }
+
+        public BaseEntity build() {
+            return new BaseEntity(this);
+        }
+    }
+
 }
