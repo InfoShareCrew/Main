@@ -1,6 +1,7 @@
 package com.infoShare.calog.domain.Article;
 
 import com.infoShare.calog.domain.Comment.CommentForm;
+import com.infoShare.calog.global.jpa.BaseEntity;
 import jakarta.validation.Valid;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +18,7 @@ public class ArticleContainer {
     private final ArticleService articleService;
 
     @GetMapping("/list")
-    public String list(Model model, @RequestParam(value="page", defaultValue="0") int page, @RequestParam(value="kw", defaultValue = "") String kw) {
+    public String list(Model model, @ModelAttribute("basedEntity")BaseEntity baseEntity, @RequestParam(value="page", defaultValue="0") int page, @RequestParam(value="kw", defaultValue = "") String kw) {
         Page<Article> paging = this.articleService.getList(page);
         model.addAttribute("paging", paging);
         return "article_list";

@@ -1,5 +1,6 @@
 package com.infoShare.calog.domain.user;
 
+import com.infoShare.calog.global.jpa.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.Getter;
@@ -15,11 +16,7 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @Entity
-public class SiteUser {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+public class SiteUser extends BaseEntity {
     @Column(unique = true)
     @Email
     private String email;

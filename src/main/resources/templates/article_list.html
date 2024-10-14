@@ -11,7 +11,7 @@
     <tr th:each="article, loop: ${paging}">
       <td th:text="${paging.getTotalElements - (paging.number * paging.size) - loop.index}"></td>
       <td><a th:href="@{|/article/detail/${article.id}|}" th:text="${article.title}"></a></td>
-      <td th:text="${#temporals.format(article.createDate, 'yyyy-MM-dd HH:mm')}"></td>
+      <td th:text="${#temporals.format(article.createdDate, 'yyyy-MM-dd HH:mm')}"></td>
       <td><span th:text="${article.view} != null ? ${article.view}:0"></span></td>
     </tr>
     </tbody>
