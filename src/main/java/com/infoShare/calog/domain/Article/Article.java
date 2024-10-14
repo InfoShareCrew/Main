@@ -42,10 +42,7 @@ public class Article {
     @ManyToOne
     private SiteUser author;
 
-    /* 추천기능 작업중
-    @ManyToOne
+    @ManyToMany
     Set<SiteUser> voter;
-*/
 
-    // TODO: 유저 엔티티 생기면 추천, 글쓴이 추가하기
 }

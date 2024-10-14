@@ -3,6 +3,8 @@ package com.infoShare.calog.domain.Comment;
 import com.infoShare.calog.domain.Article.Article;
 import com.infoShare.calog.domain.Article.ArticleService;
 import com.infoShare.calog.domain.DataNotFoundException;
+import com.infoShare.calog.domain.user.SiteUser;
+import com.infoShare.calog.domain.user.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -10,10 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.security.Principal;
@@ -25,6 +24,7 @@ import java.util.function.BiConsumer;
 public class CommentController {
     private final CommentService commentService;
     private final ArticleService articleService;
+    private final UserService userService;
 
     @PostMapping("create/{id}")
     public String create(Model model, @Valid CommentForm commentForm, BindingResult bindingResult, @PathVariable(value = "id")Integer id) {
@@ -76,6 +76,19 @@ public class CommentController {
         }
         this.commentService.delete(comment);
         return String.format("redirect:/article/detail/%s", comment.getArticle().getId());
+    }
+
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/vote/{id}")
+    @ResponseBody
+    public String commentVote(@PathVariable("id") Integer id, Principal principal) {
+        Comment comment = this.commentService.getComment(id);
+        SiteUser siteUser = this.userService.getUser(principal.getName());
+        this.commentService.vote(comment, siteUser);
+        Comment votedComment = this.commentService.getComment(id);
+        Integer count = votedComment.getVoter().size();
+        return count.toString();
     }
 
 }

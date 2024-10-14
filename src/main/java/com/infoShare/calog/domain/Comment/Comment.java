@@ -30,4 +30,7 @@ public class Comment {
     @ManyToOne
     private SiteUser author;
 
+    @ManyToMany
+    Set<SiteUser> voter;
+
 }

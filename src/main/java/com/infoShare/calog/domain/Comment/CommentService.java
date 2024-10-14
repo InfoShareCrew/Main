@@ -2,6 +2,7 @@ package com.infoShare.calog.domain.Comment;
 
 import com.infoShare.calog.domain.Article.Article;
 import com.infoShare.calog.domain.DataNotFoundException;
+import com.infoShare.calog.domain.user.SiteUser;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -38,5 +39,10 @@ public class CommentService {
 
     public void delete(Comment comment) {
         this.commentRepository.delete(comment);
+    }
+
+    public void vote(Comment comment, SiteUser siteUser) {
+        comment.getVoter().add(siteUser);
+        this.commentRepository.save(comment);
     }
 }

@@ -65,9 +65,9 @@ public class ArticleService {
         this.articleRepository.delete(article);
     }
 
-    /* 추천기능 작업중
+
     public void vote(Article article, SiteUser siteUser) {
         article.getVoter().add(siteUser);
         this.articleRepository.save(article);
-    }*/
+    }
 }

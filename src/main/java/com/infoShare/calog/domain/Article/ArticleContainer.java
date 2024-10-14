@@ -89,14 +89,16 @@ public class ArticleContainer {
         return "redirect:/";
     }
 
-    /* 추천기능 작업중
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/vote/{id}")
-    public String articleVote(Principal principal, @PathVariable("id") Integer id) {
+    @ResponseBody
+    public String articleVote(@PathVariable("id") Integer id, Principal principal) {
         Article article = this.articleService.getArticleById(id);
         SiteUser siteUser = this.userService.getUser(principal.getName());
         this.articleService.vote(article, siteUser);
-        return String.format("redirect:/article/detail/%s", id);
+        Article votedArticle = this.articleService.getArticleById(id);
+        Integer count = votedArticle.getVoter().size();
+        return count.toString();
     }
-    */
+
 }

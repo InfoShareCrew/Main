@@ -10,9 +10,13 @@
         <div class="badge bg-light text-dark p-2 text-start">
           <div th:text="${#temporals.format(article.createDate, 'yyyy-MM-dd HH:mm')}"></div>
         </div>
-        <a onclick="return confirm('정말 추천하시겠습니까?')"
-           class="btn btn-primary">
-          <i class="bi bi-hand-thumbs-up"></i> 추천
+        <a id="article_recommend"
+           class="recommend btn btn-sm btn-outline-secondary"
+           onclick="return confirm('정말 추천하시겠습니까?')">
+          추천
+          <span id="article_recommend_count"
+                class="badge rounded-pill bg-success"
+                th:text="${#lists.size(article.voter)}"></span>
         </a>
         <a onclick="return confirm('정말 수정하시겠습니까?')"
            th:href="|/article/modify/${article.id}|" class="btn btn-primary">
@@ -40,9 +44,13 @@
           <div th:text="${article.view}"></div>
         </div>
       </div>
-      <a onclick="return confirm('정말 추천하시겠습니까?')"
-         class="btn btn-primary">
-        <i class="bi bi-hand-thumbs-up"></i> 추천
+      <a id="comment_recommend"
+         class="recommend btn btn-sm btn-outline-secondary"
+         onclick="return confirm('정말 추천하시겠습니까?')">
+        추천
+        <span id="comment_recommend_count"
+              class="badge rounded-pill bg-success"
+              th:text="${#lists.size(comment.voter)}"></span>
       </a>
       <a onclick="return confirm('정말 수정하시겠습니까?')"
          th:href="|/comment/modify/${comment.id}|" class="btn btn-primary">
