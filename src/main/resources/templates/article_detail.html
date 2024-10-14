@@ -1,14 +1,5 @@
 <html layout:decorate="~{layout}">
-<!-- 아이콘 넣을라고 한번 넣어 봤어용 -->
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>문서 제목</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
-</head>
-<!--아이콘 넣을라고 한번 넣어 봤어용-->
-<body>
-<div layout:fragment="content" class="container my-3">
+<div layout:fragment="content" class="main-contents dp-flex-clmb">
 
   <!-- 본문 -->
   <h2 class="border-bottom py-2" th:text="${article.title}">제목</h2>
@@ -43,7 +34,7 @@
       <div class="card-text" style="white-space: pre-line;" th:text="${comment.content}"></div>
       <div class="d-flex justify-content-end">
         <div class="badge bg-light text-dark p-2 text-start">
-          <div th:text="${#temporals.format(comment.createDate, 'yyyy-MM-dd HH:mm')}"></div>
+          <div th:text="${#temporals.format(article.createDate, 'yyyy-MM-dd HH:mm')}"></div>
         </div>
         <div class="badge bg-light text-dark p-2 text-start">
           <div th:text="${article.view}"></div>
@@ -76,5 +67,4 @@
 
   <a th:href="|/article/list|" class="btn btn-primary">목록</a>
 </div>
-</body>
 </html>

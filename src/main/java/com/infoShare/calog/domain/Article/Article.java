@@ -31,7 +31,6 @@ public class Article {
 
     private LocalDateTime modifyDate;
 
-    @Column(columnDefinition = "default 0")
     private Long view = 0L;
 
     @OneToMany(mappedBy = "article", cascade = CascadeType.REMOVE)
