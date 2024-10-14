@@ -1,6 +1,7 @@
 package com.infoShare.calog.domain.Article;
 
 import com.infoShare.calog.domain.DataNotFoundException;
+import com.infoShare.calog.domain.user.SiteUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -8,8 +9,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -44,6 +43,21 @@ public class ArticleService {
 
     public void viewUp(Article article) {
         article.setView(article.getView()+1);
+        this.articleRepository.save(article);
+    }
+
+    public void modifyArticle(Article article, String title, String content) {
+        article.setTitle(title);
+        article.setContent(content);
+        this.articleRepository.save(article);
+    }
+
+    public void delete(Article article) {
+        this.articleRepository.delete(article);
+    }
+
+    public void vote(Article article, SiteUser siteUser) {
+        article.getVoter().add(siteUser);
         this.articleRepository.save(article);
     }
 }

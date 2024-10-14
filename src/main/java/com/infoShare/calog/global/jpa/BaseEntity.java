@@ -39,6 +39,8 @@ public class BaseEntity {
         return modifiedDate;
     }
 
+
+
     public static class Builder {
         private Long id;
         private LocalDateTime createdDate;

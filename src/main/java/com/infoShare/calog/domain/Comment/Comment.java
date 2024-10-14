@@ -2,11 +2,13 @@ package com.infoShare.calog.domain.Comment;
 
 import com.infoShare.calog.domain.Article.Article;
 import com.infoShare.calog.global.jpa.BaseEntity;
+import com.infoShare.calog.domain.Suggestion.Suggestion;
+import com.infoShare.calog.domain.user.SiteUser;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -17,4 +19,14 @@ public class Comment extends BaseEntity {
 
     @ManyToOne
     private Article article;
+
+    @ManyToOne
+    private Suggestion suggestion;
+
+    @ManyToOne
+    private SiteUser author;
+
+    @ManyToMany
+    Set<SiteUser> voter;
+
 }

@@ -1,5 +1,6 @@
 package com.infoShare.calog.domain.user;
 
+import com.infoShare.calog.domain.DataNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -68,6 +69,15 @@ public class UserService {
             userRepository.save(user);
         } else {
             throw new UsernameNotFoundException("사용자를 찾을 수 없습니다.");
+        }
+    }
+
+    public SiteUser getUser(String email) {
+        Optional<SiteUser> siteUser = this.userRepository.findByEmail(email);
+        if (siteUser.isPresent()) {
+            return siteUser.get();
+        } else {
+            throw new DataNotFoundException("siteuser not found");
         }
     }
 }
