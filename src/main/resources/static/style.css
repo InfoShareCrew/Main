@@ -10,9 +10,9 @@ a {text-decoration: none; color: var(--x-000000);}
 a:hover {color: var(--d-3d-3d-3);}
 a.btn {text-align: center;}
 ul,li {margin: 0; padding: 0; list-style: none;}
-input {border: none;}
+input, input:focus, button {border: none;}
 img {border: 1px solid var(--d-3d-3d-3); width: 100%; object-fit: cover;}
-button {border: none; cursor: pointer; background-color: var(--ffffff);}
+button {cursor: pointer; background-color: var(--ffffff);}
 span {font-family: 'Pretendard-Regular';}
 
 
@@ -22,7 +22,7 @@ nav > div {display: flex; width: 100%;}
 .nav > .container {width: 1110px; display: flex; justify-content: space-between; position: relative;}
 .nav .left-box {display: flex; gap: 32px;}
 .nav .search-container {display: flex; align-items: center; gap: 8px;}
-.nav .search-container .search-box {border: 1px solid var(--d-3d-3d-3); padding: 4px 8px; border-radius: 17px; display: flex;}
+.nav .search-container .search-box {border: 1px solid var(--d-3d-3d-3); padding: 8px 8px; border-radius: 17px; display: flex;}
 .nav .search-box .img-box {width: 18px; height: 18px;}
 .nav .right-box {display: flex; align-items: center; gap: 8px;}
 .nav .right-box .img-box {width: 40px; height: 40px; border-radius: 20px;}

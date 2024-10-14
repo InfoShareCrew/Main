@@ -16,7 +16,7 @@
   <div class="air-box"></div>
   <div class="center">
     <!-- 내 카페 -->
-    <div class="my-cafe-box">
+    <div class="my-cafe-box" sec:authorize="isAuthenticated()">
       <div class="title"><span class="f-size-18 f-weight-6">내 카페</span></div>
       <div class="category">
         <div class="ctgr-box-in btn"><span>가입한 카페</span></div>
