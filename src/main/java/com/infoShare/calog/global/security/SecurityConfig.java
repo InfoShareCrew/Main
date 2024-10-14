@@ -16,11 +16,12 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @EnableWebSecurity
 @EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
+    // 로그인 안해도 볼 수 있도록 하는 시큐리티 설정
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
-                        .requestMatchers("/", "/user/login", "/error", "/oauth2/**", "/**").permitAll()
+                        .requestMatchers("/", "/user/login", "/error", "/oauth2/**", "/**").permitAll() // 여기에 public 경로 추가
                         .anyRequest().authenticated())
                 .formLogin((formLogin) -> formLogin
                         .loginPage("/user/login")

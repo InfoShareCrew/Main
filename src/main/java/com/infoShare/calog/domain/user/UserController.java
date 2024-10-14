@@ -1,5 +1,6 @@
 package com.infoShare.calog.domain.user;
 
+import com.infoShare.calog.domain.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -15,12 +16,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("user")
+@RequestMapping("/user")
 public class UserController {
     private final UserService userService;
 
 
-    @GetMapping("signup")
+    @GetMapping("/signup")
     public String signup(UserCreateForm userCreateForm) {
         return "signup_form";
     }
@@ -35,7 +36,7 @@ public class UserController {
             return "signup_form";
         }
         try {
-            userService.create(userCreateForm.getEmail(), userCreateForm.getNickname(), userCreateForm.getPassword1());
+            userService.join(userCreateForm.getEmail(), userCreateForm.getNickname(), userCreateForm.getPassword1());
         } catch (DataIntegrityViolationException e) {
             e.printStackTrace();
             bindingResult.reject("signupFailed", "이미 등록된 사용자입니다.");
