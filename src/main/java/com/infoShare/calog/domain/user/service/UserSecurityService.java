@@ -1,5 +1,7 @@
-package com.infoShare.calog.domain.user;
+package com.infoShare.calog.domain.user.service;
 
+import com.infoShare.calog.domain.user.SiteUser;
+import com.infoShare.calog.domain.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
