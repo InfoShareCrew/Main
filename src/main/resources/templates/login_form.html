@@ -8,7 +8,7 @@
 <div layout:fragment="content" class="main-contents center-box">
     <div class="login-container">
         <div class="text-box"><span class="f-size-21 f-weight-5">InfoShare에 오신 걸 환영합니다.</span></div>
-        <div class="login-box">
+        <div class="form-container">
             <div class="text-box"><span class="f-size-21 f-weight-5">로그인</span></div>
             <form th:action="@{/user/login}" method="post" class="form-box">
                 <div th:if="${param.error}">

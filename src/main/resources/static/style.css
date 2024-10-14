@@ -12,7 +12,7 @@ a.btn {text-align: center;}
 ul,li {margin: 0; padding: 0; list-style: none;}
 input {border: none;}
 img {border: 1px solid var(--d-3d-3d-3); width: 100%; object-fit: cover;}
-button {border: none; cursor: pointer;}
+button {border: none; cursor: pointer; background-color: var(--ffffff);}
 span {font-family: 'Pretendard-Regular';}
 
 
@@ -74,11 +74,21 @@ nav > div {display: flex; width: 100%;}
 /***** 로그인 화면 *****/
 .main-contents .login-container {padding-top: 50px;}
 .main-contents .login-container > .text-box {display: flex; justify-content: center; margin-bottom: 32px;}
-.main-contents .login-container .login-box {border: 1px solid var(--d-3d-3d-3); border-radius: 15px;}
-.login-container .login-box > .text-box {display: flex; justify-content: center; padding: 16px 0;}
-.login-container .login-box .form-box {border-top: 1px solid var(--d-3d-3d-3); border-bottom: 1px solid var(--d-3d-3d-3); width: 300px; padding: 32px; display: flex; flex-direction: column; gap: 32px;}
+.login-container .form-container .form-box {border-top: 1px solid var(--d-3d-3d-3); border-bottom: 1px solid var(--d-3d-3d-3); width: 300px; padding: 32px; display: flex; flex-direction: column; gap: 32px;}
 .login-container .form-box .input-box {display: flex; flex-direction: column; gap: 16px;}
 .login-container .form-box .btn-box {display: flex; flex-direction: column; gap: 8px;}
 .login-container .btn-box a {text-align: center;}
 .login-container .menu-box {display: flex; justify-content: center; gap: 16px; padding: 16px 0;}
 .login-container .menu-box span {color: var(--d-3d-3d-3);}
+
+
+/***** 회원가입 화면 *****/
+.main-contents .signup-container {padding-top: 50px;}
+.main-contents .signup-container .form-box {border-top: 1px solid var(--d-3d-3d-3); border-bottom: none; width: 400px;}
+.signup-container .form-box .nick-box {display: flex; gap: 8px;}
+.signup-container .nick-box input {flex-grow: 1;}
+.signup-container .agree-box {display: flex; flex-direction: row; justify-content: space-between;}
+.signup-container .agree-box span {color: var(--x-999999); text-decoration: underline; cursor: pointer;}
+
+
+
