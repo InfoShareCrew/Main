@@ -7,11 +7,7 @@ import com.infoShare.calog.domain.user.SiteUser;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.checkerframework.checker.units.qual.C;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.security.core.userdetails.User;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 

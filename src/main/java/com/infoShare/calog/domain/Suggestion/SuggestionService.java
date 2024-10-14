@@ -22,7 +22,7 @@ public class SuggestionService {
 
     public Page<Suggestion> getList(int page) {
         List<Sort.Order> sorts = new ArrayList<>();
-        sorts.add(Sort.Order.desc("createDate"));
+        sorts.add(Sort.Order.desc("createdDate"));
         Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
         return this.suggestionRepository.findAll(pageable);
     }
@@ -40,7 +40,6 @@ public class SuggestionService {
         Suggestion suggestion = new Suggestion();
         suggestion.setTitle(title);
         suggestion.setContent(content);
-        suggestion.setCreateDate(LocalDateTime.now());
         this.suggestionRepository.save(suggestion);
     }
 
@@ -52,7 +51,6 @@ public class SuggestionService {
     public void modifySuggestion(Suggestion suggestion, String title, String content) {
         suggestion.setTitle(title);
         suggestion.setContent(content);
-        suggestion.setModifyDate(LocalDateTime.now());
         this.suggestionRepository.save(suggestion);
     }
 

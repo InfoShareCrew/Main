@@ -1,9 +1,9 @@
 package com.infoShare.calog.domain.Suggestion;
 
-import com.infoShare.calog.domain.Article.Article;
 import com.infoShare.calog.domain.Comment.CommentForm;
 import com.infoShare.calog.domain.user.SiteUser;
 import com.infoShare.calog.domain.user.UserService;
+import com.infoShare.calog.global.jpa.BaseEntity;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -27,6 +27,7 @@ public class SuggestionController {
 
     @GetMapping("/list")
     public String list(Model model,
+                       @ModelAttribute("basedEntity") BaseEntity baseEntity,
                        @RequestParam(value = "page", defaultValue = "0") int page,
                        @RequestParam(value = "kw", defaultValue = "") String kw) {
         Page<Suggestion> paging = this.suggestionService.getList(page);

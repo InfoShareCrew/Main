@@ -1,6 +1,6 @@
 <html layout:decorate="~{layout}">
 <div layout:fragment="content" class="main-contents dp-flex-clmb">
-
+  <h1> 건의 게시판</h1>
   <!-- 본문 -->
   <h2 class="border-bottom py-2" th:text="${suggestion.title}">제목</h2>
   <div class="card my-3">
@@ -8,7 +8,7 @@
       <div class="card-text" style="white-space: pre-line;" th:text="${suggestion.content}"></div>
       <div class="d-flex justify-content-end">
         <div class="badge bg-light text-dark p-2 text-start">
-          <div th:text="${#temporals.format(suggestion.createDate, 'yyyy-MM-dd HH:mm')}"></div>
+          <div th:text="${#temporals.format(suggestion.createdDate, 'yyyy-MM-dd HH:mm')}"></div>
         </div>
         <a id="suggestion_recommend"
            class="recommend btn btn-sm btn-outline-secondary">
@@ -37,7 +37,7 @@
       <div class="card-text" style="white-space: pre-line;" th:text="${comment.content}"></div>
       <div class="d-flex justify-content-end">
         <div class="badge bg-light text-dark p-2 text-start">
-          <div th:text="${#temporals.format(comment.createDate, 'yyyy-MM-dd HH:mm')}"></div>
+          <div th:text="${#temporals.format(comment.createdDate, 'yyyy-MM-dd HH:mm')}"></div>
         </div>
         <div class="badge bg-light text-dark p-2 text-start">
           <div th:text="${suggestion.view}"></div>
@@ -70,6 +70,8 @@
 
   <a th:href="|/suggestion/list|" class="btn btn-primary">목록</a>
 </div>
+
+
 
 <script th:inline="javascript">
   var suggestion_id = [[${suggestion.id}]];
@@ -113,3 +115,4 @@
       }
   });
 </script>
+</html>

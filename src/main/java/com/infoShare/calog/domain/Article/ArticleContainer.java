@@ -1,13 +1,11 @@
 package com.infoShare.calog.domain.Article;
 
 import com.infoShare.calog.domain.Comment.CommentForm;
-import com.infoShare.calog.global.jpa.BaseEntity;
 import com.infoShare.calog.domain.user.SiteUser;
 import com.infoShare.calog.domain.user.UserService;
+import com.infoShare.calog.global.jpa.BaseEntity;
 import jakarta.validation.Valid;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -27,15 +25,17 @@ public class ArticleContainer {
     private final UserService userService;
 
     @GetMapping("/list")
-    public String list(Model model, @RequestParam(value = "page", defaultValue = "0") int page, @RequestParam(value = "kw", defaultValue = "") String kw) {
-    public String list(Model model, @ModelAttribute("basedEntity")BaseEntity baseEntity, @RequestParam(value="page", defaultValue="0") int page, @RequestParam(value="kw", defaultValue = "") String kw) {
+    public String list(Model model,
+                       @ModelAttribute("basedEntity") BaseEntity baseEntity,
+                       @RequestParam(value="page", defaultValue="0") int page,
+                       @RequestParam(value="kw", defaultValue = "") String kw) {
         Page<Article> paging = this.articleService.getList(page);
         model.addAttribute("paging", paging);
         return "article_list";
     }
 
     @GetMapping("/detail/{id}")
-    public String detail(Model model, @PathVariable(value = "id") Integer id, CommentForm commentForm) {
+    public String detail(Model model, @PathVariable(value="id") Integer id, CommentForm commentForm) {
         Article article = this.articleService.getArticleById(id);
         model.addAttribute("article", article);
         this.articleService.viewUp(article);
@@ -49,13 +49,12 @@ public class ArticleContainer {
 
     @PostMapping("/create")
     public String create(@Valid ArticleForm articleForm, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
+        if(bindingResult.hasErrors()) {
             return "article_form";
         }
         this.articleService.createArticle(articleForm.getTitle(), articleForm.getContent());
         return "redirect:/article/list";
     }
-
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/modify/{id}")
     public String modify(Model model, @PathVariable(value = "id") Integer id) {
@@ -103,5 +102,4 @@ public class ArticleContainer {
         Integer count = votedArticle.getVoter().size();
         return count.toString();
     }
-
 }

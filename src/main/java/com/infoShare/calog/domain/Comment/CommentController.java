@@ -2,7 +2,6 @@ package com.infoShare.calog.domain.Comment;
 
 import com.infoShare.calog.domain.Article.Article;
 import com.infoShare.calog.domain.Article.ArticleService;
-import com.infoShare.calog.domain.DataNotFoundException;
 import com.infoShare.calog.domain.Suggestion.Suggestion;
 import com.infoShare.calog.domain.Suggestion.SuggestionForm;
 import com.infoShare.calog.domain.Suggestion.SuggestionService;
@@ -19,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.security.Principal;
-import java.util.function.BiConsumer;
 
 @Controller
 @RequiredArgsConstructor

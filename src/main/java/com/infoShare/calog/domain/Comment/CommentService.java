@@ -4,11 +4,9 @@ import com.infoShare.calog.domain.Article.Article;
 import com.infoShare.calog.domain.DataNotFoundException;
 import com.infoShare.calog.domain.Suggestion.Suggestion;
 import com.infoShare.calog.domain.user.SiteUser;
-import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -41,7 +39,6 @@ public class CommentService {
 
     public void modify(Comment comment, String content) {
         comment.setContent(content);
-        comment.setModifyDate(LocalDateTime.now());
         this.commentRepository.save(comment);
     }
 
