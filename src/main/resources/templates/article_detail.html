@@ -11,13 +11,13 @@
           <div th:text="${#temporals.format(article.createDate, 'yyyy-MM-dd HH:mm')}"></div>
         </div>
         <a id="article_recommend"
-           class="recommend btn btn-sm btn-outline-secondary"
-           onclick="return confirm('정말 추천하시겠습니까?')">
+           class="recommend btn btn-sm btn-outline-secondary">
           추천
           <span id="article_recommend_count"
                 class="badge rounded-pill bg-success"
                 th:text="${#lists.size(article.voter)}"></span>
         </a>
+
         <a onclick="return confirm('정말 수정하시겠습니까?')"
            th:href="|/article/modify/${article.id}|" class="btn btn-primary">
           수정
@@ -44,14 +44,13 @@
           <div th:text="${article.view}"></div>
         </div>
       </div>
-      <a id="comment_recommend"
-         class="recommend btn btn-sm btn-outline-secondary"
-         onclick="return confirm('정말 추천하시겠습니까?')">
+      <a class="comment_recommend recommend btn btn-sm btn-outline-secondary">
+        <input name="comment_id" type="hidden" th:value="${comment.id}">
         추천
-        <span id="comment_recommend_count"
-              class="badge rounded-pill bg-success"
+        <span class="comment_recommend_count badge rounded-pill bg-success"
               th:text="${#lists.size(comment.voter)}"></span>
       </a>
+
       <a onclick="return confirm('정말 수정하시겠습니까?')"
          th:href="|/comment/modify/${comment.id}|" class="btn btn-primary">
         수정
@@ -76,3 +75,47 @@
   <a th:href="|/article/list|" class="btn btn-primary">목록</a>
 </div>
 </html>
+
+
+<script th:inline="javascript">
+  var article_id = [[${article.id}]];
+
+  $("#article_recommend").on("click", function() {
+      if(confirm("정말로 추천하시겠습니까?")) {
+          $.ajax({
+              url: "/article/vote/" + article_id,
+              type: "GET",
+              success: function(response) {
+                  // 요청이 성공했을 때 실행되는 콜백 함수
+                  console.log("성공", response);
+                  $("#article_recommend_count").text(response);
+              },
+              error: function(xhr, status, error) {
+                  // 요청이 실패했을 때 실행되는 콜백 함수
+                  console.log("오류 발생", error);
+              }
+          });
+      }
+  });
+
+  $(".comment_recommend").on("click", function() {
+      if(confirm("정말로 추천하시겠습니까?")) {
+          var _this = $(this);
+          var comment_id = _this.closest('.card-body').find('input[name=comment_id]').val();
+
+          $.ajax({
+              url: "/comment/vote/" + comment_id,
+              type: "GET",
+              success: function(response) {
+                  // 요청이 성공했을 때 실행되는 콜백 함수
+                  console.log("성공", response);
+                  _this.find(".comment_recommend_count").text(response);
+              },
+              error: function(xhr, status, error) {
+                  // 요청이 실패했을 때 실행되는 콜백 함수
+                  console.log("오류 발생", error);
+              }
+          });
+      }
+  });
+</script>

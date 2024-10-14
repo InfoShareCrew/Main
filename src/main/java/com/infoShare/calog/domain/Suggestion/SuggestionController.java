@@ -1,5 +1,6 @@
 package com.infoShare.calog.domain.Suggestion;
 
+import com.infoShare.calog.domain.Article.Article;
 import com.infoShare.calog.domain.Comment.CommentForm;
 import com.infoShare.calog.domain.user.SiteUser;
 import com.infoShare.calog.domain.user.UserService;
@@ -96,6 +97,7 @@ public class SuggestionController {
         Suggestion suggestion = this.suggestionService.getSuggestionById(id);
         SiteUser siteUser = this.userService.getUser(principal.getName());
         this.suggestionService.vote(suggestion, siteUser);
+
         Suggestion votedSuggestion = this.suggestionService.getSuggestionById(id);
         Integer count = votedSuggestion.getVoter().size();
         return count.toString();

@@ -100,8 +100,9 @@ public class CommentController {
         Comment comment = this.commentService.getComment(id);
         SiteUser siteUser = this.userService.getUser(principal.getName());
         this.commentService.vote(comment, siteUser);
+
         Comment votedComment = this.commentService.getComment(id);
-        Integer count = votedComment.getVoter().size();
+        Integer count = comment.getVoter().size();
         return count.toString();
     }
 

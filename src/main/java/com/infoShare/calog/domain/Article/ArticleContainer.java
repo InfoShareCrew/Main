@@ -96,6 +96,7 @@ public class ArticleContainer {
         Article article = this.articleService.getArticleById(id);
         SiteUser siteUser = this.userService.getUser(principal.getName());
         this.articleService.vote(article, siteUser);
+
         Article votedArticle = this.articleService.getArticleById(id);
         Integer count = votedArticle.getVoter().size();
         return count.toString();
