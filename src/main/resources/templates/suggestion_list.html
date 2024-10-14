@@ -1,0 +1,39 @@
+<html layout:decorate="~{layout}">
+<div layout:fragment="content" class="main-contents dp-flex-clmb">
+  <table>
+    <thead>
+    <th>번호</th>
+    <th>제목</th>
+    <th>작성일</th>
+    <th>조회수</th>
+    </thead>
+    <tbody>
+    <tr th:each="suggestion, loop: ${paging}">
+      <td th:text="${paging.getTotalElements() - (paging.getNumber() * paging.getSize()) - loop.index}"></td>
+      <td><a th:href="@{|/suggestion/detail/${suggestion.id}|}" th:text="${suggestion.title}"></a></td>
+      <td th:text="${#temporals.format(suggestion.createDate, 'yyyy-MM-dd HH:mm')}"></td>
+      <td><span th:text="${suggestion.view} != null ? ${suggestion.view} : 0"></span></td>
+    </tr>
+    </tbody>
+  </table>
+  <!--페이징-->t
+  <div th:if="${!paging.isEmpty()}">
+    <ul class="pagination justify-content-center">
+      <li class="page-item" th:classappend="${!paging.hasPrevious()} ? 'disabled'">
+        <a href="javascript:void(0)" th:data-page="@{|?page=${paging.number-1}|}" class="page-link"><span>이전</span></a>
+      </li>
+      <li th:each="page: ${#numbers.sequence(0, paging.totalPages-1)}"
+          th:if="${page >= paging.number-5 and page <= paging.number+5}"
+          th:classappend="${page == paging.number} ? 'active'" class="page-item">
+        <a th:text="${page + 1}" th:href="@{|?page=${page}|}" class="page-link"></a>
+      </li>
+      <li class="page-item" th:classappend="${!paging.hasNext()} ? 'disabled'">
+        <a href="javascript:void(0)" th:data-page="@{|?page=${paging.number+1}|}" class="page-link">
+          <span>다음</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+  <a th:href="|/suggestion/create|">글쓰기</a>
+</div>
+</html>

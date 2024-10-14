@@ -2,6 +2,7 @@ package com.infoShare.calog.domain.Comment;
 
 import com.infoShare.calog.domain.Article.Article;
 import com.infoShare.calog.domain.DataNotFoundException;
+import com.infoShare.calog.domain.Suggestion.Suggestion;
 import com.infoShare.calog.domain.user.SiteUser;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,13 @@ public class CommentService {
         Comment comment = new Comment();
         comment.setContent(content);
         comment.setArticle(article);
+        this.commentRepository.save(comment);
+    }
+
+    public void createSuggestionComment(Suggestion suggestion, String content) {
+        Comment comment = new Comment();
+        comment.setContent(content);
+        comment.setSuggestion(suggestion);
         this.commentRepository.save(comment);
     }
 

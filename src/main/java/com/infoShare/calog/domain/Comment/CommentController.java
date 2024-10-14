@@ -3,6 +3,9 @@ package com.infoShare.calog.domain.Comment;
 import com.infoShare.calog.domain.Article.Article;
 import com.infoShare.calog.domain.Article.ArticleService;
 import com.infoShare.calog.domain.DataNotFoundException;
+import com.infoShare.calog.domain.Suggestion.Suggestion;
+import com.infoShare.calog.domain.Suggestion.SuggestionForm;
+import com.infoShare.calog.domain.Suggestion.SuggestionService;
 import com.infoShare.calog.domain.user.SiteUser;
 import com.infoShare.calog.domain.user.UserService;
 import jakarta.validation.Valid;
@@ -24,6 +27,7 @@ import java.util.function.BiConsumer;
 public class CommentController {
     private final CommentService commentService;
     private final ArticleService articleService;
+    private final SuggestionService suggestionService;
     private final UserService userService;
 
     @PostMapping("create/{id}")
@@ -35,6 +39,16 @@ public class CommentController {
         this.commentService.createComment(article, commentForm.getContent());
         return String.format("redirect:/article/detail/%s", id);
     }
+    @PostMapping("suggestion/{id}")
+    public String create(Model model, @Valid SuggestionForm suggestionForm, BindingResult bindingResult, @PathVariable(value = "id")Integer id) {
+        Suggestion suggestion = this.suggestionService.getSuggestionById(id);
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("suggestion", suggestion);
+        }
+        this.commentService.createSuggestionComment(suggestion, suggestionForm.getContent());
+        return String.format("redirect:/article/detail/%s", id);
+    }
+
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/modify/{id}")

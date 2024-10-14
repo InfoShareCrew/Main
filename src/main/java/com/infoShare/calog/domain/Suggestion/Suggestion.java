@@ -1,22 +1,27 @@
-package com.infoShare.calog.domain.Comment;
+package com.infoShare.calog.domain.Suggestion;
 
-import com.infoShare.calog.domain.Article.Article;
-import com.infoShare.calog.domain.Suggestion.Suggestion;
+import com.infoShare.calog.domain.BoardType.BoardType;
+import com.infoShare.calog.domain.Comment.Comment;
 import com.infoShare.calog.domain.user.SiteUser;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 @Getter
 @Setter
 @Entity
-public class Comment {
+public class Suggestion {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+    @Column(length = 200)
+    private String title;
 
     @Column(columnDefinition = "TEXT")
     private String content;
@@ -25,11 +30,13 @@ public class Comment {
 
     private LocalDateTime modifyDate;
 
-    @ManyToOne
-    private Article article;
+    private Long view = 0L;
+
+    @OneToMany(mappedBy = "suggestion", cascade = CascadeType.REMOVE)
+    private List<Comment> commentList;
 
     @ManyToOne
-    private Suggestion suggestion;
+    private BoardType boardType;
 
     @ManyToOne
     private SiteUser author;
