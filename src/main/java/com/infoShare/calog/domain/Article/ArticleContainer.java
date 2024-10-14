@@ -11,6 +11,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
+
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("article")
@@ -25,7 +27,7 @@ public class ArticleContainer {
     }
 
     @GetMapping("/detail/{id}")
-    public String detail(Model model, @PathVariable(value="id") Integer id, CommentForm commentForm) {
+    public String detail(Model model, @PathVariable(value="id") Integer id, CommentForm commentForm, Principal principal) {
         Article article = this.articleService.getArticleById(id);
         model.addAttribute("article", article);
         this.articleService.viewUp(article);

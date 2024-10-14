@@ -20,14 +20,13 @@
 .full-h {height: 100%;}
 
 /** 컴포넌트 **/
-.btn {display: block; padding: 8px 8px; border-radius: 10px;}
+.btn {display: block; padding: 8px 8px; border-radius: 10px; cursor: pointer;}
 .btn-b {display: block; padding: 8px 8px; border-radius: 10px; border: 1px solid var(--d-3d-3d-3);}
 .btn-primary {background-color: var(--x-0d-6efd); color: var(--ffffff);}
 .home-img {height: 33px;}
-.user-box {display: flex; gap: 8px;}
 .input {display: block; padding: 8px 8px; border-radius: 10px; border: 1px solid var(--d-3d-3d-3);}
 .kakao {background-color: var(--kakao);}
-.d-block {display: block;}
+.d-none {display: none;}
 
 /** 박스 box **/
 .img-box {display: flex; overflow: hidden;}
