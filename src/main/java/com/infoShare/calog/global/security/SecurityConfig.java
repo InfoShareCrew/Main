@@ -31,7 +31,7 @@ public class SecurityConfig {
                         .logoutSuccessUrl("/")
                         .invalidateHttpSession(true))
                 .oauth2Login((oauth2) -> oauth2
-                        .defaultSuccessUrl("/loginSuccess")
+                        .defaultSuccessUrl("/")
                         .failureUrl("/login?error=true"));
 
         return http.build();

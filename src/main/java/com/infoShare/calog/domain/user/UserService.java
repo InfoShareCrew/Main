@@ -15,22 +15,22 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    @Transactional
-    public SiteUser processGoogleUser(String email, String nickname) {
-        return userRepository.findByEmail(email).map(user -> {
-            // 기존 사용자 업데이트
-            user.updateNickname(nickname);
-            return userRepository.save(user);
-        }).orElseGet(() -> {
-            // 새로운 사용자 등록
-            SiteUser siteUser = SiteUser.builder()
-                    .email(email)
-                    .password(passwordEncoder.encode("")) // 비밀번호를 빈 문자열로 설정
-                    .nickname(nickname)
-                    .build();
-            return userRepository.save(siteUser);
-        });
-    }
+//    @Transactional
+//    public SiteUser processGoogleUser(String email, String nickname) {
+//        return userRepository.findByEmail(email).map(user -> {
+//            // 기존 사용자 업데이트
+//            user.updateNickname(nickname);
+//            return userRepository.save(user);
+//        }).orElseGet(() -> {
+//            // 새로운 사용자 등록
+//            SiteUser siteUser = SiteUser.builder()
+//                    .email(email)
+//                    .password(passwordEncoder.encode("")) // 비밀번호를 빈 문자열로 설정
+//                    .nickname(nickname)
+//                    .build();
+//            return userRepository.save(siteUser);
+//        });
+//    }
 
     public void assignRoleToUser(String email, UserRole role) {
         SiteUser user = userRepository.findByEmail(email)
