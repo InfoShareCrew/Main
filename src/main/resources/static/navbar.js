@@ -1,9 +1,10 @@
 $(document).ready(function() {
-    $.get("/user/name",
-    function(result) {
-        console.log(result);
-        $("#profile-name").text(result);
-        $("#profile-img").attr('src', '../img/e2729fba28172ae8831a761a9c60d35c.jpg');
+    $.get("/user/personal-info",
+    function(user) {
+        console.log(user);
+        $("#profile-name").text(user.nickname);
+        $("#profile-img").attr('src', `/img/${user.id}.jpg`);
+        $("#personal-link").attr('href', `/user/personal/${user.id}`)
     })
     // 유저 클릭 시 세부메뉴 토글
     $("#user-btn").click(function() {

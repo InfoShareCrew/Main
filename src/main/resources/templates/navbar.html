@@ -27,7 +27,7 @@
         </div>
       </div>
       <div class="user-box d-none" id="user-box" sec:authorize="isAuthenticated()">
-        <div class="btn"><span class="f-size-14">개인 페이지</span></div>
+        <div class="btn"><a href="" id="personal-link" class="f-size-14">개인 페이지</span></div>
         <div class="btn"><span class="f-size-14">카페 만들기</span></div>
         <div class="btn"><a th:href="@{/user/logout}" class="f-size-14">로그아웃</a></div>
       </div>

@@ -17,6 +17,9 @@ spring:
   profiles:
     include: secret
 
+  jackson:
+    time-zone: UTC
+
 # 추가: Security 설정 파일 포함
 
 logging:

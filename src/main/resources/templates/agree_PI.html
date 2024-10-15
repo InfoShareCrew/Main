@@ -1,11 +1,11 @@
-<div th:fragment="personalInformationUseAgreement" class="popup-container center-box">
+<div th:fragment="personalInformationUseAgreement" class="popup-container center-box d-none" id="popup-box">
     <div class="popup-box">
         <div class="top-box">
             <div class="text-box"><span class="f-size-21 f-weight-5">개인정보동의서</span></div>
             <button onclick="
                 console.log($(this).parent().parent().parent());
                 $(this).parent().parent().parent().removeClass('d-block');
-            "><img th:src="@{/img/X.png}" alt="X버튼"></button>
+            "><img th:src="@{/img/X.png}" alt="X버튼" id="x_btn"></button>
         </div>
         <div class="contents">
             <span class="f-size-13">

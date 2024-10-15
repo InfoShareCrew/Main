@@ -1,0 +1,104 @@
+<html layout:decorate="~{layout}">
+<!-- 스와이퍼 -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+<div layout:fragment="content" class="main-contents">
+  <div class="left-side">
+    <div class="menu-list">
+      <ul>
+        <li class="menu-1"><a href="" class="f-size-16 f-weight-6 btn-b full-w">카페 홈</a></li>
+        <li class="menu-2"><a href="" class="f-size-16 btn full-w">이웃</a></li>
+        <li class="menu-3"><a href="" class="f-size-16 btn full-w">인기글</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="air-box"></div>
+  <div class="center personal-contents">
+    <div class="profile-box">
+      <div class="img-box"><img th:src="@{|http://localhost:8080/img/${user.id}.jpg|}" alt="프로필사진"></div>
+      <div class="detail-box">
+        <div class="text-box uname"><span class="f-size-18 f-weight-6" th:text="${user.nickname}"></span></div>
+        <div class="text-box intro"><span class="f-size-14" th:text="${user.intro}"></span></div>
+        <div class="address">
+          <div class="text-box" th:if="addressList != null" th:each="address : ${addressList}"><span class="f-size-14" th:text="${address}"></span></div>
+        </div>
+      </div>
+      <div><button class="btn-b" onclick=""><span class="f-size-14 f-weight-5">수정</span></button></div>
+    </div>
+    <div class="post-box dp-flex-clmb">
+      <div class="category">
+        <div class="ctgr-box-in btn"><span>최신순</span></div>
+        <div class="ctgr-box-my btn"><span>인기순</span></div>
+      </div>
+      <div class="post-list dp-flex-clmb">
+        <div class="post post-1">
+          <div class="title"><span class="f-size-16 f-weight-6">글 제목</span></div>
+          <div class="detail-box">
+            <div class="text-box"><span>카페이름</span></div>
+            <div class="view-box">
+              <div class="img-box"><img th:src="@{/img/Eye.png}" alt="조회수 아이콘"></div>
+              <span class="f-size-14">1000</span>
+            </div>
+            <div class="rcmd-box">
+              <div class="img-box"><img th:src="@{/img/Heart.png}" alt="추천 아이콘"></div>
+              <span class="f-size-14">24</span>
+            </div>
+            <div class="cmt-box">
+              <div class="img-box"><img th:src="@{/img/Message_circle.png}" alt="댓글 아이콘"></div>
+              <span class="f-size-14">24</span>
+            </div>
+          </div>
+          <div class="content"><span class="f-size-14">글 내용</span></div>
+        </div>
+        <div class="post post-2">
+          <div class="title"><span class="f-size-16 f-weight-6">글 제목</span></div>
+          <div class="detail-box">
+            <div class="text-box"><span>카페이름</span></div>
+            <div class="view-box">
+              <div class="img-box"><img th:src="@{/img/Eye.png}" alt="조회수 아이콘"></div>
+              <span class="f-size-14">1000</span>
+            </div>
+            <div class="rcmd-box">
+              <div class="img-box"><img th:src="@{/img/Heart.png}" alt="추천 아이콘"></div>
+              <span class="f-size-14">24</span>
+            </div>
+            <div class="cmt-box">
+              <div class="img-box"><img th:src="@{/img/Message_circle.png}" alt="댓글 아이콘"></div>
+              <span class="f-size-14">24</span>
+            </div>
+          </div>
+          <div class="content"><span class="f-size-14">글 내용</span></div>
+        </div>
+        <div class="post post-3">
+          <div class="title"><span class="f-size-16 f-weight-6">글 제목</span></div>
+          <div class="detail-box">
+            <div class="text-box"><span>카페이름</span></div>
+            <div class="view-box">
+              <div class="img-box"><img th:src="@{/img/Eye.png}" alt="조회수 아이콘"></div>
+              <span class="f-size-14">1000</span>
+            </div>
+            <div class="rcmd-box">
+              <div class="img-box"><img th:src="@{/img/Heart.png}" alt="추천 아이콘"></div>
+              <span class="f-size-14">24</span>
+            </div>
+            <div class="cmt-box">
+              <div class="img-box"><img th:src="@{/img/Message_circle.png}" alt="댓글 아이콘"></div>
+              <span class="f-size-14">24</span>
+            </div>
+          </div>
+          <div class="content"><span class="f-size-14">글 내용</span></div>
+        </div>
+      </div>
+    </div>
+    div.
+  </div>
+  <div class="right-side"></div>
+</div>
+<!-- 자바 스크립트 -->
+<script layout:fragment="script" type='text/javascript'>
+  $(document).ready(function() {
+    
+  })
+</script>
+</html>

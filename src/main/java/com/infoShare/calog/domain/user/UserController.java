@@ -4,6 +4,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,6 +13,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @RequestMapping("/user")
 @Controller
@@ -88,9 +93,34 @@ public class UserController {
         return "welcome"; // 사용자 환영 페이지
     }
 
-    @GetMapping("/name")
+    @GetMapping("/password")
+    public String findPassword(UserPasswordForm userPasswordForm) {
+        return "modify_password";
+    }
+
+    @GetMapping("/personal-info")
+    @PreAuthorize("isAuthenticated()")
     @ResponseBody
-    public String returnName(Principal principal) {
-        return this.userService.findByEmail(principal.getName()).getNickname();
+    public SiteUser returnName(Principal principal) {
+        return this.userService.findByEmail(principal.getName());
+    }
+
+    @GetMapping("/personal/{userId}")
+    @PreAuthorize("isAuthenticated()")
+    public String personalPage(Model model, @PathVariable(value = "userId") Long id, Principal principal) {
+        SiteUser user = this.userService.findByEmail(principal.getName());
+
+        List<String> addressList = new ArrayList<>();
+        if (user.getAddress() != null) {
+            String[] parts = user.getAddress().split("::");
+            addressList = new ArrayList<>(Arrays.asList(parts));
+            if (!addressList.isEmpty()) { // 리스트가 비어 있지 않은 경우에만
+                addressList.remove(addressList.size() - 1); // 마지막 비어있는 문자열 제거
+            }
+        }
+
+        model.addAttribute("addressList", addressList);
+        model.addAttribute("user", user);
+        return "personal";
     }
 }

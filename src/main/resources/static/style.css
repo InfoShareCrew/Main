@@ -29,7 +29,7 @@ nav > div {display: flex; width: 100%;}
 .nav #user-btn {cursor: pointer;}
 .nav #user-btn > div {display: flex; gap: 8px; align-items: center;}
 .nav #user-box {position: absolute; right: 0; top: 55px; background-color: var(--ffffff); border: 1px solid var(--d-3d-3d-3);}
-.nav #user-box > div {border-radius: 0; border-top: 1px solid var(--d-3d-3d-3); display: flex; justify-content: flex-end;}
+.nav #user-box > div {border-radius: 0; display: flex; justify-content: flex-end;}
 .main-contents {display: flex; padding: 32px 0; width: 1110px; margin: 0 auto; gap: 32px; margin-top: 66px;}
 
 
@@ -88,13 +88,23 @@ nav > div {display: flex; width: 100%;}
 .login-container .menu-box span {color: var(--d-3d-3d-3);}
 
 
-/***** 회원가입 화면 *****/
+/***** 회원가입 화면 & 비밀번호 변경 *****/
 .main-contents .signup-container {padding-top: 50px;}
 .main-contents .signup-container .form-box {border-top: 1px solid var(--d-3d-3d-3); border-bottom: none; width: 400px;}
-.signup-container .form-box .nick-box {display: flex; gap: 8px;}
+.signup-container .form-box .nick-box, .email-box {display: flex; gap: 8px;}
 .signup-container .nick-box input {flex-grow: 1;}
+.signup-container .email-box input {flex-grow: 1;}
 .signup-container .agree-box {display: flex; flex-direction: row; justify-content: space-between;}
 .signup-container .agree-box span {color: var(--x-999999); text-decoration: underline; cursor: pointer;}
 
 
-
+/***** 개인페이지 *****/
+.personal-contents .profile-box {display: flex; gap: 16px;}
+.personal-contents .profile-box .img-box {width: 120px; height: 120px; border-radius: 60px;}
+.personal-contents .profile-box .detail-box {flex-grow: 1; display: flex; gap: 8px;}
+.personal-contents .post-box {gap: 16px;}
+.personal-contents .post-box .category {display: flex; gap: 16px;}
+.personal-contents .post-box .post-list {gap: 8px;}
+.personal-contents .post-list .post {display: flex; flex-direction: column; gap: 8px;}
+.personal-contents .post-list .detail-box {display: flex; gap: 8px; align-items: center; color: var(--d-3d-3d-3);}
+.personal-contents .detail-box > div {display: flex; gap: 2px;}
