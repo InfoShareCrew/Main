@@ -38,11 +38,11 @@
 </div>
 </body>
 <script layout:fragment="script" type='text/javascript'>
-    Kakao.init('417286d7f44c1925fffa003529f1bef8');
+    Kakao.init('ec19bd6d07318000e465741c8e174c4f');
       function loginWithKakao() {
           Kakao.Auth.login({
               success: function(authObj) {
-                  location.href = '/login/oauth2/callback/kakao';
+                  location.href = '/oauth2/authorization/kakao';
               },
               fail: function(err) {
                   alert(JSON.stringify(err));

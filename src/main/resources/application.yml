@@ -1,29 +1,34 @@
 spring:
-  application:
-    name: calog
-
-  datasource:
-    driverClassName: org.mariadb.jdbc.Driver
-    url: jdbc:mariadb://127.0.0.1:3306/info_share
-    username: root
-    password: ""
-
-  jpa:
-    hibernate:
-      ddl-auto: update
-      properties:
-        format_sql: true
-        show_sql: true
   profiles:
+    active: dev
     include: secret
-
-# 추가: Security 설정 파일 포함
-
-logging:
-  level:
-    org:
+  security:
+    oauth2:
+      client:
+        registration:
+          kakao:
+            scope:
+            client-name: Kakao
+            authorization-grant-type: authorization_code
+            redirect-uri: 'http://localhost:8080/{action}/oauth2/code/{registrationId}'
+        provider:
+          kakao:
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
+            user-name-attribute: id
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+  jpa:
+    properties:
       hibernate:
-        orm:
-          jdbc:
-            bind: TRACE
-            extract: TRACE
+        default_batch_fetch_size: 100 # Lazy ??? ? ? ??? DB?? ???? ???? ?
+        show_sql: true # SQL ??? ?? ?? ???
+        format_sql: true # SQL ??? ?????
+        use_sql_comments: true # SQL ??? ???
+  logging:
+    level:
+      org.hibernate.SQL: DEBUG
+      org.hibernate.orm.jdbc.bind: TRACE
+      org.hibernate.orm.jdbc.extract: TRACE
+      org.springframework.transaction.interceptor: TRACE

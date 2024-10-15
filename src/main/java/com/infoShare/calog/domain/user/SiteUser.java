@@ -36,4 +36,8 @@ public class SiteUser extends BaseEntity {
     @CollectionTable(name = "siteuser_roles", joinColumns = @JoinColumn(name = "siteuser_id"))
     @Enumerated(EnumType.STRING)
     private Set<UserRole> roles = new HashSet<>();
+
+    public void updateNickname(String nickname) {
+        this.nickname = nickname;
+    }
 }

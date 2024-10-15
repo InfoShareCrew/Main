@@ -2,7 +2,7 @@ package com.infoShare.calog.domain.Article;
 
 import com.infoShare.calog.domain.Comment.CommentForm;
 import com.infoShare.calog.domain.user.SiteUser;
-import com.infoShare.calog.domain.user.service.UserService;
+import com.infoShare.calog.domain.user.UserService;
 import com.infoShare.calog.global.jpa.BaseEntity;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
