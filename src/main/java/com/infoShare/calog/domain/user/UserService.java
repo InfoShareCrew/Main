@@ -32,21 +32,33 @@ public class UserService {
     }
 
     @Transactional
-    public SiteUser whenSocialLogin(String providerTypeCode, String email, String nickname) {
+    public SiteUser whenSocialLogin(String providerTypeCode, String email, String nickname, String password) {
         Optional<SiteUser> opSiteUser = findByEmail(email);
 
-        if (opSiteUser.isPresent()) return opSiteUser.get();
+        if (opSiteUser.isPresent()) {
+            return opSiteUser.get(); // 기존 사용자 반환
+        }
 
-        // 소셜 로그인을 통한 가입시 비밀번호는 없다.
-        return join(email, "", nickname); // 최초 로그인 시 딱 한번 실행
+        // 비밀번호가 null이거나 빈 문자열인 경우 랜덤 비밀번호 생성
+        String finalPassword = (password == null || password.isEmpty()) ? generateRandomPassword() : password;
+        return join(email, finalPassword, nickname); // 최초 로그인 시 딱 한번 실행
     }
 
-    private Optional<SiteUser> findByEmail(String email){
+    // 랜덤 비밀번호 생성 메서드
+    private String generateRandomPassword() {
+        return RandomStringUtils.randomAlphanumeric(10); // 10자리 랜덤 비밀번호
+    }
+
+    private Optional<SiteUser> findByEmail(String email) {
         return userRepository.findByEmail(email);
     }
 
     public SiteUser getUser(String email) {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new DataNotFoundException("siteuser not found"));
+    }
+
+    public void save(SiteUser user) {
+        userRepository.save(user);
     }
 }

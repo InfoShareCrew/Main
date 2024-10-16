@@ -41,7 +41,9 @@ public class SiteUser extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Set<UserRole> roles = new HashSet<>();
 
-    public void updateNickname(String nickname) {
+    public void updateBlog(String intro, String address, String nickname) {
+        this.intro = intro;
+        this.address = address;
         this.nickname = nickname;
     }
 }
