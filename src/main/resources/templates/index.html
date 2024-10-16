@@ -6,7 +6,6 @@
 <div layout:fragment="content" class="main-contents">
   <!-- 고정 좌측 메뉴 -->
   <div th:replace="~{index_left_side :: leftSideFragment }"></div>
-  <div class="air-box"></div>
   <div class="center">
     <!-- 내 카페 -->
     <div class="my-cafe-box" sec:authorize="isAuthenticated()">

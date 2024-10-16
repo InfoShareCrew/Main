@@ -34,10 +34,10 @@ nav > div {display: flex; width: 100%;}
 
 
 /***** 홈화면 *****/
-.main-contents > .left-side {width: 160px; position: fixed;}
-.main-contents > .left-side ul {display: flex; flex-direction: column; gap: 8px;}
-.main-contents > .left-side ul:first-child > a {background-color: var(--colourmainblue-100);}
-.main-contents > .air-box {width: 160px;}
+.main-contents > div > .left-side {width: 160px; position: fixed;}
+.main-contents > div > .left-side ul {display: flex; flex-direction: column; gap: 8px;}
+.main-contents > div > .left-side ul:first-child > a {background-color: var(--colourmainblue-100);}
+.main-contents > div > .air-box {width: 160px;}
 .main-contents > .center {border-left: 1px solid var(--d-3d-3d-3); padding: 0 32px; display: flex; flex-direction: column; gap: 64px; flex-grow: 1;}
 /* my-cafe-box */
 .center > .my-cafe-box {display: flex; flex-direction: column; gap: 16px;}
@@ -101,7 +101,7 @@ nav > div {display: flex; width: 100%;}
 /***** 개인페이지 *****/
 .personal-contents .profile-box {display: flex; gap: 16px;}
 .personal-contents .profile-box .img-box {width: 120px; height: 120px; border-radius: 60px;}
-.personal-contents .profile-box .detail-box {padding: 16px; flex-grow: 1; display: flex; gap: 8px;}
+.personal-contents .profile-box .detail-box {padding: 16px; flex-grow: 1; display: flex; flex-direction: column; gap: 8px;}
 .personal-contents .post-box {gap: 16px;}
 .personal-contents .post-box .category {display: flex; gap: 16px;}
 .personal-contents .post-box .post-list {gap: 8px;}
@@ -118,3 +118,7 @@ nav > div {display: flex; width: 100%;}
 .my-cafe-container .detail {display: flex; gap: 8px; align-items: center; color: var(--d-3d-3d-3);}
 .my-cafe-container .detail .user-box {display: flex; gap: 4px;}
 .my-cafe-container .user-box > .img-box {width: 18px; height: 18px;}
+
+
+/***** 이웃 *****/
+.neighbor .profile-box .address {display: block;}

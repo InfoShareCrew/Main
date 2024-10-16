@@ -47,4 +47,5 @@
 .input {display: block; padding: 8px 8px; border-radius: 10px; border: 1px solid var(--d-3d-3d-3);}
 .kakao {background-color: var(--kakao);}
 .d-none {display: none;}
+.d-block {display: none;}
 
