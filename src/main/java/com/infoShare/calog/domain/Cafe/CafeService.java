@@ -1,12 +1,11 @@
 package com.infoShare.calog.domain.Cafe;
 
-import com.infoShare.calog.domain.MaiorCategory.MajorCategory;
-import com.infoShare.calog.domain.MaiorCategory.MajorCategoryService;
+import com.infoShare.calog.domain.MajorCategory.MajorCategory;
+import com.infoShare.calog.domain.MajorCategory.MajorCategoryService;
 import com.infoShare.calog.domain.MinorCategory.MinorCategory;
 import com.infoShare.calog.domain.MinorCategory.MinorCategoryService;
 import com.infoShare.calog.domain.user.SiteUser;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -29,7 +28,7 @@ public class CafeService {
                 .orElseThrow(() -> new IllegalArgumentException("Invalid cafe ID"));
     }
 
-    public Cafe create(String title, Long majorCategoryId, Long minorCategoryId, SiteUser manager) {
+    public Cafe create(String title, Short majorCategoryId, Short minorCategoryId, SiteUser manager) {
         MajorCategory majorCategory = majorCategoryService.findById(majorCategoryId);
         MinorCategory minorCategory = minorCategoryService.findById(minorCategoryId);
 

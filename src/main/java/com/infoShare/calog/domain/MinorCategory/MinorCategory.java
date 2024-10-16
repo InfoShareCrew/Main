@@ -1,5 +1,5 @@
 package com.infoShare.calog.domain.MinorCategory;
-import com.infoShare.calog.domain.MaiorCategory.MajorCategory;
+import com.infoShare.calog.domain.MajorCategory.MajorCategory;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,10 +12,10 @@ public class MinorCategory {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Short id;
 
     @Column(length = 50)
-    private String title;
+    private String name;
 
     @ManyToOne
     private MajorCategory majorCategory;

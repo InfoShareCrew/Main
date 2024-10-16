@@ -1,14 +1,11 @@
 package com.infoShare.calog.domain.Cafe;
 
-import com.infoShare.calog.domain.MaiorCategory.MajorCategory;
-import com.infoShare.calog.domain.MaiorCategory.MajorCategoryService;
-import com.infoShare.calog.domain.MinorCategory.MinorCategory;
+import com.infoShare.calog.domain.MajorCategory.MajorCategoryService;
 import com.infoShare.calog.domain.MinorCategory.MinorCategoryService;
 import com.infoShare.calog.domain.user.SiteUser;
 import com.infoShare.calog.domain.user.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -34,26 +31,25 @@ public class CafeController {
     }
 
     @GetMapping("/create")
-    public String createForm(Model model) {
-        List<MajorCategory> majorCategories = majorCategoryService.findAll();
-        List<MinorCategory> minorCategories = minorCategoryService.findAll();
-
-        model.addAttribute("majorCategories", majorCategories);
-        model.addAttribute("minorCategories", minorCategories);
-
+    public String create(CafeForm cafeForm) {
         return "cafe_form";
     }
 
     @PostMapping("/create")
-    public String create(@RequestParam String title,
-                         @RequestParam Long majorCategoryId,
-                         @RequestParam Long minorCategoryId,
+    public String create(@Valid CafeForm cafeForm,
+                         BindingResult bindingResult,
                          Principal principal) {
+
+        if (bindingResult.hasErrors()){
+            return "cafe_form";
+        }
 
         String email = principal.getName();
         SiteUser manager = userService.getUser(email);
 
-        cafeService.create(title, majorCategoryId, minorCategoryId, manager);
-        return "redirect:/cafes/list";
+        this.cafeService.create(cafeForm.getTitle(),cafeForm.getMajorCategoryId(), cafeForm.getMinorCategoryId(),manager);
+        return "redirect:/cafe/list";
     }
+
+
 }

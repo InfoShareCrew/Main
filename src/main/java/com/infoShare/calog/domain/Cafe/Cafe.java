@@ -1,10 +1,9 @@
 package com.infoShare.calog.domain.Cafe;
 
-import com.infoShare.calog.domain.MaiorCategory.MajorCategory;
+import com.infoShare.calog.domain.MajorCategory.MajorCategory;
 import com.infoShare.calog.domain.MinorCategory.MinorCategory;
 import com.infoShare.calog.domain.user.SiteUser;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Max;
 import lombok.Getter;
 import lombok.Setter;
 

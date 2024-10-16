@@ -1,6 +1,6 @@
 package com.infoShare.calog.domain.MinorCategory;
 
-import com.infoShare.calog.domain.MaiorCategory.MajorCategory;
+import com.infoShare.calog.domain.MajorCategory.MajorCategory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,14 +16,14 @@ public class MinorCategoryService {
         return minorCategoryRepository.findAll();
     }
 
-    public MinorCategory findById(Long id) {
+    public MinorCategory findById(Short id) {
         return minorCategoryRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid minor category ID"));
     }
 
-    public MinorCategory create(String title, MajorCategory majorCategory) {
+    public MinorCategory create(String name, MajorCategory majorCategory) {
         MinorCategory category = new MinorCategory();
-        category.setTitle(title);
+        category.setName(name);
         category.setMajorCategory(majorCategory);
         return minorCategoryRepository.save(category);
     }

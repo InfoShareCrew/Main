@@ -1,11 +1,8 @@
-package com.infoShare.calog.domain.MaiorCategory;
+package com.infoShare.calog.domain.MajorCategory;
 
-import com.infoShare.calog.domain.MinorCategory.MinorCategory;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.Set;
 
 @Entity
 @Getter
@@ -13,8 +10,8 @@ import java.util.Set;
 public class MajorCategory{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Short id;
 
     @Column(length = 50)
-    private String title;
+    private String name;
 }

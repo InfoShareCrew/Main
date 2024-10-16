@@ -1,4 +1,4 @@
-package com.infoShare.calog.domain.MaiorCategory;
+package com.infoShare.calog.domain.MajorCategory;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,14 +15,14 @@ public class MajorCategoryService {
         return majorCategoryRepository.findAll();
     }
 
-    public MajorCategory findById(Long id) {
+    public MajorCategory findById(Short id) {
         return majorCategoryRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid major category ID"));
     }
 
-    public MajorCategory create(String title) {
+    public MajorCategory create(String name) {
         MajorCategory category = new MajorCategory();
-        category.setTitle(title);
+        category.setName(name);
         return majorCategoryRepository.save(category);
     }
 }
