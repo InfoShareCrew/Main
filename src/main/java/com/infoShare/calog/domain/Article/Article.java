@@ -2,8 +2,8 @@ package com.infoShare.calog.domain.Article;
 
 import com.infoShare.calog.domain.BoardType.BoardType;
 import com.infoShare.calog.domain.Comment.Comment;
-import com.infoShare.calog.global.jpa.BaseEntity;
 import com.infoShare.calog.domain.user.SiteUser;
+import com.infoShare.calog.global.jpa.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

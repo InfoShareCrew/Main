@@ -1,20 +1,23 @@
 package com.infoShare.calog.domain.user;
 
+import com.infoShare.calog.domain.user.email.EmailService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/user")
 public class UserController {
     private final UserService userService;
+    private final EmailService emailService;
 
     @GetMapping("/signup")
     public String signup(UserCreateForm userCreateForm) {
@@ -31,7 +34,8 @@ public class UserController {
             return "signup_form";
         }
         try {
-            userService.join(userCreateForm.getEmail(), userCreateForm.getNickname(), userCreateForm.getPassword1());
+            userService.join(userCreateForm.getEmail(), userCreateForm.getPassword1(), userCreateForm.getNickname());
+            emailService.send(userCreateForm.getEmail(), "infoShare 서비스 가입을 환영합니다!", "회원가입 환영 메일");
         } catch (DataIntegrityViolationException e) {
             bindingResult.reject("signupFailed", "이미 등록된 사용자입니다.");
             return "signup_form";

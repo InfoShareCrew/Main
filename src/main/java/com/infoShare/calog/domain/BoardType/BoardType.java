@@ -2,11 +2,11 @@ package com.infoShare.calog.domain.BoardType;
 
 import com.infoShare.calog.domain.BoardCategory.BoardCategory;
 import com.infoShare.calog.global.jpa.BaseEntity;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.time.LocalDateTime;
 
 @Getter
 @Setter

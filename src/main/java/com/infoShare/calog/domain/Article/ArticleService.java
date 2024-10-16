@@ -42,7 +42,7 @@ public class ArticleService {
     }
 
     public void viewUp(Article article) {
-        article.setView(article.getView()+1);
+        article.setView(article.getView() + 1);
         this.articleRepository.save(article);
     }
 

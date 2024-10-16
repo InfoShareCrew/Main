@@ -27,15 +27,15 @@ public class ArticleContainer {
     @GetMapping("/list")
     public String list(Model model,
                        @ModelAttribute("basedEntity") BaseEntity baseEntity,
-                       @RequestParam(value="page", defaultValue="0") int page,
-                       @RequestParam(value="kw", defaultValue = "") String kw) {
+                       @RequestParam(value = "page", defaultValue = "0") int page,
+                       @RequestParam(value = "kw", defaultValue = "") String kw) {
         Page<Article> paging = this.articleService.getList(page);
         model.addAttribute("paging", paging);
         return "article_list";
     }
 
     @GetMapping("/detail/{id}")
-    public String detail(Model model, @PathVariable(value="id") Integer id, CommentForm commentForm) {
+    public String detail(Model model, @PathVariable(value = "id") Integer id, CommentForm commentForm) {
         Article article = this.articleService.getArticleById(id);
         model.addAttribute("article", article);
         this.articleService.viewUp(article);
@@ -49,12 +49,13 @@ public class ArticleContainer {
 
     @PostMapping("/create")
     public String create(@Valid ArticleForm articleForm, BindingResult bindingResult) {
-        if(bindingResult.hasErrors()) {
+        if (bindingResult.hasErrors()) {
             return "article_form";
         }
         this.articleService.createArticle(articleForm.getTitle(), articleForm.getContent());
         return "redirect:/article/list";
     }
+
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/modify/{id}")
     public String modify(Model model, @PathVariable(value = "id") Integer id) {
@@ -67,23 +68,23 @@ public class ArticleContainer {
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/modify/{id}")
     public String modifyArticle(@Valid ArticleForm articleForm, BindingResult bindingResult,
-                                Principal principal, @PathVariable("id") Integer id){
-        if(bindingResult.hasErrors()){
+                                Principal principal, @PathVariable("id") Integer id) {
+        if (bindingResult.hasErrors()) {
             return "article_form";
         }
         Article article = this.articleService.getArticleById(id);
-        if(!article.getAuthor().getNickname().equals(principal.getName())){
+        if (!article.getAuthor().getNickname().equals(principal.getName())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
         }
-        this.articleService.modifyArticle(article, articleForm.getTitle(),articleForm.getContent());
-        return String.format("redirect:/article/detail/%s",id);
+        this.articleService.modifyArticle(article, articleForm.getTitle(), articleForm.getContent());
+        return String.format("redirect:/article/detail/%s", id);
     }
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/delete/{id}")
-    public String deleteArticle(Principal principal, @PathVariable("id") Integer id){
+    public String deleteArticle(Principal principal, @PathVariable("id") Integer id) {
         Article article = this.articleService.getArticleById(id);
-        if(!article.getAuthor().getNickname().equals(principal.getName())){
+        if (!article.getAuthor().getNickname().equals(principal.getName())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "삭제권한이 없습니다.");
         }
         this.articleService.delete(article);
