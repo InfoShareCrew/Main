@@ -1,8 +1,5 @@
 <html layout:decorate="~{layout}">
 <head>
-    <!-- 카카오 JavaScript SDK -->
-    <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
-
 </head>
 <body>
 <div layout:fragment="content" class="main-contents center-box">
@@ -24,7 +21,7 @@
                 </div>
                 <div class="btn-box">
                     <button type="submit" class="btn btn-primary"><span class="f-size-14 f-weight-5">로그인</span></button>
-                    <button class="btn kakao" onclick="loginWithKakao()"><span class="f-size-14 f-weight-5">카카오로 로그인</span></button>
+                    <a class="btn kakao" href="/oauth2/authorization/kakao"><span class="f-size-14 f-weight-5">카카오로 로그인</span></a>
                     <a href="/oauth2/authorization/google" class="btn-b f-size-14 f-weight-5">구글로 로그인</a>
                 </div>
             </form>
@@ -38,16 +35,5 @@
 </div>
 </body>
 <script layout:fragment="script" type='text/javascript'>
-    Kakao.init('ec19bd6d07318000e465741c8e174c4f');
-      function loginWithKakao() {
-          Kakao.Auth.login({
-              success: function(authObj) {
-                  location.href = '/oauth2/authorization/kakao';
-              },
-              fail: function(err) {
-                  alert(JSON.stringify(err));
-              }
-          });
-      }
 </script>
 </html>

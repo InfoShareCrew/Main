@@ -7,6 +7,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
+import org.springframework.security.oauth2.core.OAuth2Error;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,19 +22,37 @@ import java.util.Map;
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     private final UserService userService;
 
-    // 카카오톡 로그인이 성공할 때 마다 이 함수가 실행된다.
     @Override
     @Transactional
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2User oAuth2User = super.loadUser(userRequest);
-        String oauthId = oAuth2User.getName();
-        Map<String, Object> attributes = oAuth2User.getAttributes();
-        Map attributesProperties = (Map) attributes.get("properties");
-        String nickname = (String) attributesProperties.get("nickname");
         String providerTypeCode = userRequest.getClientRegistration().getRegistrationId().toUpperCase();
-        String email = providerTypeCode + "__@%s".formatted(oauthId);
-        SiteUser siteUser = userService.whenSocialLogin(providerTypeCode, email, nickname);
+
+        String oauthId;
+        String email;
+        String nickname;
+
+        if ("GOOGLE".equals(providerTypeCode)) {
+            oauthId = oAuth2User.getAttribute("sub"); // 구글의 고유 ID
+            email = oAuth2User.getAttribute("email"); // 구글 이메일
+            nickname = oAuth2User.getAttribute("name"); // 구글 사용자 이름
+        } else if ("KAKAO".equals(providerTypeCode)) {
+            oauthId = oAuth2User.getName(); // 카카오 ID
+            Map<String, Object> attributes = oAuth2User.getAttributes();
+            Map attributesProperties = (Map) attributes.get("properties");
+            nickname = (String) attributesProperties.get("nickname");
+            email = providerTypeCode + "__@%s".formatted(oauthId); // 카카오 이메일 처리 (예시)
+        } else {
+            throw new OAuth2AuthenticationException(new OAuth2Error("invalid_provider"), "Invalid OAuth2 provider");
+        }
+
+        // 비밀번호 처리: Google의 경우 비밀번호는 빈 문자열이므로 랜덤 비밀번호 생성
+        String password = providerTypeCode.equals("GOOGLE") ? "" : null;
+
+        // 사용자 정보를 데이터베이스에 저장하거나 업데이트
+        SiteUser siteUser = userService.whenSocialLogin(providerTypeCode, email, nickname, password);
         List<GrantedAuthority> authorityList = new ArrayList<>();
-        return new CustomOAuth2User(siteUser.getEmail(), siteUser.getPassword(), authorityList);
+
+        return new CustomOAuth2User(siteUser.getEmail(), siteUser.getPassword(), authorityList, oAuth2User.getAttributes());
     }
 }

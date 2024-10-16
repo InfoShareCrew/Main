@@ -16,7 +16,8 @@
       </div>
     </div>
     <div class="right-box user-box">
-      <a th:href="@{/user/login}" class="f-size-14">로그인</a>
+      <a sec:authorize="isAnonymous()" th:href="@{/user/login}" class="f-size-14">로그인</a>
+      <a sec:authorize="isAuthenticated()" th:href="@{/user/logout}" class="f-size-14">로그아웃</a>
       <a th:href="@{/user/signup}" class="f-size-14">회원가입</a>
     </div>
   </div>

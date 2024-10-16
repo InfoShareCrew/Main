@@ -9,19 +9,19 @@
     <div th:replace="~{form_errors :: formErrorsFragment}"></div>
     <div class="mb-3">
       <label for="username" class="form-label">사용자 Email</label>
-      <input type="text" th:field="*{email}" class="form-control">
+      <input type="text" id="username" th:field="*{email}" class="form-control" autocomplete="email">
     </div>
     <div class="mb-3">
       <label for="password1" class="form-label">비밀번호</label>
-      <input type="password" th:field="*{password1}" class="form-control">
+      <input type="password" id="password1" th:field="*{password1}" class="form-control" autocomplete="new-password">
     </div>
     <div class="mb-3">
       <label for="password2" class="form-label">비밀번호 확인</label>
-      <input type="password" th:field="*{password2}" class="form-control">
+      <input type="password" id="password2" th:field="*{password2}" class="form-control" autocomplete="new-password">
     </div>
     <div class="mb-3">
       <label for="nickname" class="form-label">닉네임</label>
-      <input type="text" th:field="*{nickname}" class="form-control">
+      <input type="text" id="nickname" th:field="*{nickname}" class="form-control" autocomplete="nickname">
     </div>
     <button type="submit" class="btn btn-primary">회원가입</button>
   </form>
