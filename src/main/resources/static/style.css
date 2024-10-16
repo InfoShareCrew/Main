@@ -101,7 +101,7 @@ nav > div {display: flex; width: 100%;}
 /***** 개인페이지 *****/
 .personal-contents .profile-box {display: flex; gap: 16px;}
 .personal-contents .profile-box .img-box {width: 120px; height: 120px; border-radius: 60px;}
-.personal-contents .profile-box .detail-box {flex-grow: 1; display: flex; gap: 8px;}
+.personal-contents .profile-box .detail-box {padding: 16px; flex-grow: 1; display: flex; gap: 8px;}
 .personal-contents .post-box {gap: 16px;}
 .personal-contents .post-box .category {display: flex; gap: 16px;}
 .personal-contents .post-box .post-list {gap: 8px;}

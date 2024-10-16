@@ -3,12 +3,13 @@ package com.infoShare.calog.domain.user;
 import com.infoShare.calog.global.jpa.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
-import org.checkerframework.common.aliasing.qual.Unique;
 
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 @Entity
@@ -37,7 +38,9 @@ public class SiteUser extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Set<UserRole> roles = new HashSet<>();
 
-    public void updateNickname(String nickname) {
+    public void updateBlog(String intro, String address, String nickname) {
+        this.intro = intro;
+        this.address = address;
         this.nickname = nickname;
     }
 }

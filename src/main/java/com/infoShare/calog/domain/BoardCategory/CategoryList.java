@@ -4,14 +4,14 @@ import lombok.Getter;
 
 @Getter
 public enum CategoryList {
-  Category1(""),
-  ADMIN("ROLE_ADMIN"),
-  MANAGER("ROLE_MANAGER"),
-  USER("ROLE_USER");
+    Category1(""),
+    ADMIN("ROLE_ADMIN"),
+    MANAGER("ROLE_MANAGER"),
+    USER("ROLE_USER");
 
-  private final String value;
+    private final String value;
 
-  CategoryList(String value) {
-    this.value = value;
-  }
+    CategoryList(String value) {
+        this.value = value;
+    }
 }

@@ -4,19 +4,11 @@
 <link rel="stylesheet" href="../static/style.css"> -->
 <html layout:decorate="~{layout}">
 <div layout:fragment="content" class="main-contents">
-  <div class="left-side">
-    <div class="menu-list">
-      <ul>
-        <li class="menu-1"><a href="" class="f-size-16 f-weight-6 btn-b full-w">카페 홈</a></li>
-        <li class="menu-2"><a href="" class="f-size-16 btn full-w">이웃</a></li>
-        <li class="menu-3"><a href="" class="f-size-16 btn full-w">인기글</a></li>
-      </ul>
-    </div>
-  </div>
+  <div th:replace="~{index_left_side :: leftSideFragment }"></div>
   <div class="air-box"></div>
   <div class="center personal-contents">
     <div class="profile-box">
-      <div class="img-box"><img th:src="@{|http://localhost:8080/img/${user.id}.jpg|}" alt="프로필사진"></div>
+      <div class="img-box"><img th:src="@{|/img/${user.id}.jpg|}" alt="프로필사진"></div>
       <div class="detail-box">
         <div class="text-box uname"><span class="f-size-18 f-weight-6" th:text="${user.nickname}"></span></div>
         <div class="text-box intro"><span class="f-size-14" th:text="${user.intro}"></span></div>
@@ -35,7 +27,7 @@
         <div class="post post-1">
           <div class="title"><span class="f-size-16 f-weight-6">글 제목</span></div>
           <div class="detail-box">
-            <div class="text-box"><span>카페이름</span></div>
+            <div class="text-box"><span class="f-size-14">카페이름</span></div>
             <div class="view-box">
               <div class="img-box"><img th:src="@{/img/Eye.png}" alt="조회수 아이콘"></div>
               <span class="f-size-14">1000</span>
@@ -54,7 +46,7 @@
         <div class="post post-2">
           <div class="title"><span class="f-size-16 f-weight-6">글 제목</span></div>
           <div class="detail-box">
-            <div class="text-box"><span>카페이름</span></div>
+            <div class="text-box"><span class="f-size-14">카페이름</span></div>
             <div class="view-box">
               <div class="img-box"><img th:src="@{/img/Eye.png}" alt="조회수 아이콘"></div>
               <span class="f-size-14">1000</span>
@@ -73,7 +65,7 @@
         <div class="post post-3">
           <div class="title"><span class="f-size-16 f-weight-6">글 제목</span></div>
           <div class="detail-box">
-            <div class="text-box"><span>카페이름</span></div>
+            <div class="text-box"><span class="f-size-14">카페이름</span></div>
             <div class="view-box">
               <div class="img-box"><img th:src="@{/img/Eye.png}" alt="조회수 아이콘"></div>
               <span class="f-size-14">1000</span>

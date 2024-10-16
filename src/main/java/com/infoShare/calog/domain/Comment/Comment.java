@@ -1,10 +1,13 @@
 package com.infoShare.calog.domain.Comment;
 
 import com.infoShare.calog.domain.Article.Article;
-import com.infoShare.calog.global.jpa.BaseEntity;
 import com.infoShare.calog.domain.Suggestion.Suggestion;
 import com.infoShare.calog.domain.user.SiteUser;
-import jakarta.persistence.*;
+import com.infoShare.calog.global.jpa.BaseEntity;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import lombok.Getter;
 import lombok.Setter;
 

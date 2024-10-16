@@ -1,5 +1,7 @@
 package com.infoShare.calog.domain.user;
 
+import com.infoShare.calog.domain.user.email.EmailService;
+import com.infoShare.calog.domain.user.email.EmailService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -20,6 +22,7 @@ import java.util.List;
 @RequestMapping("/user")
 public class UserController {
     private final UserService userService;
+    private final EmailService emailService;
 
     @GetMapping("/signup")
     public String signup(UserCreateForm userCreateForm) {
@@ -36,7 +39,8 @@ public class UserController {
             return "signup_form";
         }
         try {
-            userService.join(userCreateForm.getEmail(), userCreateForm.getNickname(), userCreateForm.getPassword1());
+            userService.join(userCreateForm.getEmail(), userCreateForm.getPassword1(), userCreateForm.getNickname());
+            emailService.send(userCreateForm.getEmail(), "infoShare 서비스 가입을 환영합니다!", "회원가입 환영 메일");
         } catch (DataIntegrityViolationException e) {
             bindingResult.reject("signupFailed", "이미 등록된 사용자입니다.");
             return "signup_form";
@@ -61,31 +65,5 @@ public class UserController {
     @GetMapping("/password")
     public String findPassword(UserFindPasswordForm userPasswordForm) {
         return "modify_password";
-    }
-
-    @GetMapping("/personal-info")
-    @PreAuthorize("isAuthenticated()")
-    @ResponseBody
-    public SiteUser returnUser(Principal principal) {
-        return this.userService.findByEmail(principal.getName()).get();
-    }
-
-    @GetMapping("/personal/{userId}")
-    @PreAuthorize("isAuthenticated()")
-    public String personalPage(Model model, @PathVariable(value = "userId") Long id, Principal principal) {
-        SiteUser user = this.userService.findByEmail(principal.getName()).get();
-
-        List<String> addressList = new ArrayList<>();
-        if (user.getAddress() != null) {
-            String[] parts = user.getAddress().split("::");
-            addressList = new ArrayList<>(Arrays.asList(parts));
-            if (!addressList.isEmpty()) { // 리스트가 비어 있지 않은 경우에만
-                addressList.remove(addressList.size() - 1); // 마지막 비어있는 문자열 제거
-            }
-        }
-
-        model.addAttribute("addressList", addressList);
-        model.addAttribute("user", user);
-        return "personal";
     }
 }

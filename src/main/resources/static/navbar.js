@@ -1,10 +1,10 @@
 $(document).ready(function() {
-    $.get("/user/personal-info",
+    $.get("/blog/personal-info",
     function(user) {
         console.log(user);
         $("#profile-name").text(user.nickname);
         $("#profile-img").attr('src', `/img/${user.id}.jpg`);
-        $("#personal-link").attr('href', `/user/personal/${user.id}`)
+        $("#personal-link").attr('href', `/blog/${user.id}`)
     })
     // 유저 클릭 시 세부메뉴 토글
     $("#user-btn").click(function() {
