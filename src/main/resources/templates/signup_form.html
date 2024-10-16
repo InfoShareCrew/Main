@@ -1,29 +1,49 @@
 <html layout:decorate="~{layout}">
-<div layout:fragment="content" class="container my-3">
-  <div class="my-3 border-bottom">
-    <div>
-      <h4>회원가입</h4>
+<div layout:fragment="content" class="main-contents center-box">
+  <div class="signup-container">
+    <div class="form-container">
+      <div class="text-box">
+        <span class="f-size-21 f-weight-5">회원가입</span>
+      </div>
+      <form th:action="@{/user/signup}" th:object="${userCreateForm}" method="post" class="form-box">
+        <!-- <div th:replace="~{form_errors :: formErrorsFragment}"></div> -->
+        <div>
+          <!-- <label for="username" class="form-label">사용자 Email</label> -->
+          <input type="text" th:field="*{email}" class="input f-size-14 f-weight-5" placeholder="사용자Email">
+          <div class="nick-box">
+            <input type="text" th:field="*{nickname}" class="input f-size-14 f-weight-5" placeholder="닉네임">
+            <button class="btn btn-primary" type="button" onclick="check_nick"><span class="f-size-13">중복확인</span></button>
+          </div>
+          <!-- <label for="password1" class="form-label">비밀번호</label> -->
+          <input type="password" th:field="*{password1}" class="input f-size-14 f-weight-5" placeholder="비밀번호">
+          <!-- <label for="password2" class="form-label">비밀번호 확인</label> -->
+          <input type="password" th:field="*{password2}" class="input f-size-14 f-weight-5" placeholder="비밀번호 확인">
+          <!-- <label for="nickname" class="form-label">닉네임</label> -->
+        </div>
+        <div class="agree-box">
+          <span class="f-size-13" id="popup">[필수] 개인정보 이용 동의</span>
+          <input type="checkbox" name="agree-1" value="1">
+        </div>
+        <button type="submit" class="btn btn-primary"><span class="f-size-16 f-weight-6">회원가입</span></button>
+      </form>
     </div>
   </div>
-  <form th:action="@{/user/signup}" th:object="${userCreateForm}" method="post">
-    <div th:replace="~{form_errors :: formErrorsFragment}"></div>
-    <div class="mb-3">
-      <label for="username" class="form-label">사용자 Email</label>
-      <input type="text" th:field="*{email}" class="form-control">
-    </div>
-    <div class="mb-3">
-      <label for="password1" class="form-label">비밀번호</label>
-      <input type="password" th:field="*{password1}" class="form-control">
-    </div>
-    <div class="mb-3">
-      <label for="password2" class="form-label">비밀번호 확인</label>
-      <input type="password" th:field="*{password2}" class="form-control">
-    </div>
-    <div class="mb-3">
-      <label for="nickname" class="form-label">닉네임</label>
-      <input type="text" th:field="*{nickname}" class="form-control">
-    </div>
-    <button type="submit" class="btn btn-primary">회원가입</button>
-  </form>
 </div>
+<script layout:fragment="script" type='text/javascript'>
+  $(document).ready(function() {
+    $("#popup").click(function() {
+        console.log("#popup 클릭");
+        $("#popup-box").removeClass('d-none');
+    });
+
+    $("#x_btn").click(() => {
+      $("#popup-box").addClass('d-none');
+    })
+
+  });
+  function check_nick() {
+      console.log("닉네임 중복체크");
+  }
+</script>
 </html>
+<div th:replace="~{agree_PI :: personalInformationUseAgreement}"></div>

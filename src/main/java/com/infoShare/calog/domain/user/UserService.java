@@ -58,7 +58,7 @@ public class UserService {
         return join(email, "", nickname); // 최초 로그인 시 딱 한번 실행
     }
 
-    private Optional<SiteUser> findByEmail(String email){
+    protected Optional<SiteUser> findByEmail(String email){
         return userRepository.findByEmail(email);
     }
 

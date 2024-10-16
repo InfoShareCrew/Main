@@ -8,7 +8,7 @@
 <div layout:fragment="content" class="main-contents center-box">
     <div class="login-container">
         <div class="text-box"><span class="f-size-21 f-weight-5">InfoShare에 오신 걸 환영합니다.</span></div>
-        <div class="login-box">
+        <div class="form-container">
             <div class="text-box"><span class="f-size-21 f-weight-5">로그인</span></div>
             <form th:action="@{/user/login}" method="post" class="form-box">
                 <div th:if="${param.error}">
@@ -29,20 +29,20 @@
                 </div>
             </form>
             <div class="menu-box">
-                <a href="" class="f-size-13">비밀번호 변경</a>
+                <a th:href="@{/user/password}" class="f-size-13">비밀번호 변경</a>
                 <span>|</span>
-                <a href="/user/signup" class="f-size-13">회원가입</a>
+                <a th:href="@{/user/signup}" class="f-size-13">회원가입</a>
             </div>
         </div>
     </div>
 </div>
 </body>
 <script layout:fragment="script" type='text/javascript'>
-    Kakao.init('ec19bd6d07318000e465741c8e174c4f');
+    Kakao.init('417286d7f44c1925fffa003529f1bef8');
       function loginWithKakao() {
           Kakao.Auth.login({
               success: function(authObj) {
-                  location.href = '/oauth2/authorization/kakao';
+                  location.href = '/login/oauth2/callback/kakao';
               },
               fail: function(err) {
                   alert(JSON.stringify(err));
