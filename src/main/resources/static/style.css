@@ -105,6 +105,16 @@ nav > div {display: flex; width: 100%;}
 .personal-contents .post-box {gap: 16px;}
 .personal-contents .post-box .category {display: flex; gap: 16px;}
 .personal-contents .post-box .post-list {gap: 8px;}
-.personal-contents .post-list .post {display: flex; flex-direction: column; gap: 8px;}
+.personal-contents .post-list .post {display: flex; flex-direction: column; gap: 4px;}
 .personal-contents .post-list .detail-box {display: flex; gap: 8px; align-items: center; color: var(--d-3d-3d-3);}
 .personal-contents .detail-box > div {display: flex; gap: 2px;}
+.my-cafe-container {display: flex; flex-direction: column; gap: 32px;}
+.my-cafe-container .cafe-list {display: flex; flex-direction: column; gap: 16px;}
+.my-cafe-container .cafe-list > div {display: flex; gap: 16px;}
+.my-cafe-container .cafe-list .profile-img {width: 48px; height: 48px; border-radius: 24px;}
+.my-cafe-container .cafe-list .content > div {gap: 8px;}
+.my-cafe-container .cafe-list .content-2 {display: flex; flex-direction: column; gap: 8px;}
+.my-cafe-container .content-2 > div {display: flex; flex-direction: column; gap: 4px;}
+.my-cafe-container .detail {display: flex; gap: 8px; align-items: center; color: var(--d-3d-3d-3);}
+.my-cafe-container .detail .user-box {display: flex; gap: 4px;}
+.my-cafe-container .user-box > .img-box {width: 18px; height: 18px;}
