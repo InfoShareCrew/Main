@@ -28,7 +28,7 @@ public class CommentService {
         this.commentRepository.save(comment);
     }
 
-    public Comment getComment(Integer id) {
+    public Comment getComment(Long id) {
         Optional<Comment> optionalComment = this.commentRepository.findById(id);
         if (optionalComment.isPresent()) {
             return optionalComment.get();

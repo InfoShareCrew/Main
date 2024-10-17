@@ -36,7 +36,7 @@ public class SuggestionController {
     }
 
     @GetMapping("/detail/{id}")
-    public String detail(Model model, @PathVariable(value = "id") Integer id, CommentForm commentForm) {
+    public String detail(Model model, @PathVariable(value = "id") Long id, CommentForm commentForm) {
         Suggestion suggestion = this.suggestionService.getSuggestionById(id);
         model.addAttribute("suggestion", suggestion);
         this.suggestionService.viewUp(suggestion);
@@ -59,7 +59,7 @@ public class SuggestionController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/modify/{id}")
-    public String modify(Model model, @PathVariable(value = "id") Integer id) {
+    public String modify(Model model, @PathVariable(value = "id") Long id) {
         Suggestion suggestion = this.suggestionService.getSuggestionById(id);
         model.addAttribute("suggestion", suggestion);
         return "suggestion_form";
@@ -68,7 +68,7 @@ public class SuggestionController {
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/modify/{id}")
     public String modifySuggestion(@Valid SuggestionForm suggestionForm, BindingResult bindingResult,
-                                   Principal principal, @PathVariable("id") Integer id) {
+                                   Principal principal, @PathVariable("id") Long id) {
         if (bindingResult.hasErrors()) {
             return "suggestion_form";
         }
@@ -82,7 +82,7 @@ public class SuggestionController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/delete/{id}")
-    public String deleteSuggestion(Principal principal, @PathVariable("id") Integer id) {
+    public String deleteSuggestion(Principal principal, @PathVariable("id") Long id) {
         Suggestion suggestion = this.suggestionService.getSuggestionById(id);
         if (!suggestion.getAuthor().getNickname().equals(principal.getName())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "삭제권한이 없습니다.");
@@ -94,7 +94,7 @@ public class SuggestionController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/vote/{id}")
     @ResponseBody
-    public String suggestionVote(@PathVariable("id") Integer id, Principal principal) {
+    public String suggestionVote(@PathVariable("id") Long id, Principal principal) {
         Suggestion suggestion = this.suggestionService.getSuggestionById(id);
         SiteUser siteUser = this.userService.getUser(principal.getName());
         this.suggestionService.vote(suggestion, siteUser);

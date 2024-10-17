@@ -25,7 +25,7 @@ public class SuggestionService {
         return this.suggestionRepository.findAll(pageable);
     }
 
-    public Suggestion getSuggestionById(Integer id) {
+    public Suggestion getSuggestionById(Long id) {
         Optional<Suggestion> suggestion = this.suggestionRepository.findById(id);
         if (suggestion.isPresent()) {
             return suggestion.get();

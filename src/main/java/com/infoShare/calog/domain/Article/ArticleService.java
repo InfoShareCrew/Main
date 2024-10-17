@@ -25,7 +25,7 @@ public class ArticleService {
         return this.articleRepository.findAll(pageable);
     }
 
-    public Article getArticleById(Integer id) {
+    public Article getArticleById(Long id) {
         Optional<Article> article = this.articleRepository.findById(id);
         if (article.isPresent()) {
             return article.get();

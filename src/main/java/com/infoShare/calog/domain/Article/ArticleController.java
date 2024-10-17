@@ -20,7 +20,7 @@ import java.security.Principal;
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("article")
-public class ArticleContainer {
+public class ArticleController {
     private final ArticleService articleService;
     private final UserService userService;
 
@@ -44,18 +44,8 @@ public class ArticleContainer {
         return "article_list";
     }
 
-//    @GetMapping("/list")
-//    public String list(Model model,
-//                       @ModelAttribute("basedEntity") BaseEntity baseEntity,
-//                       @RequestParam(value = "page", defaultValue = "0") int page,
-//                       @RequestParam(value = "kw", defaultValue = "") String kw) {
-//        Page<Article> paging = this.articleService.getList(page);
-//        model.addAttribute("paging", paging);
-//        return "article_list";
-//    }
-
     @GetMapping("/detail/{id}")
-    public String detail(Model model, @PathVariable(value = "id") Integer id, CommentForm commentForm) {
+    public String detail(Model model, @PathVariable(value = "id") Long id, CommentForm commentForm) {
         Article article = this.articleService.getArticleById(id);
         model.addAttribute("article", article);
         this.articleService.viewUp(article);
@@ -78,7 +68,7 @@ public class ArticleContainer {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/modify/{id}")
-    public String modify(Model model, @PathVariable(value = "id") Integer id) {
+    public String modify(Model model, @PathVariable(value = "id") Long id) {
         Article article = this.articleService.getArticleById(id);
         model.addAttribute("article", article);
         return "article_form";
@@ -88,7 +78,7 @@ public class ArticleContainer {
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/modify/{id}")
     public String modifyArticle(@Valid ArticleForm articleForm, BindingResult bindingResult,
-                                Principal principal, @PathVariable("id") Integer id) {
+                                Principal principal, @PathVariable("id") Long id) {
         if (bindingResult.hasErrors()) {
             return "article_form";
         }
@@ -102,7 +92,7 @@ public class ArticleContainer {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/delete/{id}")
-    public String deleteArticle(Principal principal, @PathVariable("id") Integer id) {
+    public String deleteArticle(Principal principal, @PathVariable("id") Long id) {
         Article article = this.articleService.getArticleById(id);
         if (!article.getAuthor().getNickname().equals(principal.getName())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "삭제권한이 없습니다.");
@@ -114,7 +104,7 @@ public class ArticleContainer {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/vote/{id}")
     @ResponseBody
-    public String articleVote(@PathVariable("id") Integer id, Principal principal) {
+    public String articleVote(@PathVariable("id") Long id, Principal principal) {
         Article article = this.articleService.getArticleById(id);
         SiteUser siteUser = this.userService.getUser(principal.getName());
         this.articleService.vote(article, siteUser);
