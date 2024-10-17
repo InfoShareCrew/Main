@@ -60,4 +60,9 @@ public class ArticleService {
         article.getVoter().add(siteUser);
         this.articleRepository.save(article);
     }
+
+    public Page<Article> searchArticles(String keyword, int page) {
+        Pageable pageable = PageRequest.of(page, 10, Sort.by(Sort.Order.desc("createdDate")));
+        return articleRepository.findByTitleContainingOrContentContaining(keyword, keyword, pageable);
+    }
 }

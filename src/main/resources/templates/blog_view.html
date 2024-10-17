@@ -6,25 +6,22 @@
     <p><strong>소개:</strong> <span th:text="${user.intro}">소개</span></p>
     <p><strong>주소:</strong> <span th:text="${user.address}">주소</span></p>
 
-    <div th:if="${authentication != null}">
-      <div th:if="${user.email == authentication.name}">
-        <form th:action="@{/blog/edit}" method="post">
-          <div class="form-group">
-            <label for="nickname">닉네임</label>
-            <input type="text" class="form-control" name="nickname" th:value="${user.nickname}" required />
-          </div>
-          <div class="form-group">
-            <label for="intro">소개</label>
-            <textarea class="form-control" name="intro" required th:text="${user.intro}"></textarea>
-          </div>
-          <div class="form-group">
-            <label for="address">주소</label>
-            <input type="text" class="form-control" name="address" th:value="${user.address}" />
-          </div>
-          <button type="submit" class="btn btn-primary">수정</button>
-        </form>
+    <!-- 수정 폼 항상 표시 -->
+    <form th:action="@{/blog/edit}" method="post">
+      <div class="form-group">
+        <label for="nickname">닉네임</label>
+        <input type="text" class="form-control" name="nickname" th:value="${nickname}" required />
       </div>
-    </div>
+      <div class="form-group">
+        <label for="intro">소개</label>
+        <textarea class="form-control" name="intro" required th:text="${intro}"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="address">주소</label>
+        <input type="text" class="form-control" name="address" th:value="${address}" />
+      </div>
+      <button type="submit" class="btn btn-primary">수정</button>
+    </form>
   </div>
   <div th:if="${user == null}">
     <p>사용자 정보를 찾을 수 없습니다. 로그인 해주세요.</p>

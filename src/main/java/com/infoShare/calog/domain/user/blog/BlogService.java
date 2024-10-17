@@ -10,11 +10,11 @@ import org.springframework.stereotype.Service;
 public class BlogService {
     private final UserService userService;
 
-    public SiteUser getUserProfile(String email) {
+    public SiteUser getUserBlog(String email) {
         return userService.getUser(email);
     }
 
-    public void updateUserProfile(SiteUser siteUser, String intro, String address, String nickname) {
+    public void updateUserBlog(SiteUser siteUser, String intro, String address, String nickname) {
         siteUser.updateBlog(intro, address, nickname);
         userService.save(siteUser); // 사용자 정보를 업데이트
     }
