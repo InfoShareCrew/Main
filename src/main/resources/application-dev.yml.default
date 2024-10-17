@@ -17,4 +17,4 @@ spring:
     hibernate:
       ddl-auto: update # DB 스키마 자동생성, 앱이 재실행되어도 데이터는 유지된다.
 custom:
-  fileDirPath: C:\\Users\\81152\\IdeaProjects\\image # 이 경로는 시크릿 처리해서 개발자마다 설정할 수 있도록 하기
+  fileDirPath: FILE_DIR_PATH # 이 경로는 시크릿 처리해서 개발자마다 설정할 수 있도록 하기

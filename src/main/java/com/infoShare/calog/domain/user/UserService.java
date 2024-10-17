@@ -33,10 +33,10 @@ public class UserService {
 
     @Transactional
     public SiteUser whenSocialLogin(String providerTypeCode, String email, String nickname, String password) {
-        Optional<SiteUser> opSiteUser = findByEmail(email);
+        SiteUser user = findByEmail(email);
 
-        if (opSiteUser.isPresent()) {
-            return opSiteUser.get(); // 기존 사용자 반환
+        if (user != null) {
+            return user; // 기존 사용자 반환
         }
 
         // 비밀번호가 null이거나 빈 문자열인 경우 랜덤 비밀번호 생성
@@ -49,8 +49,12 @@ public class UserService {
         return RandomStringUtils.randomAlphanumeric(10); // 10자리 랜덤 비밀번호
     }
 
-    public Optional<SiteUser> findByEmail(String email) {
-        return userRepository.findByEmail(email);
+    public SiteUser findByEmail(String email) {
+        Optional<SiteUser> _user = userRepository.findByEmail(email);
+        if (_user.isPresent()) {
+            return userRepository.findByEmail(email).get();
+        }
+        return null;
     }
 
     public SiteUser getUser(String email) {

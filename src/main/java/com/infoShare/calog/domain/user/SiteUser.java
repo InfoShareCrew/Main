@@ -33,14 +33,17 @@ public class SiteUser extends BaseEntity {
     @Column(length = 2000)
     private String address;
 
+    private String profileImg;
+
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "siteuser_roles", joinColumns = @JoinColumn(name = "siteuser_id"))
     @Enumerated(EnumType.STRING)
     private Set<UserRole> roles = new HashSet<>();
 
-    public void updateBlog(String intro, String address, String nickname) {
+    public void updateBlog(String intro, String address, String nickname, String profileImg) {
         this.intro = intro;
         this.address = address;
         this.nickname = nickname;
+        this.profileImg = profileImg;
     }
 }

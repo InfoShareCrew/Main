@@ -6,17 +6,21 @@
 <div layout:fragment="content" class="main-contents">
   <div th:replace="~{index_left_side :: leftSideFragment }"></div>
   <div class="air-box"></div>
-  <div class="center personal-contents">
+  <div class="center personal-container personal">
     <div class="profile-box">
-      <div class="img-box"><img th:src="@{|/img/${user.id}.jpg|}" alt="프로필사진"></div>
+      <div class="img-box">
+        <img th:src="@{|/file/${user.profileImg != null ? user.profileImg : 'user_basic.png'}|}" alt="프로필이미지" />
+      </div>
       <div class="detail-box">
         <div class="text-box uname"><span class="f-size-18 f-weight-6" th:text="${user.nickname}"></span></div>
         <div class="text-box intro"><span class="f-size-14" th:text="${user.intro}"></span></div>
         <div class="address">
-          <div class="text-box" th:if="addressList != null" th:each="address : ${addressList}"><span class="f-size-14" th:text="${address}"></span></div>
+          <div class="text-box" th:if="addressList != null" th:each="address : ${addressList}"><a class="f-size-14" th:href="${address}" th:text="${address}" target="_blank"></a></div>
         </div>
       </div>
-      <div><button class="btn-b" onclick=""><span class="f-size-14 f-weight-5">수정</span></button></div>
+      <div sec:authorize="isAuthenticated()" th:if="${user.email != null} and ${#authentication.getPrincipal().username} == ${user.email}">
+        <button class="btn-b" th:onclick="@{|window.location.href = '/blog/edit/${user.email}';|}"><span class="f-size-14 f-weight-5">수정</span></button>
+      </div>
     </div>
     <div class="post-box dp-flex-clmb">
       <div class="category">
