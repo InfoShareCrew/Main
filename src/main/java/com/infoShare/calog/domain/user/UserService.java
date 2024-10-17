@@ -49,7 +49,7 @@ public class UserService {
         return RandomStringUtils.randomAlphanumeric(10); // 10자리 랜덤 비밀번호
     }
 
-    private Optional<SiteUser> findByEmail(String email) {
+    public Optional<SiteUser> findByEmail(String email) {
         return userRepository.findByEmail(email);
     }
 
