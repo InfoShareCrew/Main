@@ -29,7 +29,7 @@ public class CommentController {
     private final UserService userService;
 
     @PostMapping("create/{id}")
-    public String create(Model model, @Valid CommentForm commentForm, BindingResult bindingResult, @PathVariable(value = "id") Integer id) {
+    public String create(Model model, @Valid CommentForm commentForm, BindingResult bindingResult, @PathVariable(value = "id") Long id) {
         Article article = this.articleService.getArticleById(id);
         if (bindingResult.hasErrors()) {
             model.addAttribute("article", article);
@@ -39,7 +39,7 @@ public class CommentController {
     }
 
     @PostMapping("suggestion/{id}")
-    public String create(Model model, @Valid SuggestionForm suggestionForm, BindingResult bindingResult, @PathVariable(value = "id") Integer id) {
+    public String create(Model model, @Valid SuggestionForm suggestionForm, BindingResult bindingResult, @PathVariable(value = "id") Long id) {
         Suggestion suggestion = this.suggestionService.getSuggestionById(id);
         if (bindingResult.hasErrors()) {
             model.addAttribute("suggestion", suggestion);
@@ -51,7 +51,7 @@ public class CommentController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/modify/{id}")
-    public String modify(CommentForm commentForm, @PathVariable(value = "id") Integer id, Principal principal) {
+    public String modify(CommentForm commentForm, @PathVariable(value = "id") Long id, Principal principal) {
         Comment comment = this.commentService.getComment(id);
         if (!comment.getAuthor().getNickname().equals(principal.getName())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
@@ -64,7 +64,7 @@ public class CommentController {
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/modify/{id}")
     public String commentModify(@Valid CommentForm commentForm, BindingResult bindingResult,
-                                @PathVariable("id") Integer id, Principal principal) {
+                                @PathVariable("id") Long id, Principal principal) {
 
         if (bindingResult.hasErrors()) {
             return "comment_form";
@@ -81,7 +81,7 @@ public class CommentController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/delete/{id}")
-    public String commentDelete(Principal principal, @PathVariable("id") Integer id) {
+    public String commentDelete(Principal principal, @PathVariable("id") Long id) {
         Comment comment = this.commentService.getComment(id);
 
         if (!comment.getAuthor().getNickname().equals(principal.getName())) {
@@ -95,7 +95,7 @@ public class CommentController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/vote/{id}")
     @ResponseBody
-    public String commentVote(@PathVariable("id") Integer id, Principal principal) {
+    public String commentVote(@PathVariable("id") Long id, Principal principal) {
         Comment comment = this.commentService.getComment(id);
         SiteUser siteUser = this.userService.getUser(principal.getName());
         this.commentService.vote(comment, siteUser);
