@@ -10,29 +10,34 @@ a {text-decoration: none; color: var(--x-000000);}
 a:hover {color: var(--d-3d-3d-3);}
 a.btn {text-align: center;}
 ul,li {margin: 0; padding: 0; list-style: none;}
-input {border: none;}
+input, input:focus, button {border: none;}
 img {border: 1px solid var(--d-3d-3d-3); width: 100%; object-fit: cover;}
-button {border: none; cursor: pointer;}
+button {cursor: pointer; background-color: var(--ffffff);}
 span {font-family: 'Pretendard-Regular';}
 
 
 /***** 네비게이션 *****/
 nav {display: flex; align-items: center; justify-content: center; width: 100%; margin: 0 auto; padding: 16px 0; border-bottom: 1px solid var(--d-3d-3d-3); position: fixed; background-color: var(--ffffff);}
 nav > div {display: flex; width: 100%;}
-.nav > .container {width: 1110px; display: flex; justify-content: space-between;}
+.nav > .container {width: 1110px; display: flex; justify-content: space-between; position: relative;}
 .nav .left-box {display: flex; gap: 32px;}
 .nav .search-container {display: flex; align-items: center; gap: 8px;}
-.nav .search-container .search-box {border: 1px solid var(--d-3d-3d-3); padding: 4px 8px; border-radius: 17px; display: flex;}
+.nav .search-container .search-box {border: 1px solid var(--d-3d-3d-3); padding: 8px 8px; border-radius: 17px; display: flex;}
 .nav .search-box .img-box {width: 18px; height: 18px;}
-.nav .user-box {display: flex; align-items: center; gap: 8px;}
+.nav .right-box {display: flex; align-items: center; gap: 8px;}
+.nav .right-box .img-box {width: 40px; height: 40px; border-radius: 20px;}
+.nav #user-btn {cursor: pointer;}
+.nav #user-btn > div {display: flex; gap: 8px; align-items: center;}
+.nav #user-box {position: absolute; right: 0; top: 55px; background-color: var(--ffffff); border: 1px solid var(--d-3d-3d-3);}
+.nav #user-box > div {border-radius: 0; display: flex; justify-content: flex-end;}
 .main-contents {display: flex; padding: 32px 0; width: 1110px; margin: 0 auto; gap: 32px; margin-top: 66px;}
 
 
 /***** 홈화면 *****/
-.main-contents > .left-side {width: 160px; position: fixed;}
-.main-contents > .left-side ul {display: flex; flex-direction: column; gap: 8px;}
-.main-contents > .left-side ul:first-child > a {background-color: var(--colourmainblue-100);}
-.main-contents > .air-box {width: 160px;}
+.main-contents > div > .left-side {width: 160px; position: fixed;}
+.main-contents > div > .left-side ul {display: flex; flex-direction: column; gap: 8px;}
+.main-contents > div > .left-side ul:first-child > a {background-color: var(--colourmainblue-100);}
+.main-contents > div > .air-box {width: 160px;}
 .main-contents > .center {border-left: 1px solid var(--d-3d-3d-3); padding: 0 32px; display: flex; flex-direction: column; gap: 64px; flex-grow: 1;}
 /* my-cafe-box */
 .center > .my-cafe-box {display: flex; flex-direction: column; gap: 16px;}
@@ -67,6 +72,7 @@ nav > div {display: flex; width: 100%;}
 .category-hot-box .post-list {display: flex; flex-direction: column; gap: 8px;}
 .category-hot-box .post-list > div {display: flex; flex-direction: column; gap: 4px;}
 .category-hot-box .detail {display: flex; gap: 8px; color: var(--x-999999);}
+.category-hot-box .detail .user-box {display: flex; gap: 4px;}
 .category-hot-box .detail .img-box {width: 18px; height: 18px;}
 .main-contents > .right-side {width: 160px;}
 
@@ -74,11 +80,45 @@ nav > div {display: flex; width: 100%;}
 /***** 로그인 화면 *****/
 .main-contents .login-container {padding-top: 50px;}
 .main-contents .login-container > .text-box {display: flex; justify-content: center; margin-bottom: 32px;}
-.main-contents .login-container .login-box {border: 1px solid var(--d-3d-3d-3); border-radius: 15px;}
-.login-container .login-box > .text-box {display: flex; justify-content: center; padding: 16px 0;}
-.login-container .login-box .form-box {border-top: 1px solid var(--d-3d-3d-3); border-bottom: 1px solid var(--d-3d-3d-3); width: 300px; padding: 32px; display: flex; flex-direction: column; gap: 32px;}
+.login-container .form-container .form-box {border-top: 1px solid var(--d-3d-3d-3); border-bottom: 1px solid var(--d-3d-3d-3); width: 300px; padding: 32px; display: flex; flex-direction: column; gap: 32px;}
 .login-container .form-box .input-box {display: flex; flex-direction: column; gap: 16px;}
 .login-container .form-box .btn-box {display: flex; flex-direction: column; gap: 8px;}
 .login-container .btn-box a {text-align: center;}
 .login-container .menu-box {display: flex; justify-content: center; gap: 16px; padding: 16px 0;}
 .login-container .menu-box span {color: var(--d-3d-3d-3);}
+
+
+/***** 회원가입 화면 & 비밀번호 변경 *****/
+.main-contents .signup-container {padding-top: 50px;}
+.main-contents .signup-container .form-box {border-top: 1px solid var(--d-3d-3d-3); border-bottom: none; width: 400px;}
+.signup-container .form-box .nick-box, .email-box {display: flex; gap: 8px;}
+.signup-container .nick-box input {flex-grow: 1;}
+.signup-container .email-box input {flex-grow: 1;}
+.signup-container .agree-box {display: flex; flex-direction: row; justify-content: space-between;}
+.signup-container .agree-box span {color: var(--x-999999); text-decoration: underline; cursor: pointer;}
+
+
+/***** 개인페이지 *****/
+.personal-contents .profile-box {display: flex; gap: 16px;}
+.personal-contents .profile-box .img-box {width: 120px; height: 120px; border-radius: 60px;}
+.personal-contents .profile-box .detail-box {padding: 16px; flex-grow: 1; display: flex; flex-direction: column; gap: 8px;}
+.personal-contents .post-box {gap: 16px;}
+.personal-contents .post-box .category {display: flex; gap: 16px;}
+.personal-contents .post-box .post-list {gap: 8px;}
+.personal-contents .post-list .post {display: flex; flex-direction: column; gap: 4px;}
+.personal-contents .post-list .detail-box {display: flex; gap: 8px; align-items: center; color: var(--d-3d-3d-3);}
+.personal-contents .detail-box > div {display: flex; gap: 2px;}
+.my-cafe-container {display: flex; flex-direction: column; gap: 32px;}
+.my-cafe-container .cafe-list {display: flex; flex-direction: column; gap: 16px;}
+.my-cafe-container .cafe-list > div {display: flex; gap: 16px;}
+.my-cafe-container .cafe-list .profile-img {width: 48px; height: 48px; border-radius: 24px;}
+.my-cafe-container .cafe-list .content > div {gap: 8px;}
+.my-cafe-container .cafe-list .content-2 {display: flex; flex-direction: column; gap: 8px;}
+.my-cafe-container .content-2 > div {display: flex; flex-direction: column; gap: 4px;}
+.my-cafe-container .detail {display: flex; gap: 8px; align-items: center; color: var(--d-3d-3d-3);}
+.my-cafe-container .detail .user-box {display: flex; gap: 4px;}
+.my-cafe-container .user-box > .img-box {width: 18px; height: 18px;}
+
+
+/***** 이웃 *****/
+.neighbor .profile-box .address {display: block;}

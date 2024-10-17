@@ -11,5 +11,6 @@ public class BlogForm {
     private String nickname;
 
     private String intro;
+
     private String address;
 }

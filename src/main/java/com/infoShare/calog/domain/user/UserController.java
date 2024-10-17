@@ -1,16 +1,21 @@
 package com.infoShare.calog.domain.user;
 
 import com.infoShare.calog.domain.user.email.EmailService;
+import com.infoShare.calog.domain.user.email.EmailService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+
+import java.security.Principal;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -55,5 +60,10 @@ public class UserController {
     public ResponseEntity<String> assignRole(@RequestParam String email, @RequestParam UserRole role) {
         userService.assignRoleToUser(email, role);
         return ResponseEntity.ok("권한이 부여되었습니다.");
+    }
+
+    @GetMapping("/password")
+    public String findPassword(UserFindPasswordForm userPasswordForm) {
+        return "modify_password";
     }
 }
