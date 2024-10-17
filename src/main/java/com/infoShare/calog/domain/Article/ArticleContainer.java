@@ -29,10 +29,30 @@ public class ArticleContainer {
                        @ModelAttribute("basedEntity") BaseEntity baseEntity,
                        @RequestParam(value = "page", defaultValue = "0") int page,
                        @RequestParam(value = "kw", defaultValue = "") String kw) {
-        Page<Article> paging = this.articleService.getList(page);
+        Page<Article> paging;
+
+        if (kw != null && !kw.isEmpty()) {
+            // 검색 기능 추가
+            paging = this.articleService.searchArticles(kw, page);
+        } else {
+            // 기본 목록
+            paging = this.articleService.getList(page);
+        }
+
         model.addAttribute("paging", paging);
+        model.addAttribute("kw", kw); // 검색어를 모델에 추가
         return "article_list";
     }
+
+//    @GetMapping("/list")
+//    public String list(Model model,
+//                       @ModelAttribute("basedEntity") BaseEntity baseEntity,
+//                       @RequestParam(value = "page", defaultValue = "0") int page,
+//                       @RequestParam(value = "kw", defaultValue = "") String kw) {
+//        Page<Article> paging = this.articleService.getList(page);
+//        model.addAttribute("paging", paging);
+//        return "article_list";
+//    }
 
     @GetMapping("/detail/{id}")
     public String detail(Model model, @PathVariable(value = "id") Integer id, CommentForm commentForm) {

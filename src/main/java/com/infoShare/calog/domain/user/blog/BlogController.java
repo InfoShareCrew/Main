@@ -51,7 +51,7 @@ public class BlogController {
 
     @PostMapping("/edit")
     public String editBlog(@Valid BlogForm blogForm, @AuthenticationPrincipal SiteUser siteUser, String intro, String address, String nickname) {
-        blogService.updateUserProfile(siteUser, intro, address, blogForm.getNickname()); // 블로그 서비스에서 업데이트 호출
+        blogService.updateUserBlog(siteUser, intro, address, blogForm.getNickname()); // 블로그 서비스에서 업데이트 호출
         return "redirect:/blog"; // 블로그 페이지로 리디렉션
     }
 }

@@ -1,40 +1,51 @@
 <html layout:decorate="~{layout}">
 <div layout:fragment="content" class="main-contents dp-flex-clmb">
   <h1> 게시판 </h1>
+
+  <!-- 검색 폼 추가 -->
+  <form method="get" action="/article/list">
+    <input type="text" name="kw" placeholder="제목 또는 내용을 입력" value=""/>
+    <button type="submit">검색</button>
+  </form>
+
   <table>
     <thead>
-    <th>번호</th>
-    <th>제목</th>
-    <th>작성일</th>
-    <th>조회수</th>
+    <tr>
+      <th>번호</th>
+      <th>제목</th>
+      <th>작성일</th>
+      <th>조회수</th>
+    </tr>
     </thead>
     <tbody>
-    <tr th:each="article, loop: ${paging}">
-      <td th:text="${paging.getTotalElements - (paging.number * paging.size) - loop.index}"></td>
-      <td><a th:href="@{|/article/detail/${article.id}|}" th:text="${article.title}"></a></td>
+    <tr th:each="article, loop : ${paging.content}">
+      <td th:text="${paging.totalElements - (paging.number * paging.size) - loop.index}"></td>
+      <td>
+        <a th:href="@{|/article/detail/${article.id}|}" th:text="${article.title}"></a>
+      </td>
       <td th:text="${#temporals.format(article.createdDate, 'yyyy-MM-dd HH:mm')}"></td>
       <td><span th:text="${article.view} != null ? ${article.view}:0"></span></td>
     </tr>
     </tbody>
   </table>
-  <!--페이징-->
-  <div th:if="${!paging.isEmpty()}">
+
+  <!-- 페이지네이션 -->
+  <div th:if="${!paging.empty}">
     <ul class="pagination justify-content-center">
       <li class="page-item" th:classappend="${!paging.hasPrevious()} ? 'disabled'">
-        <a href="javascript:void(0)" th:data-page="@{|?page=${paging.number-1}|}" class="page-link"><span>이전</span></a>
+        <a th:href="@{|/article/list?page=${paging.number-1}&kw=${kw}|}" class="page-link">이전</a>
       </li>
       <li th:each="page: ${#numbers.sequence(0, paging.totalPages-1)}"
           th:if="${page >= paging.number-5 and page <= paging.number+5}"
-          th:classappend="${page==paging.number} ? 'active'" class="page-item">
-        <a th:text="${page+1}" th:href="@{|?page=${page}|}" class="page-link"></a>
+          th:classappend="${page == paging.number} ? 'active'" class="page-item">
+        <a th:href="@{|/article/list?page=${page}&kw=${kw}|}" th:text="${page + 1}" class="page-link"></a>
       </li>
       <li class="page-item" th:classappend="${!paging.hasNext()} ? 'disabled'">
-        <a href="javascript:void(0)" th:data-page="@{|?page=${paging.number+1}|}" class="page-link">
-          <span>다음</span>
-        </a>
+        <a th:href="@{|/article/list?page=${paging.number+1}&kw=${kw}|}" class="page-link">다음</a>
       </li>
     </ul>
   </div>
-  <a th:href="|/article/create|">글쓰기</a>
+
+  <a th:href="@{/article/create}">글쓰기</a>
 </div>
 </html>

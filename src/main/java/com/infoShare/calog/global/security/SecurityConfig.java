@@ -22,6 +22,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
                         .requestMatchers("/**").permitAll() // 여기에 public 경로 추가
+                        .requestMatchers("/blog/edit").authenticated()
                         .anyRequest().authenticated())
                 .formLogin((formLogin) -> formLogin
                         .loginPage("/user/login")
