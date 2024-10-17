@@ -1,30 +1,154 @@
+<!-- <link rel="stylesheet" href="../static/bootstrap.min.css">
+<link rel="stylesheet" href="../static/lib.css">
+<link rel="stylesheet" href="../static/styleguide.css">
+<link rel="stylesheet" href="../static/style.css"> -->
 <html layout:decorate="~{layout}">
-<div layout:fragment="content">
-  <h1>프로필 보기</h1>
-  <div th:if="${user != null}">
-    <h2 th:text="${user.nickname}">닉네임</h2>
-    <p><strong>소개:</strong> <span th:text="${user.intro}">소개</span></p>
-    <p><strong>주소:</strong> <span th:text="${user.address}">주소</span></p>
-
-    <!-- 수정 폼 항상 표시 -->
-    <form th:action="@{/blog/edit}" method="post">
-      <div class="form-group">
-        <label for="nickname">닉네임</label>
-        <input type="text" class="form-control" name="nickname" th:value="${nickname}" required />
+<div layout:fragment="content" class="main-contents">
+  <div th:replace="~{index_left_side :: leftSideFragment }"></div>
+  <div class="air-box"></div>
+  <div class="center personal-contents">
+    <div class="profile-box">
+      <div class="img-box"><img th:src="@{|/img/${user.id}.jpg|}" alt="프로필사진"></div>
+      <div class="detail-box">
+        <div class="text-box uname"><span class="f-size-18 f-weight-6" th:text="${user.nickname}"></span></div>
+        <div class="text-box intro"><span class="f-size-14" th:text="${user.intro}"></span></div>
+        <div class="address">
+          <div class="text-box" th:if="addressList != null" th:each="address : ${addressList}"><span class="f-size-14" th:text="${address}"></span></div>
+        </div>
       </div>
-      <div class="form-group">
-        <label for="intro">소개</label>
-        <textarea class="form-control" name="intro" required th:text="${intro}"></textarea>
+      <div><button class="btn-b" onclick=""><span class="f-size-14 f-weight-5">수정</span></button></div>
+    </div>
+    <div class="post-box dp-flex-clmb">
+      <div class="category">
+        <div class="ctgr-box-in btn"><span>최신순</span></div>
+        <div class="ctgr-box-my btn"><span>인기순</span></div>
       </div>
-      <div class="form-group">
-        <label for="address">주소</label>
-        <input type="text" class="form-control" name="address" th:value="${address}" />
+      <div class="post-list dp-flex-clmb">
+        <div class="post post-1">
+          <div class="title"><span class="f-size-16 f-weight-6">글 제목</span></div>
+          <div class="detail-box">
+            <div class="text-box"><span class="f-size-14">카페이름</span></div>
+            <div class="view-box">
+              <div class="img-box"><img th:src="@{/img/Eye.png}" alt="조회수 아이콘"></div>
+              <span class="f-size-14">1000</span>
+            </div>
+            <div class="rcmd-box">
+              <div class="img-box"><img th:src="@{/img/Heart.png}" alt="추천 아이콘"></div>
+              <span class="f-size-14">24</span>
+            </div>
+            <div class="cmt-box">
+              <div class="img-box"><img th:src="@{/img/Message_circle.png}" alt="댓글 아이콘"></div>
+              <span class="f-size-14">24</span>
+            </div>
+          </div>
+          <div class="content"><span class="f-size-14">글 내용</span></div>
+        </div>
+        <div class="post post-2">
+          <div class="title"><span class="f-size-16 f-weight-6">글 제목</span></div>
+          <div class="detail-box">
+            <div class="text-box"><span class="f-size-14">카페이름</span></div>
+            <div class="view-box">
+              <div class="img-box"><img th:src="@{/img/Eye.png}" alt="조회수 아이콘"></div>
+              <span class="f-size-14">1000</span>
+            </div>
+            <div class="rcmd-box">
+              <div class="img-box"><img th:src="@{/img/Heart.png}" alt="추천 아이콘"></div>
+              <span class="f-size-14">24</span>
+            </div>
+            <div class="cmt-box">
+              <div class="img-box"><img th:src="@{/img/Message_circle.png}" alt="댓글 아이콘"></div>
+              <span class="f-size-14">24</span>
+            </div>
+          </div>
+          <div class="content"><span class="f-size-14">글 내용</span></div>
+        </div>
+        <div class="post post-3">
+          <div class="title"><span class="f-size-16 f-weight-6">글 제목</span></div>
+          <div class="detail-box">
+            <div class="text-box"><span class="f-size-14">카페이름</span></div>
+            <div class="view-box">
+              <div class="img-box"><img th:src="@{/img/Eye.png}" alt="조회수 아이콘"></div>
+              <span class="f-size-14">1000</span>
+            </div>
+            <div class="rcmd-box">
+              <div class="img-box"><img th:src="@{/img/Heart.png}" alt="추천 아이콘"></div>
+              <span class="f-size-14">24</span>
+            </div>
+            <div class="cmt-box">
+              <div class="img-box"><img th:src="@{/img/Message_circle.png}" alt="댓글 아이콘"></div>
+              <span class="f-size-14">24</span>
+            </div>
+          </div>
+          <div class="content"><span class="f-size-14">글 내용</span></div>
+        </div>
       </div>
-      <button type="submit" class="btn btn-primary">수정</button>
-    </form>
+    </div>
+    <div class="my-cafe-container">
+      <div class="text-box"><span class="f-size-18 f-weight-6">홍길동님이 가입 중인 카페</span></div>
+      <div class="cafe-list">
+        <div class="">
+          <div class="profile-img img-box">
+            <img th:src="@{/img/e2729fba28172ae8831a761a9c60d35c.jpg}" alt="카페 프로필 사진">
+          </div>
+          <div class="content-2 dp-flex-clmb">
+            <div class="title"><span class="f-size-16 f-weight-6">카페이름1</span></div>
+            <div class="">
+              <div class="full-w">카페소개글</div>
+              <div class="detail">
+                <div class="user-box">
+                  <div class="img-box"><img th:src="@{/img/person.png}" alt="유저 아이콘"></div>
+                  <div class="text-box"><span class="f-size-13">1000</span></div>
+                </div>
+                <div class="text-box"><span class="f-size-13">세부 카테고리</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="">
+          <div class="profile-img img-box">
+            <img th:src="@{/img/e2729fba28172ae8831a761a9c60d35c.jpg}" alt="카페 프로필 사진">
+          </div>
+          <div class="content-2 dp-flex-clmb">
+            <div class="title"><span class="f-size-16 f-weight-6">카페이름1</span></div>
+            <div>
+              <div class="content full-w">카페소개글</div>
+              <div class="detail">
+                <div class="user-box">
+                  <div class="img-box"><img th:src="@{/img/person.png}" alt="유저 아이콘"></div>
+                  <div class="text-box"><span class="f-size-13">1000</span></div>
+                </div>
+                <div class="text-box"><span class="f-size-13">세부 카테고리</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="">
+          <div class="profile-img img-box">
+            <img th:src="@{/img/e2729fba28172ae8831a761a9c60d35c.jpg}" alt="카페 프로필 사진">
+          </div>
+          <div class="content-2 dp-flex-clmb">
+            <div class="title"><span class="f-size-16 f-weight-6">카페이름1</span></div>
+            <div>
+              <div class="content full-w">카페소개글</div>
+              <div class="detail">
+                <div class="user-box">
+                  <div class="img-box"><img th:src="@{/img/person.png}" alt="유저 아이콘"></div>
+                  <div class="text-box"><span class="f-size-13">1000</span></div>
+                </div>
+                <div class="text-box"><span class="f-size-13">세부 카테고리</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
-  <div th:if="${user == null}">
-    <p>사용자 정보를 찾을 수 없습니다. 로그인 해주세요.</p>
-  </div>
+  <div class="right-side"></div>
 </div>
+<!-- 자바 스크립트 -->
+<script layout:fragment="script" type='text/javascript'>
+  $(document).ready(function() {
+
+  })
+</script>
 </html>
