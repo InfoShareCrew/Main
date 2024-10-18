@@ -14,26 +14,28 @@ import java.util.Optional;
 public class CommentService {
     private final CommentRepository commentRepository;
 
-    public void createComment(Article article, String content) {
+    public void createComment(Article article, String content, SiteUser author) {
         Comment comment = new Comment();
         comment.setContent(content);
         comment.setArticle(article);
+        comment.setAuthor(author);
         this.commentRepository.save(comment);
     }
 
-    public void createSuggestionComment(Suggestion suggestion, String content) {
+    public void createSuggestionComment(Suggestion suggestion, String content, SiteUser author) {
         Comment comment = new Comment();
         comment.setContent(content);
         comment.setSuggestion(suggestion);
+        comment.setAuthor(author);
         this.commentRepository.save(comment);
     }
 
-    public Comment getComment(Integer id) {
+    public Comment getComment(Long id) {
         Optional<Comment> optionalComment = this.commentRepository.findById(id);
         if (optionalComment.isPresent()) {
             return optionalComment.get();
         } else {
-            throw new DataNotFoundException("answer not found");
+            throw new DataNotFoundException("comment not found");
         }
     }
 

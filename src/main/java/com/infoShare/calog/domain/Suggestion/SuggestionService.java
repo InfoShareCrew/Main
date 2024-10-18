@@ -1,5 +1,6 @@
 package com.infoShare.calog.domain.Suggestion;
 
+import com.infoShare.calog.domain.Article.Article;
 import com.infoShare.calog.domain.DataNotFoundException;
 import com.infoShare.calog.domain.user.SiteUser;
 import lombok.RequiredArgsConstructor;
@@ -25,25 +26,33 @@ public class SuggestionService {
         return this.suggestionRepository.findAll(pageable);
     }
 
-    public Suggestion getSuggestionById(Integer id) {
+    public Suggestion getSuggestionById(Long id) {
         Optional<Suggestion> suggestion = this.suggestionRepository.findById(id);
         if (suggestion.isPresent()) {
+            if (suggestion.get().getAuthor() == null) {
+                throw new DataNotFoundException("Author not found for suggestion");
+            }
             return suggestion.get();
         } else {
             throw new DataNotFoundException("Suggestion not found");
         }
     }
 
-    public void createSuggestion(String title, String content) {
+    public void createSuggestion(String title, String content, SiteUser author) {
         Suggestion suggestion = new Suggestion();
         suggestion.setTitle(title);
         suggestion.setContent(content);
+        suggestion.setAuthor(author);
         this.suggestionRepository.save(suggestion);
     }
 
     public void viewUp(Suggestion suggestion) {
         suggestion.setView(suggestion.getView() + 1);
         this.suggestionRepository.save(suggestion);
+    }
+
+    public Optional<Suggestion> findById(Long id) {
+        return this.suggestionRepository.findById(id);
     }
 
     public void modifySuggestion(Suggestion suggestion, String title, String content) {

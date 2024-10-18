@@ -3,9 +3,14 @@ package com.infoShare.calog.domain.MinorCategory;
 import com.infoShare.calog.domain.DataNotFoundException;
 import com.infoShare.calog.domain.MajorCategory.MajorCategory;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,8 +20,11 @@ public class MinorCategoryService {
 
     private final MinorCategoryRepository minorCategoryRepository;
 
-    public List<MinorCategory> findAll() {
-        return minorCategoryRepository.findAll();
+    public Page<MinorCategory> getList(int page) {
+        List<Sort.Order> sorts = new ArrayList<>();
+        sorts.add(Sort.Order.desc("createdDate"));
+        Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
+        return this.minorCategoryRepository.findAll(pageable);
     }
 
     public MinorCategory getMinorCategoryById(short id) {

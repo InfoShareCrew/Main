@@ -3,11 +3,14 @@ package com.infoShare.calog.domain.user;
 import com.infoShare.calog.domain.DataNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -64,5 +67,10 @@ public class UserService {
 
     public void save(SiteUser user) {
         userRepository.save(user);
+    }
+
+    public SiteUser getUserByNickname(String nickname) {
+        return userRepository.findByNickname(nickname)
+                .orElseThrow(() -> new DataNotFoundException("User not found with nickname: " + nickname));
     }
 }
