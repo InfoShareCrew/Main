@@ -6,7 +6,7 @@
         <span class="f-size-21 f-weight-5">회원가입</span>
       </div>
       <form th:action="@{/user/signup}" th:object="${userCreateForm}" method="post" class="form-box">
-        <!-- <div th:replace="~{form_errors :: formErrorsFragment}"></div> -->
+         <div th:replace="~{form_errors :: formErrorsFragment}"></div>
         <div>
           <!-- <label for="username" class="form-label">사용자 Email</label> -->
           <input type="text" th:field="*{email}" class="input f-size-14 f-weight-5" placeholder="사용자Email">

@@ -1,21 +1,14 @@
 package com.infoShare.calog.domain.user;
 
-import com.infoShare.calog.domain.user.email.EmailService;
+import com.infoShare.calog.domain.user.blog.BlogForm;
 import com.infoShare.calog.domain.user.email.EmailService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
-import java.security.Principal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 @Controller
 @RequiredArgsConstructor

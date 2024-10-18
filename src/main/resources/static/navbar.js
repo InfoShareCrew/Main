@@ -3,8 +3,12 @@ $(document).ready(function() {
     function(user) {
         console.log(user);
         $("#profile-name").text(user.nickname);
-        $("#profile-img").attr('src', `/img/${user.id}.jpg`);
-        $("#personal-link").attr('href', `/blog/${user.id}`)
+        if (user.profileImg == null) {
+            $("#profile-img").attr('src', $('#profile-img').attr('src') + 'user_basic.png');
+        } else {
+            $("#profile-img").attr('src', $('#profile-img').attr('src') + `${user.profileImg}`);
+        }
+        $("#personal-link").attr('href', `/blog/${user.email}`)
     })
     // 유저 클릭 시 세부메뉴 토글
     $("#user-btn").click(function() {

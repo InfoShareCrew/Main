@@ -1,0 +1,61 @@
+<!-- <link rel="stylesheet" href="../static/bootstrap.min.css">
+<link rel="stylesheet" href="../static/lib.css">
+<link rel="stylesheet" href="../static/styleguide.css">
+<link rel="stylesheet" href="../static/style.css"> -->
+<html layout:decorate="~{layout}">
+<div layout:fragment="content" class="main-contents">
+  <div th:replace="~{index_left_side :: leftSideFragment }"></div>
+  <div class="air-box"></div>
+  <div class="center personal-edit-container">
+    <form class="profile-box" th:action="@{|/blog/edit/${#authentication.getPrincipal().username}|}" th:object="${blogForm}" method="post" enctype="multipart/form-data">
+      <!--오류메세지-->
+      <div class="alert alert-danger" role="alert" th:if="${#fields.hasAnyErrors()}">
+        <div th:each="err: ${#fields.allErrors()}" th:text="${err}"/>
+      </div>
+      <div class="profile-img">
+        <div class="img-box">
+          <img th:src="@{|/file/${blogForm.profileImg != null ? blogForm.profileImg : 'user_basic.png'}|}"  accept="image/png, image/gif, image/jpeg" id="profile-img-2" alt="프로필이미지" />
+        </div>
+        <button type="button" class="btn-b" id="modify-img-btn">사진변경</button>
+        <input class="btn-b d-none" type="file" name="profile-img" id="profile-img-input" value="*{profileImg}" accept="image/png, image/jpeg">
+      </div>
+      <div class="nickname-box">
+        <label for="nickname">닉네임</label>
+        <input type="text" th:value="*{nickname}" name="nickname" id="nickname" class="input f-size-16 f-weight-5" placeholder="닉네임">
+      </div>
+      <div class="intro-box">
+        <label for="intro">소개글</label>
+        <textarea th:text="*{intro}" name="intro" id="intro" class="input f-size-14 f-weight-5"  rows="5" placeholder="소개글"></textarea>
+      </div>
+      <div class="address-box">
+<!--          address 문자열 타입으로 리스트로 바꾸기-->
+<!--          <div class="text-box" th:if="addressList != null" th:each="address : ${addressList}"><span class="f-size-14" th:text="${address}"></span></div>-->
+        <label for="address">링크</label>
+        <input type="text" th:value="*{address}" name="address" id="address" class="input f-size-16 f-weight-5" placeholder="링크">
+      </div>
+      <div class="submit-box"><input type="submit" value="수정하기" class="btn btn-primary"></div>
+    </form>
+  </div>
+  <div class="right-side"></div>
+</div>
+<!-- 자바 스크립트 -->
+<script layout:fragment="script" type='text/javascript'>
+  $(document).ready(function() {
+    $("#modify-img-btn").click(()=>{
+      $("#profile-img-input").click();
+    })
+    $("#profile-img-input").on('change', function(event) {
+      const file = event.target.files[0];
+      if (file) {
+        console.log("사진이 선택되었습니다.");
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const img = $('#profile-img-2').attr('src', e.target.result);
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+  })
+</script>
+</html>
