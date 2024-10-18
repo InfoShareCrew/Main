@@ -1,6 +1,7 @@
 package com.infoShare.calog.domain.Article;
 
 import com.infoShare.calog.domain.Comment.CommentForm;
+import com.infoShare.calog.domain.DataNotFoundException;
 import com.infoShare.calog.domain.user.SiteUser;
 import com.infoShare.calog.domain.user.UserService;
 import com.infoShare.calog.global.jpa.BaseEntity;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.security.Principal;
+import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -35,66 +37,81 @@ public class ArticleContainer {
     }
 
     @GetMapping("/detail/{id}")
-    public String detail(Model model, @PathVariable(value = "id") Integer id, CommentForm commentForm) {
+    public String detail(Model model, @PathVariable(value = "id") Long id, CommentForm commentForm, Principal principal) {
         Article article = this.articleService.getArticleById(id);
         model.addAttribute("article", article);
         this.articleService.viewUp(article);
+
+        if (principal != null) {
+            SiteUser user = this.userService.getUser(principal.getName());
+            model.addAttribute("userNickname", user.getNickname());
+        }
+
         return "article_detail";
     }
 
+
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/create")
     public String create(ArticleForm articleForm) {
         return "article_form";
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/create")
-    public String create(@Valid ArticleForm articleForm, BindingResult bindingResult) {
+    public String create(@Valid ArticleForm articleForm, BindingResult bindingResult, Principal principal) {
         if (bindingResult.hasErrors()) {
             return "article_form";
         }
-        this.articleService.createArticle(articleForm.getTitle(), articleForm.getContent());
+        SiteUser author = this.userService.getUser(principal.getName());
+        this.articleService.createArticle(articleForm.getTitle(), articleForm.getContent(),author);
         return "redirect:/article/list";
     }
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/modify/{id}")
-    public String modify(Model model, @PathVariable(value = "id") Integer id) {
+    public String modifyArticle(ArticleForm articleForm, @PathVariable("id") Long id, Principal principal){
         Article article = this.articleService.getArticleById(id);
-        model.addAttribute("article", article);
+        if(!article.getAuthor().getEmail().equals(principal.getName())){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
+        }
+
+        articleForm.setTitle(article.getTitle());
+        articleForm.setContent(article.getContent());
         return "article_form";
     }
-
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/modify/{id}")
     public String modifyArticle(@Valid ArticleForm articleForm, BindingResult bindingResult,
-                                Principal principal, @PathVariable("id") Integer id) {
-        if (bindingResult.hasErrors()) {
+                                Principal principal, @PathVariable("id") Long id){
+        if(bindingResult.hasErrors()){
             return "article_form";
         }
         Article article = this.articleService.getArticleById(id);
-        if (!article.getAuthor().getNickname().equals(principal.getName())) {
+        if(!article.getAuthor().getEmail().equals(principal.getName())){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
         }
-        this.articleService.modifyArticle(article, articleForm.getTitle(), articleForm.getContent());
-        return String.format("redirect:/article/detail/%s", id);
+
+        this.articleService.modify(article,articleForm.getTitle(),articleForm.getContent());
+        return String.format("redirect:/article/detail/%s",id);
     }
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/delete/{id}")
-    public String deleteArticle(Principal principal, @PathVariable("id") Integer id) {
+    public String deleteArticle(Principal principal, @PathVariable("id") Long id){
         Article article = this.articleService.getArticleById(id);
-        if (!article.getAuthor().getNickname().equals(principal.getName())) {
+        if(!article.getAuthor().getEmail().equals(principal.getName())){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "삭제권한이 없습니다.");
         }
         this.articleService.delete(article);
-        return "redirect:/";
+        return "redirect:/article/list";
     }
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/vote/{id}")
     @ResponseBody
-    public String articleVote(@PathVariable("id") Integer id, Principal principal) {
+    public String articleVote(@PathVariable("id") Long id, Principal principal) {
         Article article = this.articleService.getArticleById(id);
         SiteUser siteUser = this.userService.getUser(principal.getName());
         this.articleService.vote(article, siteUser);

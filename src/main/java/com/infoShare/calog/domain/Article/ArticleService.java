@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -25,19 +26,24 @@ public class ArticleService {
         return this.articleRepository.findAll(pageable);
     }
 
-    public Article getArticleById(Integer id) {
+    public Article getArticleById(Long id) {
         Optional<Article> article = this.articleRepository.findById(id);
         if (article.isPresent()) {
+            if (article.get().getAuthor() == null) {
+                throw new DataNotFoundException("Author not found for article");
+            }
             return article.get();
         } else {
             throw new DataNotFoundException("Article not found");
         }
     }
 
-    public void createArticle(String title, String content) {
+
+    public void createArticle(String title, String content, SiteUser author) {
         Article article = new Article();
         article.setTitle(title);
         article.setContent(content);
+        article.setAuthor(author);
         this.articleRepository.save(article);
     }
 
@@ -46,7 +52,12 @@ public class ArticleService {
         this.articleRepository.save(article);
     }
 
-    public void modifyArticle(Article article, String title, String content) {
+    public Optional<Article> findById(Long id) {
+        return this.articleRepository.findById(id);
+    }
+
+
+    public void modify(Article article, String title, String content) {
         article.setTitle(title);
         article.setContent(content);
         this.articleRepository.save(article);

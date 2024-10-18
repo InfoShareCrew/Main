@@ -8,6 +8,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Set;
+
 
 @Entity
 @Getter
@@ -16,6 +18,10 @@ public class Cafe extends BaseEntity {
     @Column(length = 50)
     private String title;
 
+    @Column(columnDefinition = "TEXT")
+    private String content;
+
+/*
     @ManyToOne
     private SiteUser manager;
 
@@ -24,7 +30,13 @@ public class Cafe extends BaseEntity {
 
     @ManyToOne
     private MinorCategory minorCategory;
+*/
 
     @ManyToOne
     private SiteUser author;
+
+
+    @ManyToMany
+    Set<SiteUser> voter;
+
 }

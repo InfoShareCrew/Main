@@ -1,0 +1,57 @@
+<html layout:decorate="~{layout}">
+<div layout:fragment="content" class="main-contents dp-flex-clmb">
+    <h1> 카페 상세 </h1>
+    <h2 class="border-bottom py-2" th:text="${cafe.title}">제목</h2>
+    <div class="card my-3">
+        <div class="card-body">
+            <div class="card-text" style="white-space: pre-line;" th:text="${cafe.content}"></div>
+            <div class="d-flex justify-content-end">
+                <div class="badge bg-light text-dark p-2 text-start">
+                    <div class="mb-2" th:if="${cafe.author != null}">
+                        <span th:text="${cafe.author.nickname}"></span>
+                    </div>
+                    <div th:text="${#temporals.format(cafe.createdDate, 'yyyy-MM-dd HH:mm')}"></div>
+                </div>
+                <a id="cafe_recommend" class="recommend btn btn-sm btn-outline-secondary">
+                    추천
+                    <span id="cafe_recommend_count" class="badge rounded-pill bg-success"
+                          th:text="${#lists.size(cafe.voter)}"></span>
+                </a>
+                <a th:href="@{|/cafe/modify/${cafe.id}|}" class="btn btn-sm btn-outline-secondary"
+                   sec:authorize="isAuthenticated()"
+                   th:if="${userNickname == cafe.author.nickname}"
+                   th:text="수정"></a>
+                <a onclick="return confirm('정말 삭제하시겠습니까?')"
+                   th:href="@{|/cafe/delete/${cafe.id}|}" class="delete btn btn-sm btn-outline-secondary"
+                   sec:authorize="isAuthenticated()"
+                   th:if="${userNickname == cafe.author.nickname}"
+                   th:text="삭제"></a>
+            </div>
+        </div>
+    </div>
+    <a th:href="|/article/list|" class="btn btn-primary">목록</a>
+</div>
+
+</html>
+
+
+<script th:inline="javascript">
+    $(document).ready(function() {
+        var cafeId = [[${cafe.id}]];
+
+        $("#cafe_recommend").on("click", function() {
+            if(confirm("정말로 추천하시겠습니까?")) {
+                $.ajax({
+                    url: "/cafe/vote/" + cafeId,
+                    type: "GET",
+                    success: function(response) {
+                        $("#cafe_recommend_count").text(response);
+                    },
+                    error: function(xhr, status, error) {
+                        console.log("오류 발생", error);
+                    }
+                });
+            }
+        });
+    });
+</script>
