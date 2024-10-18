@@ -21,7 +21,6 @@ import java.security.Principal;
 @RequiredArgsConstructor
 @RequestMapping("suggestion")
 public class SuggestionController {
-
     private final SuggestionService suggestionService;
     private final UserService userService;
 
@@ -36,32 +35,41 @@ public class SuggestionController {
     }
 
     @GetMapping("/detail/{id}")
-    public String detail(Model model, @PathVariable(value = "id") Long id, CommentForm commentForm) {
+    public String detail(Model model, @PathVariable(value = "id") Long id, CommentForm commentForm,Principal principal) {
         Suggestion suggestion = this.suggestionService.getSuggestionById(id);
         model.addAttribute("suggestion", suggestion);
+        model.addAttribute("article", suggestion);
         this.suggestionService.viewUp(suggestion);
         return "suggestion_detail";
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/create")
     public String create(SuggestionForm suggestionForm) {
         return "suggestion_form";
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/create")
-    public String create(@Valid SuggestionForm suggestionForm, BindingResult bindingResult) {
+    public String create(@Valid SuggestionForm suggestionForm, BindingResult bindingResult,Principal principal) {
         if (bindingResult.hasErrors()) {
             return "suggestion_form";
         }
-        this.suggestionService.createSuggestion(suggestionForm.getTitle(), suggestionForm.getContent());
+        SiteUser author = this.userService.getUser(principal.getName());
+        this.suggestionService.createSuggestion(suggestionForm.getTitle(), suggestionForm.getContent(),author);
         return "redirect:/suggestion/list";
     }
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/modify/{id}")
-    public String modify(Model model, @PathVariable(value = "id") Long id) {
+    public String modify(SuggestionForm suggestionForm, @PathVariable(value = "id") Long id,Principal principal) {
         Suggestion suggestion = this.suggestionService.getSuggestionById(id);
-        model.addAttribute("suggestion", suggestion);
+
+        if(!suggestion.getAuthor().getEmail().equals(principal.getName())){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
+        }
+        suggestionForm.setTitle(suggestion.getTitle());
+        suggestionForm.setContent(suggestion.getContent());
         return "suggestion_form";
     }
 
@@ -73,7 +81,7 @@ public class SuggestionController {
             return "suggestion_form";
         }
         Suggestion suggestion = this.suggestionService.getSuggestionById(id);
-        if (!suggestion.getAuthor().getNickname().equals(principal.getName())) {
+        if (!suggestion.getAuthor().getEmail().equals(principal.getName())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
         }
         this.suggestionService.modifySuggestion(suggestion, suggestionForm.getTitle(), suggestionForm.getContent());
@@ -84,11 +92,11 @@ public class SuggestionController {
     @GetMapping("/delete/{id}")
     public String deleteSuggestion(Principal principal, @PathVariable("id") Long id) {
         Suggestion suggestion = this.suggestionService.getSuggestionById(id);
-        if (!suggestion.getAuthor().getNickname().equals(principal.getName())) {
+        if (!suggestion.getAuthor().getEmail().equals(principal.getName())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "삭제권한이 없습니다.");
         }
         this.suggestionService.delete(suggestion);
-        return "redirect:/";
+        return "redirect:/suggestion/list";
     }
 
     @PreAuthorize("isAuthenticated()")

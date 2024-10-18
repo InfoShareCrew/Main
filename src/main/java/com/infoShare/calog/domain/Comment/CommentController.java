@@ -28,24 +28,32 @@ public class CommentController {
     private final SuggestionService suggestionService;
     private final UserService userService;
 
-    @PostMapping("create/{id}")
-    public String create(Model model, @Valid CommentForm commentForm, BindingResult bindingResult, @PathVariable(value = "id") Long id) {
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/create/{id}")
+    public String create(Model model, @Valid CommentForm commentForm, BindingResult bindingResult, @PathVariable(value = "id") Long id, Principal principal) {
         Article article = this.articleService.getArticleById(id);
+        SiteUser author = this.userService.getUser(principal.getName());
+
         if (bindingResult.hasErrors()) {
             model.addAttribute("article", article);
         }
-        this.commentService.createComment(article, commentForm.getContent());
+
+        this.commentService.createComment(article, commentForm.getContent(), author);
         return String.format("redirect:/article/detail/%s", id);
     }
 
-    @PostMapping("suggestion/{id}")
-    public String create(Model model, @Valid SuggestionForm suggestionForm, BindingResult bindingResult, @PathVariable(value = "id") Long id) {
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/suggestion/create/{id}")
+    public String createSuggestionComment(Model model, @Valid CommentForm commentForm, BindingResult bindingResult, @PathVariable(value = "id") Long id, Principal principal) {
         Suggestion suggestion = this.suggestionService.getSuggestionById(id);
+        SiteUser author = this.userService.getUser(principal.getName());
+
         if (bindingResult.hasErrors()) {
             model.addAttribute("suggestion", suggestion);
         }
-        this.commentService.createSuggestionComment(suggestion, suggestionForm.getContent());
-        return String.format("redirect:/article/detail/%s", id);
+
+        this.commentService.createSuggestionComment(suggestion, commentForm.getContent(), author);
+        return String.format("redirect:/suggestion/detail/%s", id);
     }
 
 
@@ -53,7 +61,7 @@ public class CommentController {
     @GetMapping("/modify/{id}")
     public String modify(CommentForm commentForm, @PathVariable(value = "id") Long id, Principal principal) {
         Comment comment = this.commentService.getComment(id);
-        if (!comment.getAuthor().getNickname().equals(principal.getName())) {
+        if (!comment.getAuthor().getEmail().equals(principal.getName())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
         }
         commentForm.setContent(comment.getContent());
@@ -71,12 +79,46 @@ public class CommentController {
         }
 
         Comment comment = this.commentService.getComment(id);
-        if (!comment.getAuthor().getNickname().equals(principal.getName())) {
+        if (!comment.getAuthor().getEmail().equals(principal.getName())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
         }
+
         this.commentService.modify(comment, commentForm.getContent());
+
         return String.format("redirect:/article/detail/%s#comment_%s",
                 comment.getArticle().getId(), comment.getId());
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/suggestion/modify/{id}")
+    public String modifySuggestion(CommentForm commentForm, @PathVariable(value = "id") Long id, Principal principal) {
+        Comment comment = this.commentService.getComment(id);
+        if (!comment.getAuthor().getEmail().equals(principal.getName())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
+        }
+        commentForm.setContent(comment.getContent());
+        return "comment_form";
+
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/suggestion/modify/{id}")
+    public String commentSuggestionModify(@Valid CommentForm commentForm, BindingResult bindingResult,
+                                @PathVariable("id") Long id, Principal principal) {
+
+        if (bindingResult.hasErrors()) {
+            return "comment_form";
+        }
+
+        Comment comment = this.commentService.getComment(id);
+        if (!comment.getAuthor().getEmail().equals(principal.getName())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
+        }
+
+        this.commentService.modify(comment, commentForm.getContent());
+
+        return String.format("redirect:/suggestion/detail/%s#comment_%s",
+                comment.getSuggestion().getId(), comment.getId());
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -84,11 +126,23 @@ public class CommentController {
     public String commentDelete(Principal principal, @PathVariable("id") Long id) {
         Comment comment = this.commentService.getComment(id);
 
-        if (!comment.getAuthor().getNickname().equals(principal.getName())) {
+        if (!comment.getAuthor().getEmail().equals(principal.getName())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "삭제권한이 없습니다.");
         }
         this.commentService.delete(comment);
         return String.format("redirect:/article/detail/%s", comment.getArticle().getId());
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/suggestion/delete/{id}")
+    public String commentSuggestionDelete(Principal principal, @PathVariable("id") Long id) {
+        Comment comment = this.commentService.getComment(id);
+
+        if (!comment.getAuthor().getEmail().equals(principal.getName())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "삭제권한이 없습니다.");
+        }
+        this.commentService.delete(comment);
+        return String.format("redirect:/suggestion/detail/%s", comment.getSuggestion().getId());
     }
 
 
@@ -101,7 +155,8 @@ public class CommentController {
         this.commentService.vote(comment, siteUser);
 
         Comment votedComment = this.commentService.getComment(id);
-        Integer count = comment.getVoter().size();
+        Integer count = votedComment.getVoter().size();
+
         return count.toString();
     }
 
