@@ -6,4 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ArticleRepository extends JpaRepository<Article, Long> {
     Page<Article> findAll(Pageable pagement);
+    Page<Article> findByTitleContainingOrContentContaining(String title, String content, Pageable pageable);
 }

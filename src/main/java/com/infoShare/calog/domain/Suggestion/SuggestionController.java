@@ -40,12 +40,6 @@ public class SuggestionController {
         model.addAttribute("suggestion", suggestion);
         model.addAttribute("article", suggestion);
         this.suggestionService.viewUp(suggestion);
-
-        if (principal != null) {
-            SiteUser user = this.userService.getUser(principal.getName());
-            model.addAttribute("userNickname", user.getNickname());
-        }
-
         return "suggestion_detail";
     }
 

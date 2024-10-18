@@ -1,7 +1,6 @@
 package com.infoShare.calog.domain.Article;
 
 import com.infoShare.calog.domain.Comment.CommentForm;
-import com.infoShare.calog.domain.DataNotFoundException;
 import com.infoShare.calog.domain.user.SiteUser;
 import com.infoShare.calog.domain.user.UserService;
 import com.infoShare.calog.global.jpa.BaseEntity;
@@ -17,12 +16,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.security.Principal;
-import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("article")
-public class ArticleContainer {
+public class ArticleController {
     private final ArticleService articleService;
     private final UserService userService;
 
@@ -31,27 +29,29 @@ public class ArticleContainer {
                        @ModelAttribute("basedEntity") BaseEntity baseEntity,
                        @RequestParam(value = "page", defaultValue = "0") int page,
                        @RequestParam(value = "kw", defaultValue = "") String kw) {
-        Page<Article> paging = this.articleService.getList(page);
+        Page<Article> paging;
+
+        if (kw != null && !kw.isEmpty()) {
+            // 검색 기능 추가
+            paging = this.articleService.searchArticles(kw, page);
+        } else {
+            // 기본 목록
+            paging = this.articleService.getList(page);
+        }
+
         model.addAttribute("paging", paging);
+        model.addAttribute("kw", kw); // 검색어를 모델에 추가
         return "article_list";
     }
 
     @GetMapping("/detail/{id}")
-    public String detail(Model model, @PathVariable(value = "id") Long id, CommentForm commentForm, Principal principal) {
+    public String detail(Model model, @PathVariable(value = "id") Long id, CommentForm commentForm) {
         Article article = this.articleService.getArticleById(id);
         model.addAttribute("article", article);
         this.articleService.viewUp(article);
-
-        if (principal != null) {
-            SiteUser user = this.userService.getUser(principal.getName());
-            model.addAttribute("userNickname", user.getNickname());
-        }
-
         return "article_detail";
     }
 
-
-    @PreAuthorize("isAuthenticated()")
     @GetMapping("/create")
     public String create(ArticleForm articleForm) {
         return "article_form";
@@ -80,6 +80,7 @@ public class ArticleContainer {
         articleForm.setContent(article.getContent());
         return "article_form";
     }
+
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/modify/{id}")
