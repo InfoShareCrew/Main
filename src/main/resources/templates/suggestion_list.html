@@ -1,6 +1,12 @@
 <html layout:decorate="~{layout}">
 <div layout:fragment="content" class="main-contents dp-flex-clmb">
   <h1> 건의 게시판 </h1>
+  <!-- 검색 폼 추가 -->
+  <form method="get" action="/suggestion/list">
+    <input type="text" name="kw" placeholder="제목 또는 내용을 입력" value=""/>
+    <button type="submit">검색</button>
+  </form>
+
   <table>
     <thead>
     <th>번호</th>

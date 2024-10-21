@@ -1,7 +1,7 @@
 <html layout:decorate="~{layout}">
 <div layout:fragment="content" class="main-contents dp-flex-clmb">
     <h1> 카페 상세 </h1>
-    <h2 class="border-bottom py-2" th:text="${cafe.title}">제목</h2>
+    <h2 class="border-bottom py-2" th:text="${cafe.title}">카페명</h2>
     <div class="card my-3">
         <div class="card-body">
             <div class="card-text" style="white-space: pre-line;" th:text="${cafe.content}"></div>
@@ -29,7 +29,7 @@
             </div>
         </div>
     </div>
-    <a th:href="|/article/list|" class="btn btn-primary">목록</a>
+    <a th:href="|/cafe/list|" class="btn btn-primary">목록</a>
 </div>
 
 </html>

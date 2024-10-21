@@ -29,9 +29,19 @@ public class SuggestionController {
                        @ModelAttribute("basedEntity") BaseEntity baseEntity,
                        @RequestParam(value = "page", defaultValue = "0") int page,
                        @RequestParam(value = "kw", defaultValue = "") String kw) {
-        Page<Suggestion> paging = this.suggestionService.getList(page);
+        Page<Suggestion> paging;
+
+        if (kw != null && !kw.isEmpty()) {
+            // 검색 기능 추가
+            paging = this.suggestionService.searchSuggestions(kw, page);
+        } else {
+            // 기본 목록
+            paging = this.suggestionService.getList(page);
+        }
+
         model.addAttribute("paging", paging);
-        return "suggestion_list";
+        model.addAttribute("kw", kw); // 검색어를 모델에 추가
+        return "suggestion_list"; // 뷰 이름도 변경
     }
 
     @GetMapping("/detail/{id}")
@@ -40,6 +50,12 @@ public class SuggestionController {
         model.addAttribute("suggestion", suggestion);
         model.addAttribute("article", suggestion);
         this.suggestionService.viewUp(suggestion);
+
+        if (principal != null) {
+            SiteUser user = userService.getUser(principal.getName());
+            model.addAttribute("userNickname", user.getNickname()); // 닉네임 필드가 있을 경우
+        }
+
         return "suggestion_detail";
     }
 

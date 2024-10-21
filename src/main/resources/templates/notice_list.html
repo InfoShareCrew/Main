@@ -1,27 +1,36 @@
 <html layout:decorate="~{layout}">
 <div layout:fragment="content" class="main-contents dp-flex-clmb">
-  <h1> 카페 목록 </h1>
+  <h1> 공지 게시판 </h1>
+
   <!-- 검색 폼 추가 -->
-  <form method="get" action="/cafe/list">
+  <form method="get" action="/notice/list">
     <input type="text" name="kw" placeholder="제목 또는 내용을 입력" value=""/>
     <button type="submit">검색</button>
   </form>
 
-  <table class="table">
+  <table>
     <thead>
-    <th>번호</th>
-    <th>제목</th>
-    <th>작성일</th>
-    <th>작성자</th>
+    <tr>
+      <th>번호</th>
+      <th>제목</th>
+      <th>작성일</th>
+      <th>관리자</th>
+      <th>조회수</th>
+    </tr>
     </thead>
     <tbody>
-    <tr class="text-center" th:each="cafe, loop: ${paging}">
-      <td th:text="${paging.getTotalElements - (paging.number * paging.size) - loop.index}"></td>
-      <td class="text-start">
-        <a th:href="@{|/cafe/detail/${cafe.id}|}" th:text="${cafe.title}"></a>
+    <tr th:each="notice, loop : ${paging.content}">
+      <td th:text="${paging.totalElements - (paging.number * paging.size) - loop.index}"></td>
+      <td>
+        <a th:href="@{|/notice/detail/${notice.id}|}" th:text="${notice.title}"></a>
+        <span class="text-info small ms-2"
+              th:if="${#lists.size(notice.commentList) > 0}"
+              th:text="${#lists.size(notice.commentList)}">
+        </span>
       </td>
-      <td th:text="${#temporals.format(cafe.createdDate, 'yyyy-MM-dd HH:mm')}"></td>
-      <td><span th:if="${cafe.author != null}" th:text="${cafe.author.nickname}"></span></td>
+      <td th:text="${#temporals.format(notice.createdDate, 'yyyy-MM-dd HH:mm')}"></td>
+      <td><span th:if="${notice.author != null}" th:text="${notice.author.nickname}"></span></td>
+      <td><span th:text="${notice.view} != null ? ${notice.view}:0"></span></td>
     </tr>
     </tbody>
   </table>
@@ -45,7 +54,6 @@
     </ul>
   </div>
 
-
-  <a th:href="|/cafe/create|">카페등록</a>
+  <a th:href="|/notice/create|">공지쓰기</a>
 </div>
 </html>

@@ -1,7 +1,5 @@
 package com.infoShare.calog.domain.Cafe;
 
-import com.infoShare.calog.domain.MajorCategory.MajorCategory;
-import com.infoShare.calog.domain.MinorCategory.MinorCategory;
 import com.infoShare.calog.domain.user.SiteUser;
 import com.infoShare.calog.global.jpa.BaseEntity;
 import jakarta.persistence.*;
@@ -21,20 +19,8 @@ public class Cafe extends BaseEntity {
     @Column(columnDefinition = "TEXT")
     private String content;
 
-/*
-    @ManyToOne
-    private SiteUser manager;
-
-    @ManyToOne
-    private MajorCategory majorCategory;
-
-    @ManyToOne
-    private MinorCategory minorCategory;
-*/
-
     @ManyToOne
     private SiteUser author;
-
 
     @ManyToMany
     Set<SiteUser> voter;

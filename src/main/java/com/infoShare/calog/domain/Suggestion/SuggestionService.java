@@ -1,6 +1,5 @@
 package com.infoShare.calog.domain.Suggestion;
 
-import com.infoShare.calog.domain.Article.Article;
 import com.infoShare.calog.domain.DataNotFoundException;
 import com.infoShare.calog.domain.user.SiteUser;
 import lombok.RequiredArgsConstructor;
@@ -68,6 +67,10 @@ public class SuggestionService {
     public void vote(Suggestion suggestion, SiteUser siteUser) {
         suggestion.getVoter().add(siteUser);
         this.suggestionRepository.save(suggestion);
+    }
+    public Page<Suggestion> searchSuggestions(String keyword, int page) {
+        Pageable pageable = PageRequest.of(page, 10, Sort.by(Sort.Order.desc("createdDate")));
+        return suggestionRepository.findByTitleContainingOrContentContaining(keyword, keyword, pageable);
     }
 }
 

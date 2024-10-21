@@ -2,6 +2,7 @@ package com.infoShare.calog.domain.Comment;
 
 import com.infoShare.calog.domain.Article.Article;
 import com.infoShare.calog.domain.DataNotFoundException;
+import com.infoShare.calog.domain.Notice.Notice;
 import com.infoShare.calog.domain.Suggestion.Suggestion;
 import com.infoShare.calog.domain.user.SiteUser;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,14 @@ public class CommentService {
         comment.setAuthor(author);
         this.commentRepository.save(comment);
     }
+    public void createNoticeComment(Notice notice,  String content, SiteUser author) {
+        Comment comment = new Comment();
+        comment.setContent(content);
+        comment.setNotice(notice);
+        comment.setAuthor(author);
+        this.commentRepository.save(comment);
+    }
+
 
     public Comment getComment(Long id) {
         Optional<Comment> optionalComment = this.commentRepository.findById(id);
@@ -52,4 +61,6 @@ public class CommentService {
         comment.getVoter().add(siteUser);
         this.commentRepository.save(comment);
     }
+
+
 }

@@ -18,7 +18,7 @@
           <div class="text-box" th:if="addressList != null" th:each="address : ${addressList}"><a class="f-size-14" th:href="${address}" th:text="${address}" target="_blank"></a></div>
         </div>
       </div>
-      <div th:if="${user.email != null} and ${#authentication.getPrincipal().username} == ${user.email}">
+      <div sec:authorize="isAuthenticated()" th:if="${user.email != null} and ${#authentication.getPrincipal().username} == ${user.email}">
         <button class="btn-b" th:onclick="@{|window.location.href = '/blog/edit/${user.email}';|}"><span class="f-size-14 f-weight-5">수정</span></button>
       </div>
     </div>
@@ -48,63 +48,64 @@
             <div class="cmt-box">
               <div class="img-box"><img th:src="@{/img/Message_circle.png}" alt="댓글 아이콘"></div>
               <span class="f-size-14" th:text="${log.comment}"></span>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <div class="my-cafe-container">
-      <div class="text-box"><span class="f-size-18 f-weight-6">홍길동님이 가입 중인 카페</span></div>
-      <div class="cafe-list">
-        <div class="">
-          <div class="profile-img img-box">
-            <img th:src="@{/img/e2729fba28172ae8831a761a9c60d35c.jpg}" alt="카페 프로필 사진">
-          </div>
-          <div class="content-2 dp-flex-clmb">
-            <div class="title"><span class="f-size-16 f-weight-6">카페이름1</span></div>
-            <div class="">
-              <div class="full-w">카페소개글</div>
-              <div class="detail">
-                <div class="user-box">
-                  <div class="img-box"><img th:src="@{/img/person.png}" alt="유저 아이콘"></div>
-                  <div class="text-box"><span class="f-size-13">1000</span></div>
+      <div class="my-cafe-container">
+        <div class="text-box"><span class="f-size-18 f-weight-6">홍길동님이 가입 중인 카페</span></div>
+        <div class="cafe-list">
+          <div class="">
+            <div class="profile-img img-box">
+              <img th:src="@{/img/e2729fba28172ae8831a761a9c60d35c.jpg}" alt="카페 프로필 사진">
+            </div>
+            <div class="content-2 dp-flex-clmb">
+              <div class="title"><span class="f-size-16 f-weight-6">카페이름1</span></div>
+              <div class="">
+                <div class="full-w">카페소개글</div>
+                <div class="detail">
+                  <div class="user-box">
+                    <div class="img-box"><img th:src="@{/img/person.png}" alt="유저 아이콘"></div>
+                    <div class="text-box"><span class="f-size-13">1000</span></div>
+                  </div>
+                  <div class="text-box"><span class="f-size-13">세부 카테고리</span></div>
                 </div>
-                <div class="text-box"><span class="f-size-13">세부 카테고리</span></div>
               </div>
             </div>
           </div>
-        </div>
-        <div class="">
-          <div class="profile-img img-box">
-            <img th:src="@{/img/e2729fba28172ae8831a761a9c60d35c.jpg}" alt="카페 프로필 사진">
-          </div>
-          <div class="content-2 dp-flex-clmb">
-            <div class="title"><span class="f-size-16 f-weight-6">카페이름1</span></div>
-            <div>
-              <div class="content full-w">카페소개글</div>
-              <div class="detail">
-                <div class="user-box">
-                  <div class="img-box"><img th:src="@{/img/person.png}" alt="유저 아이콘"></div>
-                  <div class="text-box"><span class="f-size-13">1000</span></div>
+          <div class="">
+            <div class="profile-img img-box">
+              <img th:src="@{/img/e2729fba28172ae8831a761a9c60d35c.jpg}" alt="카페 프로필 사진">
+            </div>
+            <div class="content-2 dp-flex-clmb">
+              <div class="title"><span class="f-size-16 f-weight-6">카페이름1</span></div>
+              <div>
+                <div class="content full-w">카페소개글</div>
+                <div class="detail">
+                  <div class="user-box">
+                    <div class="img-box"><img th:src="@{/img/person.png}" alt="유저 아이콘"></div>
+                    <div class="text-box"><span class="f-size-13">1000</span></div>
+                  </div>
+                  <div class="text-box"><span class="f-size-13">세부 카테고리</span></div>
                 </div>
-                <div class="text-box"><span class="f-size-13">세부 카테고리</span></div>
               </div>
             </div>
           </div>
-        </div>
-        <div class="">
-          <div class="profile-img img-box">
-            <img th:src="@{/img/e2729fba28172ae8831a761a9c60d35c.jpg}" alt="카페 프로필 사진">
-          </div>
-          <div class="content-2 dp-flex-clmb">
-            <div class="title"><span class="f-size-16 f-weight-6">카페이름1</span></div>
-            <div>
-              <div class="content full-w">카페소개글</div>
-              <div class="detail">
-                <div class="user-box">
-                  <div class="img-box"><img th:src="@{/img/person.png}" alt="유저 아이콘"></div>
-                  <div class="text-box"><span class="f-size-13">1000</span></div>
+          <div class="">
+            <div class="profile-img img-box">
+              <img th:src="@{/img/e2729fba28172ae8831a761a9c60d35c.jpg}" alt="카페 프로필 사진">
+            </div>
+            <div class="content-2 dp-flex-clmb">
+              <div class="title"><span class="f-size-16 f-weight-6">카페이름1</span></div>
+              <div>
+                <div class="content full-w">카페소개글</div>
+                <div class="detail">
+                  <div class="user-box">
+                    <div class="img-box"><img th:src="@{/img/person.png}" alt="유저 아이콘"></div>
+                    <div class="text-box"><span class="f-size-13">1000</span></div>
+                  </div>
+                  <div class="text-box"><span class="f-size-13">세부 카테고리</span></div>
                 </div>
-                <div class="text-box"><span class="f-size-13">세부 카테고리</span></div>
               </div>
             </div>
           </div>

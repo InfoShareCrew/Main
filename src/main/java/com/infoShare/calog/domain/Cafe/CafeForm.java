@@ -13,9 +13,4 @@ public class CafeForm {
     @NotNull(message = "내용은 필수사항입니다.")
     private String content;
 
-    /*@NotEmpty(message = "대분류 카테고리는 필수사항입니다.")
-    private Short majorCategoryId;
-
-    @NotEmpty(message = "소뷴류 카테고리는 필수사항입니다.")
-    private Short minorCategoryId;*/
 }

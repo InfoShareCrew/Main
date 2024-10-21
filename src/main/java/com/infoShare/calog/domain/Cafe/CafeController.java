@@ -1,12 +1,6 @@
 package com.infoShare.calog.domain.Cafe;
 
-import com.infoShare.calog.domain.Article.Article;
-import com.infoShare.calog.domain.Comment.CommentForm;
-import com.infoShare.calog.domain.MajorCategory.MajorCategory;
-import com.infoShare.calog.domain.MajorCategory.MajorCategoryService;
-import com.infoShare.calog.domain.MinorCategory.MinorCategory;
-import com.infoShare.calog.domain.MinorCategory.MinorCategoryService;
-import com.infoShare.calog.domain.Suggestion.Suggestion;
+import com.infoShare.calog.domain.Category.CategoryService;
 import com.infoShare.calog.domain.user.SiteUser;
 import com.infoShare.calog.domain.user.UserService;
 import com.infoShare.calog.global.jpa.BaseEntity;
@@ -14,9 +8,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -24,24 +16,30 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.security.Principal;
-import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("cafe")
 public class CafeController {
     private final CafeService cafeService;
-    private final MajorCategoryService majorCategoryService;
-    private final MinorCategoryService minorCategoryService;
+    private final CategoryService categoryService;
     private final UserService userService;
 
     @GetMapping("/list")
     public String list(Model model,
                        @ModelAttribute("basedEntity") BaseEntity baseEntity,
-                       @RequestParam(value = "page",defaultValue = "0") int page,
-                       @RequestParam(value = "kw" ,defaultValue = "") String kw ) {
-        Page<Cafe> paging = this.cafeService.getList(page);
+                       @RequestParam(value = "page", defaultValue = "0") int page,
+                       @RequestParam(value = "kw", defaultValue = "") String kw) {
+        Page<Cafe> paging;
+
+        if (kw != null && !kw.isEmpty()) {
+            paging = this.cafeService.searchCafes(kw, page);
+        } else {
+            paging = this.cafeService.getList(page);
+        }
+
         model.addAttribute("paging", paging);
+        model.addAttribute("kw", kw);
         return "cafe_list";
     }
 
@@ -73,29 +71,22 @@ public class CafeController {
         }
 
         SiteUser author = this.userService.getUser(principal.getName());
-        //this.cafeService.create(cafeForm.getTitle(), cafeForm.getContent(),cafeForm.getMajorCategoryId(), cafeForm.getMinorCategoryId(), author);
+
         this.cafeService.create(cafeForm.getTitle(),cafeForm.getContent(),author);
         return "redirect:/cafe/list";
     }
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/modify/{id}")
-    public String modifyCafe(CafeForm cafeForm, @PathVariable("id") Long id,Principal principal) {
+    public String modifyCafe(CafeForm cafeForm, Model model,@PathVariable("id") Long id,Principal principal) {
         Cafe cafe = this.cafeService.getCafeById(id);
         if(!cafe.getAuthor().getEmail().equals(principal.getName())){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
         }
 
-        // 대분류 및 소분류 카테고리 수정 로직 추가
-        //MajorCategory majorCategory = majorCategoryService.findById(cafeForm.getMajorCategoryId());
-       // MinorCategory minorCategory = minorCategoryService.findById(cafeForm.getMinorCategoryId());
-
-        // 카페 정보 수정
-        cafe.setTitle(cafeForm.getTitle());
-        cafe.setContent(cafeForm.getContent());
-        //cafe.setMajorCategory(majorCategory);
-        //cafe.setMinorCategory(minorCategory);
-
+        cafeForm.setTitle(cafe.getTitle());
+        cafeForm.setContent(cafe.getContent());
+        model.addAttribute("cafeForm",cafeForm);
         return "cafe_form";
     }
 
