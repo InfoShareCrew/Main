@@ -2,6 +2,7 @@ package com.infoShare.calog.domain.user.blog;
 
 import com.infoShare.calog.domain.user.SiteUser;
 import com.infoShare.calog.domain.user.UserService;
+import com.infoShare.calog.domain.user.activity.ActivityLogService;
 import com.infoShare.calog.global.Util.UtilService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,7 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/blog")
@@ -26,6 +28,7 @@ public class BlogController {
     private final BlogService blogService;
     private final UserService userService;
     private final UtilService utilService;
+    private final ActivityLogService activityLogService;
 
     @Value("${custom.fileDirPath}")
     private String fileDirPath;
@@ -40,6 +43,9 @@ public class BlogController {
     @GetMapping("/{userEmail}")
     public String userBlog(Model model, @PathVariable(value = "userEmail") String email) {
         SiteUser user = this.userService.findByEmail(email);
+
+        // 사용자 활동 로그 가져오기
+        List<Map<String, Object>> activityLogs = activityLogService.getActivityLogsByUserId(user.getId());
 
         // 문자열로 저장되어 있는 사용자의 개인링크 첨부를 알고리즘으로 풀어 리스트로 html에 첨부
         String address = user.getAddress();
@@ -57,6 +63,7 @@ public class BlogController {
         model.addAttribute("addressList", addressList);
         model.addAttribute("user", user);
         model.addAttribute("fileDirPath", fileDirPath);
+        model.addAttribute("activityLogs", activityLogs); // 활동 로그 추가
         return "blog_view";
     }
 
