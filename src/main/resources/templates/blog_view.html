@@ -18,7 +18,7 @@
           <div class="text-box" th:if="addressList != null" th:each="address : ${addressList}"><a class="f-size-14" th:href="${address}" th:text="${address}" target="_blank"></a></div>
         </div>
       </div>
-      <div sec:authorize="isAuthenticated()" th:if="${user.email != null} and ${#authentication.getPrincipal().username} == ${user.email}">
+      <div th:if="${user.email != null} and ${#authentication.getPrincipal().username} == ${user.email}">
         <button class="btn-b" th:onclick="@{|window.location.href = '/blog/edit/${user.email}';|}"><span class="f-size-14 f-weight-5">수정</span></button>
       </div>
     </div>
@@ -28,62 +28,25 @@
         <div class="ctgr-box-my btn"><span>인기순</span></div>
       </div>
       <div class="post-list dp-flex-clmb">
-        <div class="post post-1">
-          <div class="title"><span class="f-size-16 f-weight-6">글 제목</span></div>
+        <!-- 활동 내역 표시 -->
+        <div class="post" th:each="log, iterStat : ${activityLogs}" th:if="${iterStat.index < 3}">
+          <div class="title">
+            <a class="f-size-16 f-weight-6"
+               th:href="@{|/article/detail/${log.articleId}|}"
+               th:text="${log.articleTitle}"></a>
+          </div>
           <div class="detail-box">
-            <div class="text-box"><span class="f-size-14">카페이름</span></div>
+            <div class="text-box"><span class="f-size-14" th:text="${log.cafeTitle}"></span></div>
             <div class="view-box">
               <div class="img-box"><img th:src="@{/img/Eye.png}" alt="조회수 아이콘"></div>
-              <span class="f-size-14">1000</span>
+              <span class="f-size-14" th:text="${log.view}"></span>
             </div>
             <div class="rcmd-box">
               <div class="img-box"><img th:src="@{/img/Heart.png}" alt="추천 아이콘"></div>
-              <span class="f-size-14">24</span>
+              <span class="f-size-14" th:text="${log.voter}"></span>
             </div>
-            <div class="cmt-box">
-              <div class="img-box"><img th:src="@{/img/Message_circle.png}" alt="댓글 아이콘"></div>
-              <span class="f-size-14">24</span>
-            </div>
+            <div class="content"><span class="f-size-14" th:text="${log.content}"></span></div>
           </div>
-          <div class="content"><span class="f-size-14">글 내용</span></div>
-        </div>
-        <div class="post post-2">
-          <div class="title"><span class="f-size-16 f-weight-6">글 제목</span></div>
-          <div class="detail-box">
-            <div class="text-box"><span class="f-size-14">카페이름</span></div>
-            <div class="view-box">
-              <div class="img-box"><img th:src="@{/img/Eye.png}" alt="조회수 아이콘"></div>
-              <span class="f-size-14">1000</span>
-            </div>
-            <div class="rcmd-box">
-              <div class="img-box"><img th:src="@{/img/Heart.png}" alt="추천 아이콘"></div>
-              <span class="f-size-14">24</span>
-            </div>
-            <div class="cmt-box">
-              <div class="img-box"><img th:src="@{/img/Message_circle.png}" alt="댓글 아이콘"></div>
-              <span class="f-size-14">24</span>
-            </div>
-          </div>
-          <div class="content"><span class="f-size-14">글 내용</span></div>
-        </div>
-        <div class="post post-3">
-          <div class="title"><span class="f-size-16 f-weight-6">글 제목</span></div>
-          <div class="detail-box">
-            <div class="text-box"><span class="f-size-14">카페이름</span></div>
-            <div class="view-box">
-              <div class="img-box"><img th:src="@{/img/Eye.png}" alt="조회수 아이콘"></div>
-              <span class="f-size-14">1000</span>
-            </div>
-            <div class="rcmd-box">
-              <div class="img-box"><img th:src="@{/img/Heart.png}" alt="추천 아이콘"></div>
-              <span class="f-size-14">24</span>
-            </div>
-            <div class="cmt-box">
-              <div class="img-box"><img th:src="@{/img/Message_circle.png}" alt="댓글 아이콘"></div>
-              <span class="f-size-14">24</span>
-            </div>
-          </div>
-          <div class="content"><span class="f-size-14">글 내용</span></div>
         </div>
       </div>
     </div>

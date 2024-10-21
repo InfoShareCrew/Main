@@ -121,4 +121,13 @@ public class ArticleController {
         Integer count = votedArticle.getVoter().size();
         return count.toString();
     }
+
+    @GetMapping("/blog/view/{id}")
+    public String viewBlog(@PathVariable Long id, Model model) {
+        Article article = articleService.getArticleById(id); // 이 메서드가 null을 반환할 수 있는지 확인
+        if (article != null) {
+            model.addAttribute("article", article);
+        }
+        return "blog_view"; // 템플릿 이름
+    }
 }
