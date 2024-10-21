@@ -39,11 +39,11 @@ public class ArticleService {
     }
 
 
-    public void createArticle(String title, String content, SiteUser author, Category majorCategory) {
+    public void createArticle(String title, String content, SiteUser author, Category category) {
         Article article = new Article();
         article.setTitle(title);
         article.setContent(content);
-        article.setMajorCategory(majorCategory);
+        article.setCategory(category);
         article.setAuthor(author);
         this.articleRepository.save(article);
     }
@@ -61,7 +61,7 @@ public class ArticleService {
     public void modify(Article article, String title, String content, Category majorCategory) {
         article.setTitle(title);
         article.setContent(content);
-        article.setMajorCategory(majorCategory);
+        article.setCategory(majorCategory);
         this.articleRepository.save(article);
     }
 
@@ -78,4 +78,5 @@ public class ArticleService {
         Pageable pageable = PageRequest.of(page, 10, Sort.by(Sort.Order.desc("createdDate")));
         return articleRepository.findByTitleContainingOrContentContaining(keyword, keyword, pageable);
     }
+
 }

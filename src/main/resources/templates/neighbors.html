@@ -1,14 +1,61 @@
-<!-- <link rel="stylesheet" href="../static/bootstrap.min.css">
-<link rel="stylesheet" href="../static/lib.css">
-<link rel="stylesheet" href="../static/styleguide.css">
-<link rel="stylesheet" href="../static/style.css"> -->
 <html layout:decorate="~{layout}">
+
+<head>
+  <!-- 스와이퍼 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+  <link rel="stylesheet" type="text/css" th:href="@{/swiper.css}">
+  <!-- <link rel="stylesheet" href="../static/bootstrap.min.css">
+  <link rel="stylesheet" href="../static/lib.css">
+  <link rel="stylesheet" href="../static/styleguide.css">
+  <link rel="stylesheet" href="../static/style.css">
+  <link rel="stylesheet" href="../static/swiper.css"> -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+</head>
 <div layout:fragment="content" class="main-contents">
   <div th:replace="~{index_left_side :: leftSideFragment }"></div>
   <div class="air-box"></div>
   <div class="center personal-container neighbor">
     <div class="neighborList">
-        이웃 리스트
+      <!-- Slider main container -->
+      <div class="swiper">
+        <!-- Additional required wrapper -->
+        <div class="swiper-wrapper">
+          <!-- Slides -->
+          <div class="swiper-slide">
+            <div class="img-box" id="ss-1"><img src="../static/img/e2729fba28172ae8831a761a9c60d35c.jpg" alt="카페 프로필 사진"></div>
+          </div>
+          <div class="swiper-slide" id="ss-2">
+            <button class=""><span class="f-size-13 f-size-5">카테고리-2</span></button>
+          </div>
+          <div class="swiper-slide" id="ss-3">
+            <button class=""><span class="f-size-13 f-size-5">카테고리-3</span></button>
+          </div>
+          <div class="swiper-slide" id="ss-4">
+            <button class=""><span class="f-size-13 f-size-5">카테고리-4</span></button>
+          </div>
+          <div class="swiper-slide" id="ss-5">
+            <button class=""><span class="f-size-13 f-size-5">카테고리-5</span></button>
+          </div>
+          <div class="swiper-slide" id="ss-6">
+            <button class=""><span class="f-size-13 f-size-5">카테고리-6</span></button>
+          </div>
+          <div class="swiper-slide" id="ss-7">
+            <button class=""><span class="f-size-13 f-size-5">카테고리-7</span></button>
+          </div>
+          <div class="swiper-slide" id="ss-8">
+            <button class=""><span class="f-size-13 f-size-5">카테고리-8</span></button>
+          </div>
+        </div>
+        <!-- If we need pagination -->
+        <!-- <div class="swiper-pagination"></div> -->
+
+        <!-- If we need navigation buttons -->
+        <div class="swiper-button-prev"></div>
+        <div class="swiper-button-next"></div>
+
+        <!-- If we need scrollbar -->
+        <!-- <div class="swiper-scrollbar"></div> -->
+      </div>
     </div>
     <div class="profile-box">
         <!--            <div class="img-box"><img th:src="@{|/img/${user.id}.jpg|}" alt="프로필사진"></div>-->
@@ -152,11 +199,42 @@
   </div>
   <div class="right-side"></div>
 </div>
+<!-- Swiper JS 파일 추가 -->
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <!-- 자바 스크립트 -->
 <script layout:fragment="script" type='text/javascript'>
-  $(document).ready(function() {
+  const swiper = new Swiper('.swiper', {
+   // Optional parameters
+   direction: 'horizontal',
+   loop: true,
 
+   // If we need pagination
+   pagination: {
+     el: '.swiper-pagination',
+   },
+
+      slidesPerView: 5,
+      spaceBetween: 16,
+
+   // Navigation arrows
+   navigation: {
+     nextEl: '.swiper-button-next',
+     prevEl: '.swiper-button-prev',
+   },
+
+  //  // And if we need scrollbar
+  //  scrollbar: {
+  //    el: '.swiper-scrollbar',
+  //  },
+ });
+
+ const categoryList = ['ss-1', 'ss-2', 'ss-3', 'ss-4', 'ss-5', 'ss-6', 'ss-7', 'ss-8']; // 카테고리 리스트
+ categoryList.forEach(function(value, index) {  // 카테고리 누르면 해당 카페 보여주기
+  const swiper_slide = document.querySelector("#"+value);
+  swiper_slide.addEventListener("click", function() {
+    console.log(this);
   })
+ })
 </script>
 </html>
 
