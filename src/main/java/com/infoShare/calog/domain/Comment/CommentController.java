@@ -2,8 +2,9 @@ package com.infoShare.calog.domain.Comment;
 
 import com.infoShare.calog.domain.Article.Article;
 import com.infoShare.calog.domain.Article.ArticleService;
+import com.infoShare.calog.domain.Notice.Notice;
+import com.infoShare.calog.domain.Notice.NoticeService;
 import com.infoShare.calog.domain.Suggestion.Suggestion;
-import com.infoShare.calog.domain.Suggestion.SuggestionForm;
 import com.infoShare.calog.domain.Suggestion.SuggestionService;
 import com.infoShare.calog.domain.user.SiteUser;
 import com.infoShare.calog.domain.user.UserService;
@@ -26,6 +27,7 @@ public class CommentController {
     private final CommentService commentService;
     private final ArticleService articleService;
     private final SuggestionService suggestionService;
+    private final NoticeService noticeService;
     private final UserService userService;
 
     @PreAuthorize("isAuthenticated()")
@@ -54,6 +56,20 @@ public class CommentController {
 
         this.commentService.createSuggestionComment(suggestion, commentForm.getContent(), author);
         return String.format("redirect:/suggestion/detail/%s", id);
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/notice/create/{id}")
+    public String createNoticeComment(Model model, @Valid CommentForm commentForm, BindingResult bindingResult, @PathVariable(value = "id") Long id, Principal principal) {
+        Notice notice = this.noticeService.getNoticeById(id);
+        SiteUser author = this.userService.getUser(principal.getName());
+
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("notice", notice);
+        }
+
+        this.commentService.createNoticeComment(notice, commentForm.getContent(), author);
+        return String.format("redirect:/notice/detail/%s", id);
     }
 
 
@@ -122,6 +138,40 @@ public class CommentController {
     }
 
     @PreAuthorize("isAuthenticated()")
+    @GetMapping("/notice/modify/{id}")
+    public String modifyNotice(CommentForm commentForm, @PathVariable(value = "id") Long id, Principal principal) {
+        Comment comment = this.commentService.getComment(id);
+        if (!comment.getAuthor().getEmail().equals(principal.getName())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
+        }
+        commentForm.setContent(comment.getContent());
+        return "comment_form";
+
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/notice/modify/{id}")
+    public String commentNoticeModify(@Valid CommentForm commentForm, BindingResult bindingResult,
+                                          @PathVariable("id") Long id, Principal principal) {
+
+        if (bindingResult.hasErrors()) {
+            return "comment_form";
+        }
+
+        Comment comment = this.commentService.getComment(id);
+        if (!comment.getAuthor().getEmail().equals(principal.getName())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
+        }
+
+        this.commentService.modify(comment, commentForm.getContent());
+
+        return String.format("redirect:/notice/detail/%s#comment_%s",
+                comment.getNotice().getId(), comment.getId());
+    }
+
+
+
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/delete/{id}")
     public String commentDelete(Principal principal, @PathVariable("id") Long id) {
         Comment comment = this.commentService.getComment(id);
@@ -145,6 +195,17 @@ public class CommentController {
         return String.format("redirect:/suggestion/detail/%s", comment.getSuggestion().getId());
     }
 
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/notice/delete/{id}")
+    public String commentNoticeDelete(Principal principal, @PathVariable("id") Long id) {
+        Comment comment = this.commentService.getComment(id);
+
+        if (!comment.getAuthor().getEmail().equals(principal.getName())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "삭제권한이 없습니다.");
+        }
+        this.commentService.delete(comment);
+        return String.format("redirect:/notice/detail/%s", comment.getNotice().getId());
+    }
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/vote/{id}")

@@ -1,5 +1,7 @@
 package com.infoShare.calog.domain.Article;
 
+import com.infoShare.calog.domain.Category.Category;
+import com.infoShare.calog.domain.Category.CategoryService;
 import com.infoShare.calog.domain.Comment.CommentForm;
 import com.infoShare.calog.domain.user.SiteUser;
 import com.infoShare.calog.domain.user.UserService;
@@ -23,6 +25,7 @@ import java.security.Principal;
 public class ArticleController {
     private final ArticleService articleService;
     private final UserService userService;
+    private final CategoryService categoryService;
 
     @GetMapping("/list")
     public String list(Model model,
@@ -45,15 +48,27 @@ public class ArticleController {
     }
 
     @GetMapping("/detail/{id}")
-    public String detail(Model model, @PathVariable(value = "id") Long id, CommentForm commentForm) {
+    public String detail(Model model, @PathVariable(value = "id") Long id, CommentForm commentForm, Principal principal) {
         Article article = this.articleService.getArticleById(id);
         model.addAttribute("article", article);
         this.articleService.viewUp(article);
+
+        if (principal != null) {
+            SiteUser user = userService.getUser(principal.getName());
+            model.addAttribute("userNickname", user.getNickname());
+        }
+
+        // 선택한 카테고리 정보 추가
+        Category majorCategory = article.getMajorCategory();
+        model.addAttribute("selectedCategoryId", majorCategory != null ? majorCategory.getId() : null);
+        model.addAttribute("categories", categoryService.getAllCategories()); // 모든 카테고리 목록 가져오기
+
         return "article_detail";
     }
 
     @GetMapping("/create")
-    public String create(ArticleForm articleForm) {
+    public String create(ArticleForm articleForm, Model model) {
+        model.addAttribute("categories", categoryService.getList(0).getContent()); // 카테고리 가져오기
         return "article_form";
     }
 
@@ -64,13 +79,14 @@ public class ArticleController {
             return "article_form";
         }
         SiteUser author = this.userService.getUser(principal.getName());
-        this.articleService.createArticle(articleForm.getTitle(), articleForm.getContent(),author);
+        Category category = this.categoryService.getCategoryById(articleForm.getCategoryId());
+        this.articleService.createArticle(articleForm.getTitle(), articleForm.getContent(), author, category);
         return "redirect:/article/list";
     }
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/modify/{id}")
-    public String modifyArticle(ArticleForm articleForm, @PathVariable("id") Long id, Principal principal){
+    public String modifyArticle(ArticleForm articleForm, @PathVariable("id") Long id,Model model, Principal principal){
         Article article = this.articleService.getArticleById(id);
         if(!article.getAuthor().getEmail().equals(principal.getName())){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
@@ -78,6 +94,9 @@ public class ArticleController {
 
         articleForm.setTitle(article.getTitle());
         articleForm.setContent(article.getContent());
+        articleForm.setCategoryId(articleForm.getCategoryId());
+        model.addAttribute("articleForm",articleForm);
+        model.addAttribute("categories",categoryService.getAllCategories());
         return "article_form";
     }
 
@@ -93,8 +112,8 @@ public class ArticleController {
         if(!article.getAuthor().getEmail().equals(principal.getName())){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
         }
-
-        this.articleService.modify(article,articleForm.getTitle(),articleForm.getContent());
+        Category category = this.categoryService.getCategoryById(articleForm.getCategoryId()); // 카테고리 추가
+        this.articleService.modify(article, articleForm.getTitle(), articleForm.getContent(), category); // 수정 메서드 호출
         return String.format("redirect:/article/detail/%s",id);
     }
 

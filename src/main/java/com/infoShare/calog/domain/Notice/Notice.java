@@ -1,7 +1,7 @@
-package com.infoShare.calog.domain.Article;
+package com.infoShare.calog.domain.Notice;
 
 import com.infoShare.calog.domain.BoardType.BoardType;
-import com.infoShare.calog.domain.Category.Category;
+import com.infoShare.calog.domain.Cafe.Cafe;
 import com.infoShare.calog.domain.Comment.Comment;
 import com.infoShare.calog.domain.user.SiteUser;
 import com.infoShare.calog.global.jpa.BaseEntity;
@@ -15,7 +15,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
-public class Article extends BaseEntity {
+public class Notice extends BaseEntity {
     @Column(length = 200)
     private String title;
 
@@ -24,7 +24,7 @@ public class Article extends BaseEntity {
 
     private Long view = 0L;
 
-    @OneToMany(mappedBy = "article", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "notice", cascade = CascadeType.REMOVE)
     private List<Comment> commentList;
 
     @ManyToOne
@@ -34,9 +34,8 @@ public class Article extends BaseEntity {
     private SiteUser author;
 
     @ManyToOne
-    private Category majorCategory;
+    private Cafe cafe;
 
     @ManyToMany
     Set<SiteUser> voter;
-
 }

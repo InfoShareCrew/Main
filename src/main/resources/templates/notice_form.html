@@ -1,0 +1,22 @@
+<html layout:decorate="~{layout}">
+<div layout:fragment="content" class="container">
+  <h5 class="my-3 border-bottom pb-2">공지 등록</h5>
+  <form method="post" th:object="${noticeForm}">
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+    <!-- 오류 메시지 -->
+    <div class="alert alert-danger" role="alert" th:if="${#fields.hasAnyErrors()}">
+      <div th:each="err: ${#fields.allErrors()}" th:text="${err}"/>
+    </div>
+    <!-- 입력 -->
+    <div class="mb-3">
+      <label for="title" class="form-label">공지제목</label>
+      <input type="text" th:field="*{title}" class="form-control">
+    </div>
+    <div class="mb-3">
+      <label for="content" class="form-label">공지내용</label>
+      <textarea th:field="*{content}" rows="10" class="form-control"></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary my-2">등록하기</button>
+  </form>
+</div>
+</html>

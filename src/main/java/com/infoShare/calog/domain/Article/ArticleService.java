@@ -1,5 +1,6 @@
 package com.infoShare.calog.domain.Article;
 
+import com.infoShare.calog.domain.Category.Category;
 import com.infoShare.calog.domain.DataNotFoundException;
 import com.infoShare.calog.domain.user.SiteUser;
 import lombok.RequiredArgsConstructor;
@@ -9,7 +10,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -39,10 +39,11 @@ public class ArticleService {
     }
 
 
-    public void createArticle(String title, String content, SiteUser author) {
+    public void createArticle(String title, String content, SiteUser author, Category majorCategory) {
         Article article = new Article();
         article.setTitle(title);
         article.setContent(content);
+        article.setMajorCategory(majorCategory);
         article.setAuthor(author);
         this.articleRepository.save(article);
     }
@@ -57,9 +58,10 @@ public class ArticleService {
     }
 
 
-    public void modify(Article article, String title, String content) {
+    public void modify(Article article, String title, String content, Category majorCategory) {
         article.setTitle(title);
         article.setContent(content);
+        article.setMajorCategory(majorCategory);
         this.articleRepository.save(article);
     }
 

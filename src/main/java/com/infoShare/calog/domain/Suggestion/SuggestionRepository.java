@@ -8,4 +8,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface SuggestionRepository extends JpaRepository<Suggestion, Long> {
     Page<Suggestion> findAll(Pageable pageable);
+    Page<Suggestion> findByTitleContainingOrContentContaining(String title, String content, Pageable pageable);
 }

@@ -1,4 +1,4 @@
-package com.infoShare.calog.domain.MajorCategory;
+package com.infoShare.calog.domain.Category;
 
 import com.infoShare.calog.domain.user.SiteUser;
 import jakarta.persistence.*;
@@ -10,16 +10,19 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @Setter
-public class MajorCategory  {
+public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Short id;
 
     @Column(length = 50)
-    private String name;
+    private String majorCategory;
 
-    private LocalDateTime createDate;
-    private LocalDateTime modifyDate;
+    @Column(length = 50)
+    private String minorCategory;
+
+    private LocalDateTime createdDate;
+    private LocalDateTime modifiedDate;
 
     @ManyToOne
     private SiteUser author;
