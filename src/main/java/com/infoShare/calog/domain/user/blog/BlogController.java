@@ -47,6 +47,7 @@ public class BlogController {
         // 사용자 활동 로그 가져오기
         List<Map<String, Object>> activityLogs = activityLogService.getActivityLogsByUserId(user.getId());
 
+        List<Map<String, Object>> activityCafes = activityLogService.getActivityCafesByUserId(user.getId());
         // 문자열로 저장되어 있는 사용자의 개인링크 첨부를 알고리즘으로 풀어 리스트로 html에 첨부
         String address = user.getAddress();
         List<String> addressList = new ArrayList<>();
@@ -64,6 +65,7 @@ public class BlogController {
         model.addAttribute("user", user);
         model.addAttribute("fileDirPath", fileDirPath);
         model.addAttribute("activityLogs", activityLogs); // 활동 로그 추가
+        model.addAttribute("activityCafes", activityCafes);
         return "blog_view";
     }
 

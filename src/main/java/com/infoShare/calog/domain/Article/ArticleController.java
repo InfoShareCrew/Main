@@ -8,6 +8,7 @@ import com.infoShare.calog.domain.user.UserService;
 import com.infoShare.calog.global.jpa.BaseEntity;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.Banner;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -74,13 +75,13 @@ public class ArticleController {
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/create")
-    public String create(@Valid ArticleForm articleForm, BindingResult bindingResult, Principal principal) {
+    public String create(@Valid ArticleForm articleForm, BindingResult bindingResult, Principal principal, Model model) {
         if (bindingResult.hasErrors()) {
+            model.addAttribute("categories", categoryService.getList(0).getContent());
             return "article_form";
         }
         SiteUser author = this.userService.getUser(principal.getName());
-        Category category = articleForm.getCategory();
-        this.articleService.createArticle(articleForm.getTitle(), articleForm.getContent(), author, category);
+        this.articleService.createArticle(articleForm.getTitle(), articleForm.getContent(), author, articleForm.getCategory());
         return "redirect:/article/list";
     }
 

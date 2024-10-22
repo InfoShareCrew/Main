@@ -21,7 +21,18 @@ public class ActivityLogService {
                 "JOIN Site_User u ON c.id = u.id " +  // assuming this relationship
                 "WHERE u.id = ? " +
                 "GROUP BY a.title, c.name, a.view, a.content, a.id, c.id " +
-                "ORDER BY MAX(a.created_date) DESC";;
+                "ORDER BY MAX(a.created_date) DESC";
+
+        return jdbcTemplate.queryForList(sql, userId);
+    }
+
+    public List<Map<String, Object>> getActivityCafesByUserId(Long userId) {
+        String sql = "SELECT c.name AS name, c.intro AS intro, c.category_id AS category, c.id AS cafeId " +
+                "FROM cafe c " +
+                "JOIN Site_User u ON c.maneger_id = u.id " +
+                "WHERE u.id = ? " +
+                "GROUP BY c.name, c.intro, c.category_id " +
+                "ORDER BY c.created_date DESC";
 
         return jdbcTemplate.queryForList(sql, userId);
     }

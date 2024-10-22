@@ -19,12 +19,12 @@
     <!-- 카테고리 선택 -->
     <div class="mb-3">
       <label for="category" class="form-label">카테고리</label>
-      <select id="category" th:field="*{categoryId}" class="form-select">
+      <select id="category" th:field="*{category}" class="form-select">
         <option value="">선택하세요</option>
         <option th:each="category : ${categories}"
                 th:value="${category.id}"
                 th:text="${category.majorCategory} + ' - ' + ${category.minorCategory}"
-                th:selected="${category.id == articleForm.categoryId}"></option>
+                th:selected="${category.id == articleForm.category}"></option>
       </select>
     </div>
     <button type="submit" class="btn btn-primary my-2">등록하기</button>
