@@ -17,10 +17,17 @@ public class ActivityLogController {
     @Autowired
     private ActivityLogService activityLogService;
 
-    @GetMapping("/{userId}")
+    @GetMapping("/{userId}/logs")
     public String getActivityLogs(@PathVariable Long userId, Model model) {
         List<Map<String, Object>> logs = activityLogService.getActivityLogsByUserId(userId);
         model.addAttribute("logs", logs);
+        return "blog_view"; // 해당 HTML 파일의 이름
+    }
+
+    @GetMapping("/{userId}/cafes")
+    public String getActivityCafes(@PathVariable Long userId, Model model) {
+        List<Map<String, Object>> cafes = activityLogService.getActivityCafesByUserId(userId);
+        model.addAttribute("cafes", cafes);
         return "blog_view"; // 해당 HTML 파일의 이름
     }
 }
