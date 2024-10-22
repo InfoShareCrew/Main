@@ -8,7 +8,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -86,7 +85,7 @@ public class BlogController {
                            @PathVariable(value = "userEmail") String email,
                            @RequestParam(value = "profile-img") MultipartFile image,
                            BindingResult bindingResult,
-                            Principal principal) {
+                           Principal principal) {
         if (bindingResult.hasErrors()) {
             return "blog_prof_form";
         }
@@ -95,10 +94,10 @@ public class BlogController {
         String profileImg = this.utilService.saveImage("user", image);
         SiteUser siteUser = userService.findByEmail(principal.getName());
         blogService.updateUserProfile(siteUser,
-                                        blogForm.getIntro(),
-                                        blogForm.getAddress(),
-                                        blogForm.getNickname(),
-                                        profileImg); // 블로그 서비스에서 업데이트 호출
+                blogForm.getIntro(),
+                blogForm.getAddress(),
+                blogForm.getNickname(),
+                profileImg); // 블로그 서비스에서 업데이트 호출
         return String.format("redirect:/blog/%s", email); // 블로그 페이지로 리디렉션
     }
 }
