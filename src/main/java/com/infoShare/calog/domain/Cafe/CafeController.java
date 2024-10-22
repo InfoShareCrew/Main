@@ -93,7 +93,7 @@ public class CafeController {
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/modify/{id}")
     public String modifyCafe(@Valid CafeForm cafeForm, BindingResult bindingResult,
-                         Principal principal,@PathVariable("id") Long id){
+                             Principal principal,@PathVariable("id") Long id){
 
         if (bindingResult.hasErrors()){
             return "cafe_form";
