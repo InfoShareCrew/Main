@@ -12,16 +12,22 @@ public class ActivityLogService {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    public List<Map<String, Object>> getActivityLogsByUserId(Long userId) {
+    public List<Map<String, Object>> getActivityLogsByUserId(Long userId, String sortType) {
         String sql = "SELECT a.title AS articleTitle, c.name AS cafeName, a.view, a.content, a.id AS articleId, c.id AS cafeId, COUNT(DISTINCT av.article_id) AS voter, COUNT(DISTINCT co.article_id) AS comment " +
                 "FROM article a " +
-                "JOIN cafe c " + // assuming a.cafe_id exists
+                "JOIN cafe c " +
                 "LEFT JOIN article_voter av ON av.article_id " +
                 "LEFT JOIN comment co ON co.article_id " +
-                "JOIN Site_User u ON a.author_id = u.id " +  // assuming this relationship
+                "JOIN Site_User u ON a.author_id = u.id " +
                 "WHERE u.id = ? " +
-                "GROUP BY a.id " +
-                "ORDER BY MAX(a.created_date) DESC";
+                "GROUP BY a.id ";
+
+        // 정렬 방식에 따라 쿼리 수정
+        if ("popular".equals(sortType)) {
+            sql += "ORDER BY COUNT(DISTINCT av.article_id) DESC"; // 인기순
+        } else {
+            sql += "ORDER BY MAX(a.created_date) DESC"; // 최신순
+        }
 
         return jdbcTemplate.queryForList(sql, userId);
     }

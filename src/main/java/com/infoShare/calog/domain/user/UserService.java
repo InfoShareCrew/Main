@@ -73,4 +73,10 @@ public class UserService {
         return userRepository.findByNickname(nickname)
                 .orElseThrow(() -> new DataNotFoundException("User not found with nickname: " + nickname));
     }
+
+    public Long findUserIdByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .map(SiteUser::getId)
+                .orElse(null); // User가 없으면 null 반환
+    }
 }

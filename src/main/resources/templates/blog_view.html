@@ -20,12 +20,13 @@
       </div>
       <div sec:authorize="isAuthenticated()" th:if="${user.email != null} and ${#authentication.getPrincipal().username} == ${user.email}">
         <button class="btn-b" th:onclick="@{|window.location.href = '/blog/edit/${user.email}';|}"><span class="f-size-14 f-weight-5">수정</span></button>
+        <button class="btn-b" th:onclick="@{|window.location.href = '/user/password';|}"><span class="f-size-14 f-weight-5">비밀번호 재설정</span></button>
       </div>
     </div>
     <div class="post-box dp-flex-clmb">
       <div class="category">
-        <div class="ctgr-box-in btn"><span>최신순</span></div>
-        <div class="ctgr-box-my btn"><span>인기순</span></div>
+        <a href="/blog/{{user.email}}?sort=latest">최신순</a>
+        <a href="/blog/{{user.email}}?sort=popular">인기순</a>
       </div>
       <div class="post-list dp-flex-clmb">
         <!-- 활동 내역 표시 -->
@@ -82,7 +83,7 @@
 <!-- 자바 스크립트 -->
 <script layout:fragment="script" type='text/javascript'>
   $(document).ready(function() {
-      // 추가적인 JavaScript 코드
+
   });
 </script>
 </html>
