@@ -2,6 +2,15 @@
 <div layout:fragment="content" class="main-contents">
   <h1> 게시판 </h1>
   <h2 class="border-bottom py-2" th:text="${article.title}">제목</h2>
+  <h5>해시태그</h5>
+  <div th:if="${#lists.size(article.tags) > 0}">
+    <span th:each="tag : ${article.tags}" class="badge bg-secondary me-1">
+        <a th:href="@{/article/list(tag=${tag.name})}" th:text="${tag.name}" style="color: inherit; text-decoration: none;"></a>
+    </span>
+  </div>
+  <div th:if="${#lists.size(article.tags) == 0}">
+    <span>등록된 해시태그가 없습니다.</span>
+  </div>
   <div class="card my-3">
     <div class="card-body">
       <div class="card-text" th:utext="${@commonUtil.markdown(article.content)}"></div>

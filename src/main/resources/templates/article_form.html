@@ -32,6 +32,12 @@
       </select>
     </div>
 
+    <!-- 해시태그 입력 -->
+    <div class="mb-3">
+      <label for="tags" class="form-label">해시태그 (쉼표로 구분)</label>
+      <input type="text" th:field="*{tags}" class="form-control" />
+    </div>
+
     <button type="submit" class="btn btn-primary my-2">등록하기</button>
   </form>
 </div>

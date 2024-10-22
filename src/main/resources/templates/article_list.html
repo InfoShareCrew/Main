@@ -4,7 +4,9 @@
 
   <!-- 검색 폼 추가 -->
   <form method="get" action="/article/list">
-    <input type="text" name="kw" placeholder="제목 또는 내용을 입력" value=""/>
+    <input type="text" name="kw" placeholder="제목 또는 내용을 입력하세요" value=""/>
+    <!--해시태그 검색 폼 추가-->
+    <input type="text" name="tag" placeholder="해시태그를 입력하세요 (예:해시태그)" value=""/>
     <button type="submit">검색</button>
   </form>
 
@@ -14,8 +16,9 @@
       <th>번호</th>
       <th>제목</th>
       <th>작성일</th>
-        <th>작성자</th>
+      <th>작성자</th>
       <th>조회수</th>
+      <th>태그</th>
     </tr>
     </thead>
     <tbody>
@@ -23,19 +26,24 @@
       <td th:text="${paging.totalElements - (paging.number * paging.size) - loop.index}"></td>
       <td>
         <a th:href="@{|/article/detail/${article.id}|}" th:text="${article.title}"></a>
-          <span class="text-info small ms-2"
-                th:if="${#lists.size(article.commentList) > 0}"
-                th:text="${#lists.size(article.commentList)}">
-        </span>
+        <span class="text-info small ms-2"
+              th:if="${#lists.size(article.commentList) > 0}"
+              th:text="${#lists.size(article.commentList)}">
+          </span>
       </td>
       <td th:text="${#temporals.format(article.createdDate, 'yyyy-MM-dd HH:mm')}"></td>
       <td><span th:if="${article.author != null}" th:text="${article.author.nickname}"></span></td>
       <td><span th:text="${article.view} != null ? ${article.view}:0"></span></td>
+      <td>
+          <span th:each="tag : ${article.tags}" class="tag">
+            <a th:href="@{/article/list(tag=${tag.name})}" th:text="${tag.name}"></a>
+          </span>
+      </td>
     </tr>
     </tbody>
   </table>
 
-  <!--페이징-->
+  <!-- 페이징 -->
   <div th:if="${!paging.isEmpty()}">
     <ul class="pagination justify-content-center">
       <li class="page-item" th:classappend="${!paging.hasPrevious()} ? 'disabled'">
@@ -53,7 +61,6 @@
       </li>
     </ul>
   </div>
-
 
   <a th:href="|/article/create|">글쓰기</a>
 </div>

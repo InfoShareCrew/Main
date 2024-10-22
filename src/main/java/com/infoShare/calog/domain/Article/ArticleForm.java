@@ -17,4 +17,6 @@ public class ArticleForm {
 
     @NotNull(message = "카테고리는 필수사항입니다.")
     private Category category;
+
+    private String tags = ""; // 해시태그 입력 필드
 }

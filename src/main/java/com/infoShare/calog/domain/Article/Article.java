@@ -2,6 +2,7 @@ package com.infoShare.calog.domain.Article;
 
 import com.infoShare.calog.domain.Category.Category;
 import com.infoShare.calog.domain.Comment.Comment;
+import com.infoShare.calog.domain.Tag.Tag;
 import com.infoShare.calog.domain.user.SiteUser;
 import com.infoShare.calog.global.jpa.BaseEntity;
 import jakarta.persistence.*;
@@ -34,5 +35,11 @@ public class Article extends BaseEntity {
 
     @ManyToMany
     Set<SiteUser> voter;
+
+    @ManyToMany  // 해시태그
+    @JoinTable(name = "article_tags",
+            joinColumns = @JoinColumn(name = "article_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id"))
+    private Set<Tag> tags;
 
 }
