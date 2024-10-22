@@ -1,6 +1,6 @@
 package com.infoShare.calog.domain.Notice;
 
-import com.infoShare.calog.domain.BoardType.BoardType;
+import com.infoShare.calog.domain.BoardCategory.BoardCategory;
 import com.infoShare.calog.domain.Cafe.Cafe;
 import com.infoShare.calog.domain.Comment.Comment;
 import com.infoShare.calog.domain.user.SiteUser;
@@ -26,9 +26,6 @@ public class Notice extends BaseEntity {
 
     @OneToMany(mappedBy = "notice", cascade = CascadeType.REMOVE)
     private List<Comment> commentList;
-
-    @ManyToOne
-    private BoardType boardType;
 
     @ManyToOne
     private SiteUser author;

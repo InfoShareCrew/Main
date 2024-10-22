@@ -10,14 +10,14 @@ a {text-decoration: none; color: var(--x-000000);}
 a:hover {color: var(--d-3d-3d-3);}
 a.btn {text-align: center;}
 ul,li {margin: 0; padding: 0; list-style: none;}
-input, input:focus, button {border: none;}
+input, input:focus, button {border: none; background-color: var(--ffffff-0);}
 img {border: 1px solid var(--d-3d-3d-3); width: 100%; object-fit: cover;}
 button {cursor: pointer; background-color: var(--ffffff);}
 span {font-family: 'Pretendard-Regular';}
 
 
 /***** 네비게이션 *****/
-nav {display: flex; align-items: center; justify-content: center; width: 100%; margin: 0 auto; padding: 16px 0; border-bottom: 1px solid var(--d-3d-3d-3); position: fixed; background-color: var(--ffffff);}
+nav {display: flex; align-items: center; justify-content: center; width: 100%; margin: 0 auto; padding: 16px 0; border-bottom: 1px solid var(--d-3d-3d-3); position: fixed; background-color: var(--colourmainblue-100); z-index: 10;}
 nav > div {display: flex; width: 100%;}
 .nav > .container {width: 1110px; display: flex; justify-content: space-between; position: relative;}
 .nav .left-box {display: flex; gap: 32px;}
@@ -43,7 +43,7 @@ nav > div {display: flex; width: 100%;}
 .center > .my-cafe-box {display: flex; flex-direction: column; gap: 16px;}
 .my-cafe-box .category {display: flex; gap: 16px;}
 .my-cafe-box .category > div {cursor: pointer;}
-.my-cafe-box .cafe-list > div {display: flex; gap: 16px;}
+.my-cafe-box .cafe-list > a {display: flex; gap: 16px;}
 .my-cafe-box .cafe-list .profile-img {width: 64px; height: 64px; border-radius: 32px;}
 .my-cafe-box .cafe-list .content {display: flex; flex-direction: column; gap: 8px; flex-grow: 1;}
 .my-cafe-box .post-list > div {display: flex; justify-content: space-between;}

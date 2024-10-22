@@ -1,5 +1,9 @@
 package com.infoShare.calog.domain.Suggestion;
 
+import com.infoShare.calog.domain.Article.Article;
+import com.infoShare.calog.domain.Article.ArticleService;
+import com.infoShare.calog.domain.Cafe.Cafe;
+import com.infoShare.calog.domain.Cafe.CafeService;
 import com.infoShare.calog.domain.Comment.CommentForm;
 import com.infoShare.calog.domain.user.SiteUser;
 import com.infoShare.calog.domain.user.UserService;
@@ -23,6 +27,8 @@ import java.security.Principal;
 public class SuggestionController {
     private final SuggestionService suggestionService;
     private final UserService userService;
+    private final ArticleService articleService;
+    private final CafeService cafeService;
 
     @GetMapping("/list")
     public String list(Model model,

@@ -1,6 +1,5 @@
 package com.infoShare.calog.domain.Article;
 
-import com.infoShare.calog.domain.BoardType.BoardType;
 import com.infoShare.calog.domain.Category.Category;
 import com.infoShare.calog.domain.Comment.Comment;
 import com.infoShare.calog.domain.user.SiteUser;
@@ -28,13 +27,10 @@ public class Article extends BaseEntity {
     private List<Comment> commentList;
 
     @ManyToOne
-    private BoardType boardType;
-
-    @ManyToOne
     private SiteUser author;
 
     @ManyToOne
-    private Category majorCategory;
+    private Category Category;
 
     @ManyToMany
     Set<SiteUser> voter;

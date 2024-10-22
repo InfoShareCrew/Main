@@ -12,7 +12,9 @@
 .f-weight-6 {font-weight: 600;}
 .f-weight-7 {font-weight: 700;}
 /* border */
-.border-1 {border: #d5d5d5 solid 1px;}
+.border-1 {border: var(--x000000-5) solid 1px;}
+/* color */
+.f-color-d3 {color: var(--d-3d-3d-3);}
 
 
 .dp-flex-clmb {display: flex; flex-direction: column;}
@@ -47,5 +49,5 @@
 .input {display: block; padding: 8px 8px; border-radius: 10px; border: 1px solid var(--d-3d-3d-3);}
 .kakao {background-color: var(--kakao);}
 .d-none {display: none;}
-.d-block {display: none;}
+.d-block {display: block;}
 

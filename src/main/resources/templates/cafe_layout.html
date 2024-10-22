@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="stylesheet" type="text/css" th:href="@{/lib.css}">
+  <link rel="stylesheet" type="text/css" th:href="@{/styleguide.css}">
+  <link rel="stylesheet" type="text/css" th:href="@{/style.css}">
+  <link rel="stylesheet" type="text/css" th:href="@{/cafe.css}">
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+  <script th:src="@{/navbar.js}"></script>
+
+  <title>인포쉐어</title>
+</head>
+<body>
+
+<!--네비게이션-->
+<nav th:replace="~{navbar :: navbarFragment}"></nav>
+
+<!-- 카페 배너 -->
+<div th:replace="~{cafe_banner :: cafeBannerFragment }"></div>
+
+<div class="main-contents">
+<!-- 카페 고정 왼쪽 사이드 -->
+<div th:replace="~{cafe_left_side :: cafeLeftSideFragment }"></div>
+<!--기본 템플릿 안에 삽입될 박스-->
+<th:block layout:fragment="content"></th:block>
+</div>
+<!-- 자바스크립트 -->
+<!-- 각 템플릿에서 작성 -->
+<th:block layout:fragment="script"></th:block>
+</body>
+</html>

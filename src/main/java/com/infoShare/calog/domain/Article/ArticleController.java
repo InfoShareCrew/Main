@@ -59,7 +59,7 @@ public class ArticleController {
         }
 
         // 선택한 카테고리 정보 추가
-        Category majorCategory = article.getMajorCategory();
+        Category majorCategory = article.getCategory();
         model.addAttribute("selectedCategoryId", majorCategory != null ? majorCategory.getId() : null);
         model.addAttribute("categories", categoryService.getAllCategories()); // 모든 카테고리 목록 가져오기
 
@@ -79,7 +79,7 @@ public class ArticleController {
             return "article_form";
         }
         SiteUser author = this.userService.getUser(principal.getName());
-        Category category = this.categoryService.getCategoryById(articleForm.getCategoryId());
+        Category category = articleForm.getCategory();
         this.articleService.createArticle(articleForm.getTitle(), articleForm.getContent(), author, category);
         return "redirect:/article/list";
     }
@@ -94,7 +94,7 @@ public class ArticleController {
 
         articleForm.setTitle(article.getTitle());
         articleForm.setContent(article.getContent());
-        articleForm.setCategoryId(articleForm.getCategoryId());
+        articleForm.setCategory(articleForm.getCategory());
         model.addAttribute("articleForm",articleForm);
         model.addAttribute("categories",categoryService.getAllCategories());
         return "article_form";
@@ -112,7 +112,7 @@ public class ArticleController {
         if(!article.getAuthor().getEmail().equals(principal.getName())){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
         }
-        Category category = this.categoryService.getCategoryById(articleForm.getCategoryId()); // 카테고리 추가
+        Category category = articleForm.getCategory(); // 카테고리 추가
         this.articleService.modify(article, articleForm.getTitle(), articleForm.getContent(), category); // 수정 메서드 호출
         return String.format("redirect:/article/detail/%s",id);
     }
