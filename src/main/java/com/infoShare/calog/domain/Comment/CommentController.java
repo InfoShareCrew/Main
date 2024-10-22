@@ -221,4 +221,17 @@ public class CommentController {
         return count.toString();
     }
 
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/unvote/{id}")  //추천취소
+    @ResponseBody
+    public String cancelVote(@PathVariable("id") Long id, Principal principal) {
+        Comment comment = this.commentService.getComment(id);
+        SiteUser siteUser = this.userService.getUser(principal.getName());
+        this.commentService.cancelVote(comment, siteUser);
+
+        Comment votedComment = this.commentService.getComment(id);
+        Integer count = comment.getVoter().size();
+        return count.toString();
+    }
 }

@@ -155,6 +155,21 @@ public class ArticleController {
         return count.toString();
     }
 
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/unvote/{id}")  //추천취소
+    @ResponseBody
+    public String cancelVote(@PathVariable("id") Long id, Principal principal) {
+        Article article = this.articleService.getArticleById(id);
+        SiteUser siteUser = this.userService.getUser(principal.getName());
+        this.articleService.cancelVote(article, siteUser);
+
+        Article votedArticle = this.articleService.getArticleById(id);
+        Integer count = votedArticle.getVoter().size();
+        return count.toString();
+    }
+
+
     @GetMapping("/blog/view/{id}")
     public String viewBlog(@PathVariable Long id, Model model) {
         Article article = articleService.getArticleById(id); // 이 메서드가 null을 반환할 수 있는지 확인

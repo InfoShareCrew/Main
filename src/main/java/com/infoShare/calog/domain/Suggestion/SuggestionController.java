@@ -5,6 +5,7 @@ import com.infoShare.calog.domain.Article.ArticleService;
 import com.infoShare.calog.domain.Cafe.Cafe;
 import com.infoShare.calog.domain.Cafe.CafeService;
 import com.infoShare.calog.domain.Comment.CommentForm;
+import com.infoShare.calog.domain.Notice.Notice;
 import com.infoShare.calog.domain.user.SiteUser;
 import com.infoShare.calog.domain.user.UserService;
 import com.infoShare.calog.global.jpa.BaseEntity;
@@ -133,4 +134,18 @@ public class SuggestionController {
         Integer count = votedSuggestion.getVoter().size();
         return count.toString();
     }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/unvote/{id}")  //추천취소
+    @ResponseBody
+    public String cancelVote(@PathVariable("id") Long id, Principal principal) {
+        Suggestion suggestion = this.suggestionService.getSuggestionById(id);
+        SiteUser siteUser = this.userService.getUser(principal.getName());
+        this.suggestionService.cancelVote(suggestion, siteUser);
+
+        Suggestion votedSuggestion = this.suggestionService.getSuggestionById(id);
+        Integer count = suggestion.getVoter().size();
+        return count.toString();
+    }
 }
+

@@ -63,4 +63,10 @@ public class CommentService {
     }
 
 
+    public void cancelVote(Comment comment, SiteUser siteUser) {
+        comment.getVoter().remove(siteUser);
+        this.commentRepository.save(comment);
+    } //추천 취소
+
+
 }

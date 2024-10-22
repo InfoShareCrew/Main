@@ -1,6 +1,7 @@
 package com.infoShare.calog.domain.Suggestion;
 
 import com.infoShare.calog.domain.DataNotFoundException;
+import com.infoShare.calog.domain.Notice.Notice;
 import com.infoShare.calog.domain.user.SiteUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -68,6 +69,14 @@ public class SuggestionService {
         suggestion.getVoter().add(siteUser);
         this.suggestionRepository.save(suggestion);
     }
+
+
+    public void cancelVote(Suggestion suggestion, SiteUser siteUser) {
+        suggestion.getVoter().remove(siteUser);
+        this.suggestionRepository.save(suggestion);
+    } //추천 취소
+
+
     public Page<Suggestion> searchSuggestions(String keyword, int page) {
         Pageable pageable = PageRequest.of(page, 10, Sort.by(Sort.Order.desc("createdDate")));
         return suggestionRepository.findByTitleContainingOrContentContaining(keyword, keyword, pageable);

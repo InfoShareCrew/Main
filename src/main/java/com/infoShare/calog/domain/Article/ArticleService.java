@@ -82,6 +82,12 @@ public class ArticleService {
         this.articleRepository.save(article);
     }
 
+    public void cancelVote(Article article, SiteUser siteUser) {
+        article.getVoter().remove(siteUser);
+        this.articleRepository.save(article);
+    } //추천 취소
+
+
     public Page<Article> searchArticlesOrTag(String keyword, String tag, int page) {
         Pageable pageable = PageRequest.of(page, 10, Sort.by(Sort.Order.desc("createdDate")));
 
