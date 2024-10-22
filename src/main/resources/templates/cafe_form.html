@@ -1,20 +1,25 @@
 <html layout:decorate="~{layout}">
-<div layout:fragment="content" class="container">
-    <h5 class="my-3 border-bottom pb-2">카페 등록</h5>
-    <form method="post" th:object="${cafeForm}">
+<head>
+    <link rel="stylesheet" type="text/css" th:href="@{/cafe.css}">
+</head>
+<div layout:fragment="content" class="cafeForm">
+    <div class="text-box">
+        <span class="f-size-28 f-size-6">카페 설정</span>
+    </div>
+    <form method="post" th:object="${cafeForm}"class="form">
         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
         <!--오류메세지-->
         <div class="alert alert-danger" role="alert" th:if="${#fields.hasAnyErrors()}">
-            <div th:each="err: ${#fields.allErrors()}" th:text="${err}"/>
+            <div th:each="err: ${#fields.allErrors()}" th:text="${err}"></div>
         </div>
-        <!--입력-->
-        <div class="mb-3">
-            <label for="title" class="form-label">제목</label>
-            <input type="text" th:field="*{title}" class="form-control">
+            <!--입력-->
+        <div class="input-box">
+            <label for="name" class="form-label">카페 이름</label>
+            <input type="text" th:field="*{name}" class="input">
         </div>
-        <div class="mb-3">
-            <label for="content" class="form-label">내용</label>
-            <textarea th:field="*{content}" rows="10" class="form-control"></textarea>
+        <div class="input-box">
+            <label for="intro" class="form-label">카페 소개글</label>
+            <textarea th:field="*{intro}" rows="10" class="input"></textarea>
         </div>
         <input type="submit" value="등록하기" class="btn btn-primary my-2">
     </form>

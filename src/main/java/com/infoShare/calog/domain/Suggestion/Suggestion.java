@@ -1,6 +1,6 @@
 package com.infoShare.calog.domain.Suggestion;
 
-import com.infoShare.calog.domain.BoardType.BoardType;
+import com.infoShare.calog.domain.Cafe.Cafe;
 import com.infoShare.calog.domain.Comment.Comment;
 import com.infoShare.calog.domain.user.SiteUser;
 import com.infoShare.calog.global.jpa.BaseEntity;
@@ -27,7 +27,8 @@ public class Suggestion extends BaseEntity {
     private List<Comment> commentList;
 
     @ManyToOne
-    private BoardType boardType;
+    @JoinColumn(name = "cafe_id")
+    private Cafe cafe;
 
     @ManyToOne
     private SiteUser author;

@@ -1,0 +1,56 @@
+<html layout:decorate="~{cafe_layout}">
+<head>
+</head>
+<div layout:fragment="content" class="main-contents notice">
+  <div class="center">
+    <div class="title-box">
+      <div class="text-box">
+        <span class="f-size-28 f-weight-6">공지사항</span>
+      </div>
+      <a th:if="${#authentication.getPrincipal().username} == ${cafe.maneger.email}" th:href="@{|/cafe/${cafe.id}/notice/create|}" class="btn btn-primary">글쓰기</a>
+    </div>
+    <table>
+      <thead>
+      <tr>
+        <th>번호</th>
+        <th>제목</th>
+        <th>작성일</th>
+        <th>작성자</th>
+        <th>조회수</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="notice, loop : ${paging.content}">
+        <td th:text="${paging.totalElements - (paging.number * paging.size) - loop.index}"></td>
+        <td>
+          <a th:href="@{|/notice/detail/${notice.id}|}" th:text="${notice.title}"></a>
+        </td>
+        <td th:text="${#temporals.format(notice.createdDate, 'yyyy-MM-dd HH:mm')}"></td>
+        <td><span th:if="${notice.author != null}" th:text="${notice.author.nickname}"></span></td>
+        <td><span th:text="${notice.view} != null ? ${notice.view}:0"></span></td>
+      </tr>
+      </tbody>
+    </table>
+    <!-- 페이지네이션 -->
+    <div th:if="${!paging.empty}">
+      <ul class="pagination justify-content-center">
+        <li class="page-item" th:classappend="${!paging.hasPrevious()} ? 'disabled'">
+          <a th:href="@{|/notice/list?page=${paging.number-1}&kw=${kw}|}" class="page-link">이전</a>
+        </li>
+        <li th:each="page: ${#numbers.sequence(0, paging.totalPages-1)}"
+            th:if="${page >= paging.number-5 and page <= paging.number+5}"
+            th:classappend="${page == paging.number} ? 'active'" class="page-item">
+          <a th:href="@{|/notice/list?page=${page}&kw=${kw}|}" th:text="${page + 1}" class="page-link"></a>
+        </li>
+        <li class="page-item" th:classappend="${!paging.hasNext()} ? 'disabled'">
+          <a th:href="@{|/notice/list?page=${paging.number+1}&kw=${kw}|}" class="page-link">다음</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="right-side"></div>
+</div>
+<!-- 자바 스크립트 -->
+<script layout:fragment="script" type='text/javascript'>
+</script>
+</html>

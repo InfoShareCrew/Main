@@ -1,5 +1,6 @@
 package com.infoShare.calog.domain.Article;
 
+import com.infoShare.calog.domain.Category.Category;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -15,5 +16,5 @@ public class ArticleForm {
     private String content;
 
     @NotNull(message = "카테고리는 필수사항입니다.")
-    private Short categoryId;
+    private Category category;
 }

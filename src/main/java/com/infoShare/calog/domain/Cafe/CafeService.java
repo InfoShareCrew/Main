@@ -1,9 +1,8 @@
 package com.infoShare.calog.domain.Cafe;
 
-import com.infoShare.calog.domain.Article.Article;
 import com.infoShare.calog.domain.DataNotFoundException;
-import com.infoShare.calog.domain.Category.CategoryService;
 import com.infoShare.calog.domain.user.SiteUser;
+import com.infoShare.calog.domain.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,13 +19,17 @@ import java.util.Optional;
 public class CafeService {
 
     private final CafeRepository cafeRepository;
-    private final CategoryService categoryService;
+    private final UserService userService;
 
     public Page<Cafe> getList(int page) {
         List<Sort.Order> sorts = new ArrayList<>();
         sorts.add(Sort.Order.desc("createdDate"));
         Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
         return this.cafeRepository.findAll(pageable);
+    }
+
+    public List<Cafe> getMyList(String userEmail) {
+        return cafeRepository.findAllByManeger(userService.getUser(userEmail));
     }
 
     public Cafe getCafeById(Long id) {
@@ -43,18 +46,30 @@ public class CafeService {
                 .orElseThrow(() -> new IllegalArgumentException("Invalid cafe ID"));
     }
 
+   /* public Cafe create(String title, Short majorCategoryId, Short minorCategoryId, SiteUser manager) {
+        MajorCategory majorCategory = majorCategoryService.findById(majorCategoryId);
+        MinorCategory minorCategory = minorCategoryService.findById(minorCategoryId);
 
-    public Cafe create(String title, String content ,SiteUser author) {
         Cafe cafe = new Cafe();
         cafe.setTitle(title);
-        cafe.setContent(content);
-        cafe.setAuthor(author);
+        cafe.setManager(manager);
+        cafe.setMajorCategory(majorCategory);
+        cafe.setMinorCategory(minorCategory);
+
+        return cafeRepository.save(cafe);
+    }*/
+
+    public Cafe create(String name, String intro ,SiteUser maneger) {
+        Cafe cafe = new Cafe();
+        cafe.setName(name);
+        cafe.setIntro(intro);
+        cafe.setManeger(maneger);
         return cafeRepository.save(cafe);
     }
 
-    public void modifyCafe(Cafe cafe, String title, String content) {
-        cafe.setTitle(title);
-        cafe.setContent(content);
+    public void modifyCafe(Cafe cafe, String name, String intro) {
+        cafe.setName(name);
+        cafe.setIntro(intro);
         this.cafeRepository.save(cafe);
     }
 
@@ -66,10 +81,5 @@ public class CafeService {
     public void vote(Cafe cafe, SiteUser siteUser) {
         cafe.getVoter().add(siteUser);
         this.cafeRepository.save(cafe);
-    }
-
-    public Page<Cafe> searchCafes(String keyword, int page) {
-        Pageable pageable = PageRequest.of(page, 10, Sort.by(Sort.Order.desc("createdDate")));
-        return cafeRepository.findByTitleContainingOrContentContaining(keyword, keyword, pageable);
     }
 }

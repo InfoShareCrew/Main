@@ -8,9 +8,9 @@ import lombok.Setter;
 @Setter
 public class CafeForm {
     @NotNull(message = "제목은 필수사항입니다.")
-    private String title;
+    private String name;
 
     @NotNull(message = "내용은 필수사항입니다.")
-    private String content;
+    private String intro;
 
 }
