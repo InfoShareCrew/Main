@@ -51,4 +51,4 @@ public class Article extends BaseEntity {
 
 }
 
-// 카페 카테고리 게시판
+// 카페 카테고리 게시판 출발
