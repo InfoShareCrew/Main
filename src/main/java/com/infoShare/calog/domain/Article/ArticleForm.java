@@ -18,4 +18,7 @@ public class ArticleForm {
 
     @NotNull(message = "게시판 선택은 필수사항입니다.")
     private BoardCategory boardCategory;
+
+    private String tags = ""; // 해시태그 입력 필드
+
 }

@@ -1,0 +1,50 @@
+<html layout:decorate="~{layout}">
+<div layout:fragment="content" class="main-contents dp-flex-clmb">
+    <h1>태그 목록</h1>
+    <!-- 검색 폼 추가 -->
+    <form method="get" action="/tags/list">
+        <input type="text" name="kw" placeholder="해시태그를 입력하세요 (예:해시태그)" value=""/>
+        <button type="submit">검색</button>
+    </form>
+
+    <table>
+        <thead>
+        <tr>
+            <th>태그</th>
+            <th>게시글 수</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="tag : ${paging.content}">
+            <td>
+                <a th:href="@{/article/list(tag=${tag.name})}" th:text="${tag.name}"></a>
+            </td>
+            <td th:text="${tag.articleCount}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+
+    <!--페이징-->
+    <div th:if="${!paging.isEmpty()}">
+        <ul class="pagination justify-content-center">
+            <li class="page-item" th:classappend="${!paging.hasPrevious()} ? 'disabled'">
+                <a th:href="@{|?page=${paging.number-1}|}" class="page-link" th:if="${paging.hasPrevious()}"><span>이전</span></a>
+                <span th:if="${!paging.hasPrevious()}" class="page-link"><span>이전</span></span>
+            </li>
+            <li th:each="page: ${#numbers.sequence(0, paging.totalPages-1)}"
+                th:if="${page >= paging.number-5 and page <= paging.number+5}"
+                th:classappend="${page==paging.number} ? 'active'" class="page-item">
+                <a th:text="${page + 1}" th:href="@{|?page=${page}|}" class="page-link"></a>
+            </li>
+            <li class="page-item" th:classappend="${!paging.hasNext()} ? 'disabled'">
+                <a th:href="@{|?page=${paging.number+1}|}" class="page-link" th:if="${paging.hasNext()}"><span>다음</span></a>
+                <span th:if="${!paging.hasNext()}" class="page-link"><span>다음</span></span>
+            </li>
+        </ul>
+    </div>
+
+    <a th:href="@{/tags/list}" th:text="'태그 목록'"></a>
+    <a th:href="@{/article/list}" th:text="'게시글 목록'"></a>
+</div>
+</html>

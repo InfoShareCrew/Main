@@ -4,7 +4,7 @@
   <h2 class="border-bottom py-2" th:text="${suggestion.title}">제목</h2>
   <div class="card my-3">
     <div class="card-body">
-      <div class="card-text" style="white-space: pre-line;" th:text="${suggestion.content}"></div>
+      <div class="card-text" th:utext="${@commonUtil.markdown(suggestion.content)}"></div>
       <div class="d-flex justify-content-end">
         <div class="badge bg-light text-dark p-2 text-start">
           <div class="mb-2" th:if="${suggestion.author != null}">
@@ -12,7 +12,7 @@
           </div>
           <div th:text="${#temporals.format(suggestion.createdDate, 'yyyy-MM-dd HH:mm')}"></div>
         </div>
-        <a id="suggestion_recommend" class="recommend btn btn-sm btn-outline-secondary">
+        <a id="suggestion_recommend" class="recommend btn btn-sm btn-outline-secondary" data-voted="false">
           추천
           <span id="suggestion_recommend_count" class="badge rounded-pill bg-success"
                 th:text="${#lists.size(suggestion.voter)}"></span>
@@ -43,7 +43,7 @@
           <div th:text="${#temporals.format(comment.createdDate, 'yyyy-MM-dd HH:mm')}"></div>
         </div>
       </div>
-      <a class="comment_recommend recommend btn btn-sm btn-outline-secondary">
+      <a class="comment_recommend recommend btn btn-sm btn-outline-secondary" data-voted="false">
         <input name="comment_id" type= "hidden" th:value="${comment.id}">
         추천
         <span class="comment_recommend_count badge rounded-pill bg-success"
@@ -77,42 +77,76 @@
 </div>
 </html>
 
-
-
 <script th:inline="javascript">
   $(document).ready(function() {
       var suggestionId = [[${suggestion.id}]];
 
       $("#suggestion_recommend").on("click", function() {
-          if(confirm("정말로 추천하시겠습니까?")) {
-              $.ajax({
-                  url: "/suggestion/vote/" + suggestionId,
-                  type: "GET",
-                  success: function(response) {
-                      $("#suggestion_recommend_count").text(response);
-                  },
-                  error: function(xhr, status, error) {
-                      console.log("오류 발생", error);
-                  }
-              });
+          var _this = $(this);
+          var voted = _this.data("voted");
+
+          var message = voted ? "정말로 추천을 취소하시겠습니까?" : "정말로 추천하시겠습니까?";
+          if (confirm(message)) {
+              if (voted) {
+                  $.ajax({
+                      url: "/suggestion/unvote/" + suggestionId,
+                      type: "GET",
+                      success: function(response) {
+                          $("#suggestion_recommend_count").text(response);
+                          _this.data("voted", false);
+                      },
+                      error: function(xhr, status, error) {
+                          console.log("오류 발생", error);
+                      }
+                  });
+              } else {
+                  $.ajax({
+                      url: "/suggestion/vote/" + suggestionId,
+                      type: "GET",
+                      success: function(response) {
+                          $("#suggestion_recommend_count").text(response);
+                          _this.data("voted", true);
+                      },
+                      error: function(xhr, status, error) {
+                          console.log("오류 발생", error);
+                      }
+                  });
+              }
           }
       });
 
       $(".comment_recommend").on("click", function() {
-          if(confirm("정말로 추천하시겠습니까?")) {
-              var _this = $(this);
-              var commentId = _this.find('input[name=comment_id]').val();
+          var _this = $(this);
+          var voted = _this.data("voted");
+          var commentId = _this.find('input[name=comment_id]').val();
 
-              $.ajax({
-                  url: "/comment/vote/" + commentId,
-                  type: "GET",
-                  success: function(response) {
-                      _this.find(".comment_recommend_count").text(response);
-                  },
-                  error: function(xhr, status, error) {
-                      console.log("오류 발생", error);
-                  }
-              });
+          var message = voted ? "정말로 추천을 취소하시겠습니까?" : "정말로 추천하시겠습니까?";
+          if (confirm(message)) {
+              if (voted) {
+                  $.ajax({
+                      url: "/comment/unvote/" + commentId,
+                      type: "GET",
+                      success: function(response) {
+                          _this.find(".comment_recommend_count").text(response);
+                          _this.data("voted", false);
+                      },
+                      error: function(xhr, status, error) {
+                          console.log("오류 발생", error);
+                      }
+                  });
+              } else {
+                  $.ajax({
+                      url: "/comment/vote/" + commentId,
+                      type: "GET",
+                      success: function(response) {
+                          _this.find(".comment_recommend_count").text(response);
+                          _this.data("voted", true);
+                      },
+                      error: function(xhr, status, error) {
+                          console.log("오류 발생", error);
+                      }
+                  });
+              }
           }
       });
   });

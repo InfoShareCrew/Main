@@ -246,7 +246,8 @@ public class CafeController {
                 articleForm.getTitle(),
                 articleForm.getContent(),
                 this.userService.findByEmail(principal.getName()),
-                articleForm.getBoardCategory()
+                articleForm.getBoardCategory(),
+                articleForm.getTags()
         );
         return String.format("redirect:/cafe/%s/공지사항", cafeId);
     }

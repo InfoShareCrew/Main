@@ -1,5 +1,6 @@
 package com.infoShare.calog.domain.Notice;
 
+import com.infoShare.calog.domain.Comment.Comment;
 import com.infoShare.calog.domain.Comment.CommentForm;
 import com.infoShare.calog.domain.user.SiteUser;
 import com.infoShare.calog.domain.user.UserService;
@@ -126,6 +127,19 @@ public class NoticeController {
 
         Notice votedNotice = this.noticeService.getNoticeById(id);
         Integer count = votedNotice.getVoter().size();
+        return count.toString();
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/unvote/{id}")  //추천취소
+    @ResponseBody
+    public String cancelVote(@PathVariable("id") Long id, Principal principal) {
+        Notice notice = this.noticeService.getNoticeById(id);
+        SiteUser siteUser = this.userService.getUser(principal.getName());
+        this.noticeService.cancelVote(notice, siteUser);
+
+        Notice votedNotice = this.noticeService.getNoticeById(id);
+        Integer count = notice.getVoter().size();
         return count.toString();
     }
 }

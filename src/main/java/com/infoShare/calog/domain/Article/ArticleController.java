@@ -5,12 +5,15 @@ import com.infoShare.calog.domain.BoardCategory.BoardCategoryService;
 import com.infoShare.calog.domain.Category.Category;
 import com.infoShare.calog.domain.Category.CategoryService;
 import com.infoShare.calog.domain.Comment.CommentForm;
+import com.infoShare.calog.domain.Tag.Tag;
+import com.infoShare.calog.domain.Tag.TagService;
 import com.infoShare.calog.domain.user.SiteUser;
 import com.infoShare.calog.domain.user.UserService;
 import com.infoShare.calog.global.jpa.BaseEntity;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -18,6 +21,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import org.thymeleaf.expression.Strings;
 
 import java.security.Principal;
 
@@ -29,12 +33,14 @@ public class ArticleController {
     private final UserService userService;
     private final CategoryService categoryService;
     private final BoardCategoryService boardCategoryService;
+    private final TagService tagService;
 
     @GetMapping("/list")
     public String list(Model model,
                        @ModelAttribute("basedEntity") BaseEntity baseEntity,
                        @RequestParam(value = "page", defaultValue = "0") int page,
-                       @RequestParam(value = "kw", defaultValue = "") String kw) {
+                       @RequestParam(value = "kw", defaultValue = "") String kw,
+                       @RequestParam(value = "tag", required = false) String tag) {
         Page<Article> paging;
 
         if (kw != null && !kw.isEmpty()) {
@@ -44,9 +50,9 @@ public class ArticleController {
             // 기본 목록
             paging = this.articleService.getList(page);
         }
-
         model.addAttribute("paging", paging);
-        model.addAttribute("kw", kw); // 검색어를 모델에 추가
+        model.addAttribute("kw", kw);
+        model.addAttribute("tag", tag);  // 태그 검색기능
         return "article_list";
     }
 
@@ -77,21 +83,22 @@ public class ArticleController {
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/create")
-    public String create(@Valid ArticleForm articleForm, BindingResult bindingResult, Principal principal) {
+    public String create(@Valid ArticleForm articleForm, BindingResult bindingResult, Principal principal, Model model) {
         if (bindingResult.hasErrors()) {
+            model.addAttribute("categories", categoryService.getAllCategories()); // 카테고리가져오기
             return "article_form";
         }
         SiteUser author = this.userService.getUser(principal.getName());
         BoardCategory boardCategory = articleForm.getBoardCategory();
-        this.articleService.createArticle(articleForm.getTitle(), articleForm.getContent(), author, boardCategory);
+        this.articleService.createArticle(articleForm.getTitle(), articleForm.getContent(), author, boardCategory,articleForm.getTags());
         return "redirect:/article/list";
     }
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/modify/{id}")
-    public String modifyArticle(ArticleForm articleForm, @PathVariable("id") Long id,Model model, Principal principal){
+    public String modifyArticle(ArticleForm articleForm, @PathVariable("id") Long id, Model model, Principal principal) {
         Article article = this.articleService.getArticleById(id);
-        if(!article.getAuthor().getEmail().equals(principal.getName())){
+        if (!article.getAuthor().getEmail().equals(principal.getName())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
         }
 
@@ -100,6 +107,22 @@ public class ArticleController {
         articleForm.setBoardCategory(articleForm.getBoardCategory());
         model.addAttribute("articleForm",articleForm);
         model.addAttribute("categories",categoryService.getAllCategories());
+
+
+        // 태그를 설정할 때 '#'를 제거하고 추가
+        StringBuilder tagsBuilder = new StringBuilder();
+        for (Tag tag : article.getTags()) {
+            // '#' 제거하고 태그 이름만 추가
+            String tagNameWithoutHash = tag.getName().replace("#", "");
+            tagsBuilder.append(tagNameWithoutHash).append(", ");
+        }
+        if (tagsBuilder.length() > 0) {
+            tagsBuilder.setLength(tagsBuilder.length() - 2); // 마지막 쉼표 제거
+        }
+        articleForm.setTags(tagsBuilder.toString().trim());  // 수정 시 입력한 태그 가져오기
+
+        model.addAttribute("articleForm", articleForm);
+        model.addAttribute("categories", categoryService.getAllCategories());
         return "article_form";
     }
 
@@ -107,24 +130,26 @@ public class ArticleController {
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/modify/{id}")
     public String modifyArticle(@Valid ArticleForm articleForm, BindingResult bindingResult,
-                                Principal principal, @PathVariable("id") Long id){
-        if(bindingResult.hasErrors()){
+                                Principal principal, @PathVariable("id") Long id, Model model) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("categories", categoryService.getAllCategories());// 수정시 카테고리 가져오기
             return "article_form";
         }
         Article article = this.articleService.getArticleById(id);
-        if(!article.getAuthor().getEmail().equals(principal.getName())){
+        if (!article.getAuthor().getEmail().equals(principal.getName())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
         }
+
         BoardCategory boardCategory = articleForm.getBoardCategory(); // 카테고리 추가
-        this.articleService.modify(article, articleForm.getTitle(), articleForm.getContent(), boardCategory); // 수정 메서드 호출
-        return String.format("redirect:/article/detail/%s",id);
+        this.articleService.modify(article, articleForm.getTitle(), articleForm.getContent(), boardCategory, articleForm.getTags()); // 수정 메서드 호출
+        return String.format("redirect:/article/detail/%s", id);
     }
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/delete/{id}")
-    public String deleteArticle(Principal principal, @PathVariable("id") Long id){
+    public String deleteArticle(Principal principal, @PathVariable("id") Long id) {
         Article article = this.articleService.getArticleById(id);
-        if(!article.getAuthor().getEmail().equals(principal.getName())){
+        if (!article.getAuthor().getEmail().equals(principal.getName())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "삭제권한이 없습니다.");
         }
         this.articleService.delete(article);
@@ -143,6 +168,21 @@ public class ArticleController {
         Integer count = votedArticle.getVoter().size();
         return count.toString();
     }
+
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/unvote/{id}")  //추천취소
+    @ResponseBody
+    public String cancelVote(@PathVariable("id") Long id, Principal principal) {
+        Article article = this.articleService.getArticleById(id);
+        SiteUser siteUser = this.userService.getUser(principal.getName());
+        this.articleService.cancelVote(article, siteUser);
+
+        Article votedArticle = this.articleService.getArticleById(id);
+        Integer count = votedArticle.getVoter().size();
+        return count.toString();
+    }
+
 
     @GetMapping("/blog/view/{id}")
     public String viewBlog(@PathVariable Long id, Model model) {
