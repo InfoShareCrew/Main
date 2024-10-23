@@ -40,15 +40,15 @@
             <div class="text-box"><span class="f-size-14" th:text="${log.cafeName}"></span></div>
             <div class="view-box">
               <div class="img-box"><img th:src="@{/img/Eye.png}" alt="조회수 아이콘"></div>
-              <span class="f-size-14" th:text="${log.view}"></span>
+              <span class="f-size-14" th:text="${log.view != null ? log.view : 0}"></span>
             </div>
             <div class="rcmd-box">
               <div class="img-box"><img th:src="@{/img/Heart.png}" alt="추천 아이콘"></div>
-              <span class="f-size-14" th:text="${log.voter}"></span>
+              <span class="f-size-14" th:text="${log.voter != null ? log.voter : 0}"></span>
             </div>
             <div class="cmt-box">
               <div class="img-box"><img th:src="@{/img/Message_circle.png}" alt="댓글 아이콘"></div>
-              <span class="f-size-14" th:text="${log.comment}"></span>
+              <span class="f-size-14" th:text="${log.comment != null ? log.comment : 0}"></span>
             </div>
           </div>
         </div>
