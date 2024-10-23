@@ -23,10 +23,13 @@ public class MainController {
     @RequestMapping("/")
     public String index(Model model, Principal principal) {
         List<Cafe> cafeList = null;
+        List<Cafe> myCafeList = null;
         if (principal != null) {
-             cafeList = cafeService.getMyList(principal.getName());
+            cafeList = cafeService.getMyList(principal.getName());
+            myCafeList = cafeService.getOwnList(principal.getName());
         }
         model.addAttribute("cafeList", cafeList);
+        model.addAttribute("myCafeList", myCafeList);
         return "index";
     }
 }

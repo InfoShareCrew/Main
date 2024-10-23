@@ -8,7 +8,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -37,7 +36,12 @@ public class BlogController {
     @PreAuthorize("isAuthenticated()")
     @ResponseBody
     public Object getUserOb(Principal principal) {
-        return this.userService.findByEmail(principal.getName());
+        SiteUser user = this.userService.findByEmail(principal.getName());
+        return UserResponseDTO.builder()
+                .nickname(user.getNickname())
+                .email(user.getEmail())
+                .profileImg(user.getProfileImg())
+                .build();
     }
 
     @GetMapping("/{userEmail}")
@@ -91,9 +95,15 @@ public class BlogController {
             return "blog_prof_form";
         }
 
-        // TODO: 프로필 사진 변경하지 않고 저장할 시 빈 파일 저장되는 거 디버깅하기
-        String profileImg = this.utilService.saveImage("user", image);
         SiteUser siteUser = userService.findByEmail(principal.getName());
+
+        // TODO: 프로필 사진 변경하지 않고 저장할 시 빈 파일 저장되는 거 디버깅하기
+        String profileImg = null;
+        if (!image.isEmpty()) {
+            profileImg = this.utilService.saveImage("user", image);
+        } else {
+            profileImg = siteUser.getProfileImg();
+        }
         blogService.updateUserProfile(siteUser,
                                         blogForm.getIntro(),
                                         blogForm.getAddress(),

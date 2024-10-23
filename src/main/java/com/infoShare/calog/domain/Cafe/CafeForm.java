@@ -13,4 +13,5 @@ public class CafeForm {
     @NotNull(message = "내용은 필수사항입니다.")
     private String intro;
 
+    private String profileImg;
 }

@@ -2,6 +2,7 @@ package com.infoShare.calog.domain.neighbor;
 
 import com.infoShare.calog.domain.user.SiteUser;
 import com.infoShare.calog.domain.user.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -9,24 +10,13 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class NeighborService {
-    private final NeighborRepository neighborRepository;
     private final UserRepository userRepository;
 
-    public NeighborService(NeighborRepository neighborRepository, UserRepository userRepository) {
-        this.neighborRepository = neighborRepository;
-        this.userRepository = userRepository;
-    }
-
-    public Neighbor addNeighbor(Long neighborUserId) {
-        Long userId = getCurrentUserId();
-        SiteUser siteUser = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-        SiteUser neighbor = userRepository.findById(neighborUserId)
-                .orElseThrow(() -> new RuntimeException("Neighbor not found"));
-
-        Neighbor newNeighbor = new Neighbor(siteUser, neighbor);
-        return neighborRepository.save(newNeighbor);
+    public SiteUser addNeighbor(SiteUser user, SiteUser neighbor) {
+        user.getNeighbor().add(neighbor);
+        return userRepository.save(user);
     }
 
     public Long getCurrentUserId() {
@@ -42,8 +32,8 @@ public class NeighborService {
         }
     }
 
-    public List<Neighbor> getNeighborsByUserEmail(String email) {
-        // 사용자 이메일에 해당하는 이웃 목록을 반환
-        return neighborRepository.findByUserEmail(email);
-    }
+//    public List<SiteUser> getNeighborsByUserEmail(String email) {
+////         사용자 이메일에 해당하는 이웃 목록을 반환
+//        return userRepository.findByEmail(email).getNeighbor;
+//    }
 }

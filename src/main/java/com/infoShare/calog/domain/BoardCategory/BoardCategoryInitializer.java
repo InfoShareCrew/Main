@@ -12,9 +12,9 @@ public class BoardCategoryInitializer {
     @PostConstruct
     public void init() {
         if (boardCategoryRepository.count() == 0) {
-            boardCategoryRepository.save(new BoardCategory(1, "공지사항"));
-            boardCategoryRepository.save(new BoardCategory(2, "건의게시판"));
-            boardCategoryRepository.save(new BoardCategory(3, "자유게시판"));
+            boardCategoryRepository.save(BoardCategory.builder().name("공지사항").build());
+            boardCategoryRepository.save(BoardCategory.builder().name("건의게시판").build());
+            boardCategoryRepository.save(BoardCategory.builder().name("자유게시판").build());
         }
     }
 }

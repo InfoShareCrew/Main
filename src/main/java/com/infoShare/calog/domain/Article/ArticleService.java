@@ -1,5 +1,7 @@
 package com.infoShare.calog.domain.Article;
 
+import com.infoShare.calog.domain.BoardCategory.BoardCategory;
+import com.infoShare.calog.domain.BoardCategory.BoardCategoryService;
 import com.infoShare.calog.domain.Category.Category;
 import com.infoShare.calog.domain.DataNotFoundException;
 import com.infoShare.calog.domain.user.SiteUser;
@@ -18,6 +20,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ArticleService {
     private final ArticleRepository articleRepository;
+    private final BoardCategoryService boardCategoryService;
 
     public Page<Article> getList(int page) {
         List<Sort.Order> sorts = new ArrayList<>();
@@ -39,11 +42,11 @@ public class ArticleService {
     }
 
 
-    public void createArticle(String title, String content, SiteUser author, Category category) {
+    public void createArticle(String title, String content, SiteUser author, BoardCategory boardCategory) {
         Article article = new Article();
         article.setTitle(title);
         article.setContent(content);
-        article.setCategory(category);
+        article.setBoardCategory(boardCategory);
         article.setAuthor(author);
         this.articleRepository.save(article);
     }
@@ -58,10 +61,10 @@ public class ArticleService {
     }
 
 
-    public void modify(Article article, String title, String content, Category majorCategory) {
+    public void modify(Article article, String title, String content, BoardCategory boardCategory) {
         article.setTitle(title);
         article.setContent(content);
-        article.setCategory(majorCategory);
+        article.setBoardCategory(boardCategory);
         this.articleRepository.save(article);
     }
 
@@ -74,9 +77,9 @@ public class ArticleService {
         this.articleRepository.save(article);
     }
 
-    public Page<Article> searchArticles(String keyword, int page) {
+    public Page<Article> searchArticles(String keyword, int page, String boardName) {
         Pageable pageable = PageRequest.of(page, 10, Sort.by(Sort.Order.desc("createdDate")));
-        return articleRepository.findByTitleContainingOrContentContaining(keyword, keyword, pageable);
+        return articleRepository.findByTitleContainingOrContentContainingAndBoardCategoryId(keyword, keyword, pageable);
     }
 
 }

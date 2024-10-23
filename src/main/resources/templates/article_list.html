@@ -1,13 +1,14 @@
-<html layout:decorate="~{layout}">
-<div layout:fragment="content" class="main-contents dp-flex-clmb">
-  <h1> 게시판 </h1>
-
+<html layout:decorate="~{cafe_layout}">
+<div layout:fragment="content" class="main-contents dp-flex-clmb board-list">
+  <div class="title-box">
+    <span th:text="${boardCategory.name}" class="f-size-28 f-weight-6"> 게시판 </span>
+    <a sec:authorize="isAuthenticated()" th:if="${#authentication.getPrincipal().username} == ${cafe.maneger.email}" th:href="@{|/cafe/${cafe.id}/notice/create|}" class="btn btn-primary">글쓰기</a>
+  </div>
   <!-- 검색 폼 추가 -->
-  <form method="get" action="/article/list">
+  <form method="get" th:action="@{|/cafe/${cafe.id}/${boardName}|}">
     <input type="text" name="kw" placeholder="제목 또는 내용을 입력" value=""/>
     <button type="submit">검색</button>
   </form>
-
   <table>
     <thead>
     <tr>
@@ -23,7 +24,7 @@
       <td th:text="${paging.totalElements - (paging.number * paging.size) - loop.index}"></td>
       <td>
         <a th:href="@{|/article/detail/${article.id}|}" th:text="${article.title}"></a>
-          <span class="text-info small ms-2"
+          <span class="text-info small"
                 th:if="${#lists.size(article.commentList) > 0}"
                 th:text="${#lists.size(article.commentList)}">
         </span>
@@ -53,8 +54,5 @@
       </li>
     </ul>
   </div>
-
-
-  <a th:href="|/article/create|">글쓰기</a>
 </div>
 </html>
