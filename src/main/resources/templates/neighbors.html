@@ -13,228 +13,23 @@
 </head>
 <div layout:fragment="content" class="main-contents">
   <div th:replace="~{index_left_side :: leftSideFragment }"></div>
-  <div class="air-box"></div>
   <div class="center personal-container neighbor">
-    <div class="neighborList">
-      <!-- Slider main container -->
-      <div class="swiper">
-        <!-- Additional required wrapper -->
-        <div class="swiper-wrapper">
-          <!-- Slides -->
-          <div class="swiper-slide">
-            <div class="img-box" id="ss-1"><img src="../static/img/e2729fba28172ae8831a761a9c60d35c.jpg" alt="카페 프로필 사진"></div>
+    <div class="neighbor-box">
+      <div class="title-box"><span class="f-size-18 f-weight-6">이웃</span></div>
+      <div class="neighborList">
+        <a th:href="@{|/blog/${neighbor.email}|}" th:each="neighbor : ${neighborList}">
+          <div class="img-box"><img th:src="@{|/file/${neighbor.profileImg != null ? neighbor.profileImg : 'user/user_basic.png'}|}" alt="이웃 프로필 이미지"></div>
+          <div class="text-box">
+            <span th:text="${neighbor.nickname}"></span>
           </div>
-          <div class="swiper-slide" id="ss-2">
-            <button class=""><span class="f-size-13 f-size-5">카테고리-2</span></button>
-          </div>
-          <div class="swiper-slide" id="ss-3">
-            <button class=""><span class="f-size-13 f-size-5">카테고리-3</span></button>
-          </div>
-          <div class="swiper-slide" id="ss-4">
-            <button class=""><span class="f-size-13 f-size-5">카테고리-4</span></button>
-          </div>
-          <div class="swiper-slide" id="ss-5">
-            <button class=""><span class="f-size-13 f-size-5">카테고리-5</span></button>
-          </div>
-          <div class="swiper-slide" id="ss-6">
-            <button class=""><span class="f-size-13 f-size-5">카테고리-6</span></button>
-          </div>
-          <div class="swiper-slide" id="ss-7">
-            <button class=""><span class="f-size-13 f-size-5">카테고리-7</span></button>
-          </div>
-          <div class="swiper-slide" id="ss-8">
-            <button class=""><span class="f-size-13 f-size-5">카테고리-8</span></button>
-          </div>
-        </div>
-        <!-- If we need pagination -->
-        <!-- <div class="swiper-pagination"></div> -->
-
-        <!-- If we need navigation buttons -->
-        <div class="swiper-button-prev"></div>
-        <div class="swiper-button-next"></div>
-
-        <!-- If we need scrollbar -->
-        <!-- <div class="swiper-scrollbar"></div> -->
-      </div>
-    </div>
-    <div class="profile-box">
-        <!--            <div class="img-box"><img th:src="@{|/img/${user.id}.jpg|}" alt="프로필사진"></div>-->
-                    <div class="img-box"><img src="" alt="프로필사진"></div>
-                    <div class="detail-box">
-        <!--                <div class="text-box uname"><span class="f-size-18 f-weight-6" th:text="${user.nickname}"></span></div>-->
-                        <div class="text-box uname"><span class="f-size-18 f-weight-6">이웃</span></div>
-        <!--                <div class="text-box intro"><span class="f-size-14" th:text="${user.intro}"></span></div>-->
-                        <div class="text-box intro"><span class="f-size-14">소개글</span></div>
-                        <div class="address">
-        <!--                    <div class="text-box" th:if="addressList != null" th:each="address : ${addressList}"><span class="f-size-14" th:text="${address}"></span></div>-->
-                            <div class="text-box"><span class="f-size-14">링크</span></div>
-                            <div class="text-box"><span class="f-size-14">링크</span></div>
-                        </div>
-                    </div>
-    </div>
-    <div class="post-box dp-flex-clmb">
-      <div class="category">
-        <div class="ctgr-box-in btn"><span>최신순</span></div>
-        <div class="ctgr-box-my btn"><span>인기순</span></div>
-      </div>
-      <div class="post-list dp-flex-clmb">
-        <div class="post post-1">
-          <div class="title"><span class="f-size-16 f-weight-6">글 제목</span></div>
-          <div class="detail-box">
-            <div class="text-box"><span class="f-size-14">카페이름</span></div>
-            <div class="view-box">
-              <div class="img-box"><img th:src="@{/img/Eye.png}" alt="조회수 아이콘"></div>
-              <span class="f-size-14">1000</span>
-            </div>
-            <div class="rcmd-box">
-              <div class="img-box"><img th:src="@{/img/Heart.png}" alt="추천 아이콘"></div>
-              <span class="f-size-14">24</span>
-            </div>
-            <div class="cmt-box">
-              <div class="img-box"><img th:src="@{/img/Message_circle.png}" alt="댓글 아이콘"></div>
-              <span class="f-size-14">24</span>
-            </div>
-          </div>
-          <div class="content"><span class="f-size-14">글 내용</span></div>
-        </div>
-        <div class="post post-2">
-          <div class="title"><span class="f-size-16 f-weight-6">글 제목</span></div>
-          <div class="detail-box">
-            <div class="text-box"><span class="f-size-14">카페이름</span></div>
-            <div class="view-box">
-              <div class="img-box"><img th:src="@{/img/Eye.png}" alt="조회수 아이콘"></div>
-              <span class="f-size-14">1000</span>
-            </div>
-            <div class="rcmd-box">
-              <div class="img-box"><img th:src="@{/img/Heart.png}" alt="추천 아이콘"></div>
-              <span class="f-size-14">24</span>
-            </div>
-            <div class="cmt-box">
-              <div class="img-box"><img th:src="@{/img/Message_circle.png}" alt="댓글 아이콘"></div>
-              <span class="f-size-14">24</span>
-            </div>
-          </div>
-          <div class="content"><span class="f-size-14">글 내용</span></div>
-        </div>
-        <div class="post post-3">
-          <div class="title"><span class="f-size-16 f-weight-6">글 제목</span></div>
-          <div class="detail-box">
-            <div class="text-box"><span class="f-size-14">카페이름</span></div>
-            <div class="view-box">
-              <div class="img-box"><img th:src="@{/img/Eye.png}" alt="조회수 아이콘"></div>
-              <span class="f-size-14">1000</span>
-            </div>
-            <div class="rcmd-box">
-              <div class="img-box"><img th:src="@{/img/Heart.png}" alt="추천 아이콘"></div>
-              <span class="f-size-14">24</span>
-            </div>
-            <div class="cmt-box">
-              <div class="img-box"><img th:src="@{/img/Message_circle.png}" alt="댓글 아이콘"></div>
-              <span class="f-size-14">24</span>
-            </div>
-          </div>
-          <div class="content"><span class="f-size-14">글 내용</span></div>
-        </div>
-      </div>
-    </div>
-    <div class="my-cafe-container">
-      <div class="text-box"><span class="f-size-18 f-weight-6">홍길동님이 가입 중인 카페</span></div>
-      <div class="cafe-list">
-        <div class="">
-          <div class="profile-img img-box">
-            <img th:src="@{/img/e2729fba28172ae8831a761a9c60d35c.jpg}" alt="카페 프로필 사진">
-          </div>
-          <div class="content-2 dp-flex-clmb">
-            <div class="title"><span class="f-size-16 f-weight-6">카페이름1</span></div>
-            <div class="">
-              <div class="full-w">카페소개글</div>
-              <div class="detail">
-                <div class="user-box">
-                  <div class="img-box"><img th:src="@{/img/person.png}" alt="유저 아이콘"></div>
-                  <div class="text-box"><span class="f-size-13">1000</span></div>
-                </div>
-                <div class="text-box"><span class="f-size-13">세부 카테고리</span></div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="">
-          <div class="profile-img img-box">
-            <img th:src="@{/img/e2729fba28172ae8831a761a9c60d35c.jpg}" alt="카페 프로필 사진">
-          </div>
-          <div class="content-2 dp-flex-clmb">
-            <div class="title"><span class="f-size-16 f-weight-6">카페이름1</span></div>
-            <div>
-              <div class="content full-w">카페소개글</div>
-              <div class="detail">
-                <div class="user-box">
-                  <div class="img-box"><img th:src="@{/img/person.png}" alt="유저 아이콘"></div>
-                  <div class="text-box"><span class="f-size-13">1000</span></div>
-                </div>
-                <div class="text-box"><span class="f-size-13">세부 카테고리</span></div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="">
-          <div class="profile-img img-box">
-            <img th:src="@{/img/e2729fba28172ae8831a761a9c60d35c.jpg}" alt="카페 프로필 사진">
-          </div>
-          <div class="content-2 dp-flex-clmb">
-            <div class="title"><span class="f-size-16 f-weight-6">카페이름1</span></div>
-            <div>
-              <div class="content full-w">카페소개글</div>
-              <div class="detail">
-                <div class="user-box">
-                  <div class="img-box"><img th:src="@{/img/person.png}" alt="유저 아이콘"></div>
-                  <div class="text-box"><span class="f-size-13">1000</span></div>
-                </div>
-                <div class="text-box"><span class="f-size-13">세부 카테고리</span></div>
-              </div>
-            </div>
-          </div>
-        </div>
+        </a>
       </div>
     </div>
   </div>
   <div class="right-side"></div>
 </div>
-<!-- Swiper JS 파일 추가 -->
-<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <!-- 자바 스크립트 -->
 <script layout:fragment="script" type='text/javascript'>
-  const swiper = new Swiper('.swiper', {
-   // Optional parameters
-   direction: 'horizontal',
-   loop: true,
-
-   // If we need pagination
-   pagination: {
-     el: '.swiper-pagination',
-   },
-
-      slidesPerView: 5,
-      spaceBetween: 16,
-
-   // Navigation arrows
-   navigation: {
-     nextEl: '.swiper-button-next',
-     prevEl: '.swiper-button-prev',
-   },
-
-  //  // And if we need scrollbar
-  //  scrollbar: {
-  //    el: '.swiper-scrollbar',
-  //  },
- });
-
- const categoryList = ['ss-1', 'ss-2', 'ss-3', 'ss-4', 'ss-5', 'ss-6', 'ss-7', 'ss-8']; // 카테고리 리스트
- categoryList.forEach(function(value, index) {  // 카테고리 누르면 해당 카페 보여주기
-  const swiper_slide = document.querySelector("#"+value);
-  swiper_slide.addEventListener("click", function() {
-    console.log(this);
-  })
- })
 </script>
 </html>
 

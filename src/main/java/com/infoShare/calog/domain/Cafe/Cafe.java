@@ -26,13 +26,16 @@ public class Cafe extends BaseEntity {
     @ManyToOne
     private Category category;
 
-    @ManyToOne
-    private BoardCategory boardCategory;
+    @OneToMany
+    private Set<BoardCategory> boardCategory;
 
     @ManyToOne
     private SiteUser maneger;
 
     private String profileImg;
+
+    @OneToMany(mappedBy = "cafe") // Users와 Cafe의 관계 설정
+    private Set<SiteUser> users; // SiteUser가 @Entity여야 합니다.
 
     @ManyToMany
     Set<SiteUser> voter;

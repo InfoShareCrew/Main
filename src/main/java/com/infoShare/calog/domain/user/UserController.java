@@ -56,7 +56,15 @@ public class UserController {
     }
 
     @GetMapping("/password")
-    public String findPassword(UserFindPasswordForm userPasswordForm) {
+    public String modifyPassword(@ModelAttribute("userPasswordForm") UserFindPasswordForm userPasswordForm) {
         return "modify_password";
+    }
+
+    @PostMapping("/password")
+    public String modifyPassword(@Valid UserFindPasswordForm userPasswordForm, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "modify_password";
+        }
+        return "redirect:/";
     }
 }

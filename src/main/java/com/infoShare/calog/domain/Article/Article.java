@@ -1,5 +1,7 @@
 package com.infoShare.calog.domain.Article;
 
+import com.infoShare.calog.domain.BoardCategory.BoardCategory;
+import com.infoShare.calog.domain.Cafe.Cafe;
 import com.infoShare.calog.domain.Category.Category;
 import com.infoShare.calog.domain.Comment.Comment;
 import com.infoShare.calog.domain.user.SiteUser;
@@ -30,7 +32,12 @@ public class Article extends BaseEntity {
     private SiteUser author;
 
     @ManyToOne
-    private Category Category;
+    @JoinColumn(name = "board_category_id")
+    private BoardCategory boardCategory;
+
+    @ManyToOne
+    @JoinColumn(name = "cafe")
+    private Cafe cafe;
 
     @ManyToMany
     Set<SiteUser> voter;

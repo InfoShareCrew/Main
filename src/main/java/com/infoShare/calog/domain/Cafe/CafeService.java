@@ -1,5 +1,6 @@
 package com.infoShare.calog.domain.Cafe;
 
+import java.util.Set;
 import com.infoShare.calog.domain.DataNotFoundException;
 import com.infoShare.calog.domain.user.SiteUser;
 import com.infoShare.calog.domain.user.UserService;
@@ -28,7 +29,13 @@ public class CafeService {
         return this.cafeRepository.findAll(pageable);
     }
 
-    public List<Cafe> getMyList(String userEmail) {
+    public List<Cafe> getMyList(String userEmail) {        // 내가 가입한 카페 리스트
+//        return cafeRepository.findAllByManeger(userService.getUser(userEmail));//TODO: 여기 편집
+        Set<Cafe> cafeSet = userService.getUser(userEmail).getCafe();
+        return new ArrayList<>(cafeSet);
+    }
+
+    public List<Cafe> getOwnList(String userEmail) {        // 내가 만든 카페 리스트
         return cafeRepository.findAllByManeger(userService.getUser(userEmail));
     }
 
@@ -46,19 +53,6 @@ public class CafeService {
                 .orElseThrow(() -> new IllegalArgumentException("Invalid cafe ID"));
     }
 
-   /* public Cafe create(String title, Short majorCategoryId, Short minorCategoryId, SiteUser manager) {
-        MajorCategory majorCategory = majorCategoryService.findById(majorCategoryId);
-        MinorCategory minorCategory = minorCategoryService.findById(minorCategoryId);
-
-        Cafe cafe = new Cafe();
-        cafe.setTitle(title);
-        cafe.setManager(manager);
-        cafe.setMajorCategory(majorCategory);
-        cafe.setMinorCategory(minorCategory);
-
-        return cafeRepository.save(cafe);
-    }*/
-
     public Cafe create(String name, String intro ,SiteUser maneger) {
         Cafe cafe = new Cafe();
         cafe.setName(name);
@@ -67,9 +61,10 @@ public class CafeService {
         return cafeRepository.save(cafe);
     }
 
-    public void modifyCafe(Cafe cafe, String name, String intro) {
+    public void modifyCafe(Cafe cafe, String name, String intro, String profileImg) {
         cafe.setName(name);
         cafe.setIntro(intro);
+        cafe.setProfileImg(profileImg);
         this.cafeRepository.save(cafe);
     }
 
@@ -77,9 +72,13 @@ public class CafeService {
         this.cafeRepository.delete(cafe);
     }
 
-
     public void vote(Cafe cafe, SiteUser siteUser) {
         cafe.getVoter().add(siteUser);
         this.cafeRepository.save(cafe);
+    }
+
+    public void signup(Cafe cafe, SiteUser siteUser) {
+        siteUser.getCafe().add(cafe);
+        this.userService.save(siteUser);
     }
 }
