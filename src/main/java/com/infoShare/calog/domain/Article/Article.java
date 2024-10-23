@@ -43,3 +43,5 @@ public class Article extends BaseEntity {
     private Set<Tag> tags;
 
 }
+
+// 카페 카테고리 게시판

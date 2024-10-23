@@ -97,14 +97,17 @@ public class ArticleController {
         articleForm.setCategory(article.getCategory());
 
 
+        // 태그를 설정할 때 '#'를 제거하고 추가
         StringBuilder tagsBuilder = new StringBuilder();
         for (Tag tag : article.getTags()) {
-            tagsBuilder.append(tag.getName()).append(", ");
+            // '#' 제거하고 태그 이름만 추가
+            String tagNameWithoutHash = tag.getName().replace("#", "");
+            tagsBuilder.append(tagNameWithoutHash).append(", ");
         }
         if (tagsBuilder.length() > 0) {
-            tagsBuilder.setLength(tagsBuilder.length() - 2);
+            tagsBuilder.setLength(tagsBuilder.length() - 2); // 마지막 쉼표 제거
         }
-        articleForm.setTags(tagsBuilder.toString());  // 수정시 입력한 태그 가져오기
+        articleForm.setTags(tagsBuilder.toString().trim());  // 수정 시 입력한 태그 가져오기
 
         model.addAttribute("articleForm", articleForm);
         model.addAttribute("categories", categoryService.getAllCategories());
