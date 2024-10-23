@@ -1,5 +1,6 @@
 package com.infoShare.calog.domain.user;
 
+import com.infoShare.calog.domain.Cafe.Cafe;
 import com.infoShare.calog.global.jpa.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -34,6 +35,12 @@ public class SiteUser extends BaseEntity {
     private String address;
 
     private String profileImg;
+
+    @ManyToMany
+    Set<SiteUser> neighbor;
+
+    @ManyToMany // Cafe와의 관계
+    Set<Cafe> cafe; // Cafe와 연결된 필드
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "siteuser_roles", joinColumns = @JoinColumn(name = "siteuser_id"))

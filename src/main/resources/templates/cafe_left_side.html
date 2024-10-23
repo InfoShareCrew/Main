@@ -2,17 +2,32 @@
   <div class="left-side">
     <div class="cafe-info full-w">
       <a class="img-box" th:href="@{|/cafe/${cafe.id}|}">
-        <img src="" alt="카페 프로필 이미지">
+        <img th:src="@{|/file/${cafe.profileImg != null ? cafe.profileImg : 'cafe/user_basic.png'}|}" alt="카페 프로필 이미지">
       </a>
       <div class="text-box">
         <a th:href="@{|/cafe/${cafe.id}|}" class="f-size-16 f-weight-6" th:text="${cafe.name}"></a>
-        <a th:href="@{|/cafe/modify/${cafe.id}|}" class="f-size-13 f-color-d3">카페 편집</a>
+        <a sec:authorize="isAuthenticated()"
+           th:if="${#authentication.getPrincipal().username} == ${cafe.maneger.email}"
+           th:href="@{|/cafe/modify/${cafe.id}|}" class="f-size-13 f-color-d3"
+        >카페 편집</a>
+        <!-- 로그인 했을 때 보이는 가입하기 버튼 -->
+        <span sec:authorize="isAuthenticated()" th:if="${#authentication.getPrincipal().username} != ${cafe.maneger.email}">
+          <span th:each="user : ${cafe.users}">
+            <span th:if="${user.name == #authentication.getPrincipal().username}">
+              <!-- Do something when a match is found -->
+              <a th:href="@{|/cafe/signup/${cafe.id}|}"
+              >카페 가입하기</a>
+            </span>
+          </span>
+        </span>
+        <!-- 로그인 안 했을 때 보이는 가입하기 버튼 -->
+        <a sec:authorize="isAnonymous()" th:href="@{|/cafe/signup/${cafe.id}|}">카페 가입하기</a>
       </div>
     </div>
     <div class="menu-list">
       <ul>
-        <li class="menu-1"><a th:href="@{|/cafe/${cafe.id}/notice|}" class="f-size-16 full-w">공지사항</a></li>
-        <li class="menu-2"><a th:href="@{|/cafe/${cafe.id}/suggest|}" class="f-size-16 full-w">건의게시판</a></li>
+        <li class="menu-1"><a th:href="@{|/cafe/${cafe.id}/공지사항|}" class="f-size-16 full-w">공지사항</a></li>
+        <li class="menu-2"><a th:href="@{|/cafe/${cafe.id}/건의게시판|}" class="f-size-16 full-w">건의게시판</a></li>
       </ul>
       <hr>
       <!-- <ul th:each="{board_category : ${categoryList}}">

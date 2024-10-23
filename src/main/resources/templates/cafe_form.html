@@ -6,13 +6,21 @@
     <div class="text-box">
         <span class="f-size-28 f-size-6">카페 설정</span>
     </div>
-    <form method="post" th:object="${cafeForm}"class="form">
+    <form method="post" th:object="${cafeForm}"class="form" enctype="multipart/form-data">
         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
         <!--오류메세지-->
         <div class="alert alert-danger" role="alert" th:if="${#fields.hasAnyErrors()}">
             <div th:each="err: ${#fields.allErrors()}" th:text="${err}"></div>
         </div>
-            <!--입력-->
+        <!--입력-->
+        <div class="input-box">
+            <label for="profile-img" class="form-label">카페 사진</label>
+            <div class="img-box">
+                <img th:src="@{|/file/${cafeForm.profileImg != null ? cafeForm.profileImg : 'cafe/user_basic.png'}|}"  accept="image/png, image/gif, image/jpeg" id="profile-img-2" alt="프로필이미지" />
+            </div>
+            <button type="button" class="btn-b" id="modify-img-btn">사진변경</button>
+            <input class="btn-b d-none" type="file" name="profile-img" id="profile-img-input" value="*{profileImg}" accept="image/png, image/jpeg">
+        </div>
         <div class="input-box">
             <label for="name" class="form-label">카페 이름</label>
             <input type="text" th:field="*{name}" class="input">
@@ -24,4 +32,24 @@
         <input type="submit" value="등록하기" class="btn btn-primary my-2">
     </form>
 </div>
+<!-- 자바 스크립트 -->
+<script layout:fragment="script" type='text/javascript'>
+    $(document).ready(function() {
+      $("#modify-img-btn").click(()=>{
+        $("#profile-img-input").click();
+      })
+      $("#profile-img-input").on('change', function(event) {
+        const file = event.target.files[0];
+        if (file) {
+          console.log("사진이 선택되었습니다.");
+          const reader = new FileReader();
+          reader.onload = function(e) {
+              const img = $('#profile-img-2').attr('src', e.target.result);
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+
+    })
+</script>
 </html>

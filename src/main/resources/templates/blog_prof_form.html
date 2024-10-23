@@ -14,7 +14,7 @@
       </div>
       <div class="profile-img">
         <div class="img-box">
-          <img th:src="@{|/file/${blogForm.profileImg != null ? blogForm.profileImg : 'user_basic.png'}|}"  accept="image/png, image/gif, image/jpeg" id="profile-img-2" alt="프로필이미지" />
+          <img th:src="@{|/file/${blogForm.profileImg != null ? blogForm.profileImg : 'user/user_basic.png'}|}"  accept="image/png, image/gif, image/jpeg" id="profile-img-2" alt="프로필이미지" />
         </div>
         <button type="button" class="btn-b" id="modify-img-btn">사진변경</button>
         <input class="btn-b d-none" type="file" name="profile-img" id="profile-img-input" value="*{profileImg}" accept="image/png, image/jpeg">

@@ -1,14 +1,4 @@
 <html layout:decorate="~{layout}">
-<head>
-  <!-- 스와이퍼 -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-  <link rel="stylesheet" th:href="@{/swiper.css}" />
-  <!-- <link rel="stylesheet" href="../static/bootstrap.min.css">
-  <link rel="stylesheet" href="../static/lib.css">
-  <link rel="stylesheet" href="../static/styleguide.css">
-  <link rel="stylesheet" href="../static/style.css">
-  <link rel="stylesheet" href="../static/swiper.css"> -->
-</head>
 <div layout:fragment="content" class="main-contents">
   <!-- 고정 좌측 메뉴 -->
   <div th:replace="~{index_left_side :: leftSideFragment }"></div>
@@ -23,8 +13,18 @@
       <div class="cafe-list" id="cafe-in-list">
         <a th:each="cafe : ${cafeList}" th:href="@{|/cafe/${cafe.id}|}" class="cafe-box-1">
           <div class="profile-img img-box">
-            <img th:src="@{img/e2729fba28172ae8831a761a9c60d35c.jpg}" alt="카페 프로필 사진">
-<!--            <img th:src="${cafe.profileImg} == null ? @{img/e2729fba28172ae8831a761a9c60d35c.jpg} : @{/file/user_basic.png}" alt="카페 프로필 사진">-->
+            <img th:src="@{|/file/${cafe.profileImg != null ? cafe.profileImg : 'cafe/user_basic.png'}|}" alt="카페 프로필 사진">
+          </div>
+          <div class="content">
+            <div class="title"><span class="f-size-16 f-weight-6" th:text="${cafe.name}">카페이름1</span></div>
+            <div class="intro"><span class="f-size-14 f-weight-5" th:text="${cafe.intro}">카페 소개글</span></div>
+          </div>
+        </a>
+      </div>
+      <div class="cafe-list d-none" id="cafe-my-list">
+        <a th:each="cafe : ${myCafeList}" th:href="@{|/cafe/${cafe.id}|}" class="cafe-box-1">
+          <div class="profile-img img-box">
+            <img th:src="@{|/file/${cafe.profileImg != null ? cafe.profileImg : 'cafe/user_basic.png'}|}" alt="카페 프로필 사진">
           </div>
           <div class="content">
             <div class="title"><span class="f-size-16 f-weight-6" th:text="${cafe.name}">카페이름1</span></div>
@@ -64,31 +64,6 @@
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <!-- 자바 스크립트 -->
 <script layout:fragment="script" type='text/javascript'>
-  const swiper = new Swiper('.swiper', {
-   // Optional parameters
-   direction: 'horizontal',
-   loop: true,
-
-   // If we need pagination
-   pagination: {
-     el: '.swiper-pagination',
-   },
-
-      slidesPerView: 5,
-      spaceBetween: 16,
-
-   // Navigation arrows
-   navigation: {
-     nextEl: '.swiper-button-next',
-     prevEl: '.swiper-button-prev',
-   },
-
-  //  // And if we need scrollbar
-  //  scrollbar: {
-  //    el: '.swiper-scrollbar',
-  //  },
- });
-
  $(document).ready(function() {
   $("#cafe-in").click(() => {
     $("#cafe-in-list").addClass("d-block");

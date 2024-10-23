@@ -1,15 +1,18 @@
 package com.infoShare.calog.domain.BoardCategory;
 
+import com.infoShare.calog.domain.Article.Article;
+import com.infoShare.calog.domain.Cafe.Cafe;
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+
+import java.util.List;
 
 @Getter
+@Setter
 @Entity
-@Builder
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class BoardCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,8 +21,9 @@ public class BoardCategory {
     @Column(length = 200)
     private String name;
 
-    public BoardCategory(int id, String name) {
-        this.id = id;
-        this.name = name;
-    }
+    @OneToMany(mappedBy = "boardCategory")
+    private List<Article> articles;
+
+    @OneToMany(mappedBy = "boardCategory")
+    private List<Cafe> cafe;
 }

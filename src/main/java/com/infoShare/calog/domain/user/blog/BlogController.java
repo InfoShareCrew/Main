@@ -8,7 +8,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -37,7 +36,12 @@ public class BlogController {
     @PreAuthorize("isAuthenticated()")
     @ResponseBody
     public Object getUserOb(Principal principal) {
-        return this.userService.findByEmail(principal.getName());
+        SiteUser user = this.userService.findByEmail(principal.getName());
+        return UserResponseDTO.builder()
+                .nickname(user.getNickname())
+                .email(user.getEmail())
+                .profileImg(user.getProfileImg())
+                .build();
     }
 
     @GetMapping("/{userEmail}")
@@ -47,6 +51,7 @@ public class BlogController {
         // 사용자 활동 로그 가져오기
         List<Map<String, Object>> activityLogs = activityLogService.getActivityLogsByUserId(user.getId());
 
+        List<Map<String, Object>> activityCafes = activityLogService.getActivityCafesByUserId(user.getId());
         // 문자열로 저장되어 있는 사용자의 개인링크 첨부를 알고리즘으로 풀어 리스트로 html에 첨부
         String address = user.getAddress();
         List<String> addressList = new ArrayList<>();
@@ -64,6 +69,7 @@ public class BlogController {
         model.addAttribute("user", user);
         model.addAttribute("fileDirPath", fileDirPath);
         model.addAttribute("activityLogs", activityLogs); // 활동 로그 추가
+        model.addAttribute("activityCafes", activityCafes);
         return "blog_view";
     }
 
@@ -84,19 +90,25 @@ public class BlogController {
                            @PathVariable(value = "userEmail") String email,
                            @RequestParam(value = "profile-img") MultipartFile image,
                            BindingResult bindingResult,
-                            Principal principal) {
+                           Principal principal) {
         if (bindingResult.hasErrors()) {
             return "blog_prof_form";
         }
 
-        // TODO: 프로필 사진 변경하지 않고 저장할 시 빈 파일 저장되는 거 디버깅하기
-        String profileImg = this.utilService.saveImage("user", image);
         SiteUser siteUser = userService.findByEmail(principal.getName());
+
+        // TODO: 프로필 사진 변경하지 않고 저장할 시 빈 파일 저장되는 거 디버깅하기
+        String profileImg = null;
+        if (!image.isEmpty()) {
+            profileImg = this.utilService.saveImage("user", image);
+        } else {
+            profileImg = siteUser.getProfileImg();
+        }
         blogService.updateUserProfile(siteUser,
-                                        blogForm.getIntro(),
-                                        blogForm.getAddress(),
-                                        blogForm.getNickname(),
-                                        profileImg); // 블로그 서비스에서 업데이트 호출
+                blogForm.getIntro(),
+                blogForm.getAddress(),
+                blogForm.getNickname(),
+                profileImg); // 블로그 서비스에서 업데이트 호출
         return String.format("redirect:/blog/%s", email); // 블로그 페이지로 리디렉션
     }
 }

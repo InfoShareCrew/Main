@@ -1,5 +1,7 @@
 package com.infoShare.calog.domain.Article;
 
+import com.infoShare.calog.domain.BoardCategory.BoardCategory;
+import com.infoShare.calog.domain.BoardCategory.BoardCategoryService;
 import com.infoShare.calog.domain.Category.Category;
 import com.infoShare.calog.domain.Category.CategoryService;
 import com.infoShare.calog.domain.Comment.CommentForm;
@@ -30,6 +32,7 @@ public class ArticleController {
     private final ArticleService articleService;
     private final UserService userService;
     private final CategoryService categoryService;
+    private final BoardCategoryService boardCategoryService;
     private final TagService tagService;
 
     @GetMapping("/list")
@@ -38,8 +41,15 @@ public class ArticleController {
                        @RequestParam(value = "page", defaultValue = "0") int page,
                        @RequestParam(value = "kw", defaultValue = "") String kw,
                        @RequestParam(value = "tag", required = false) String tag) {
-        Page<Article> paging = articleService.searchArticlesOrTag(kw, tag, page);
+        Page<Article> paging;
 
+        if (kw != null && !kw.isEmpty()) {
+            // 검색 기능 추가
+            paging = this.articleService.searchArticles(kw, page, "공지사항");
+        } else {
+            // 기본 목록
+            paging = this.articleService.getList(page);
+        }
         model.addAttribute("paging", paging);
         model.addAttribute("kw", kw);
         model.addAttribute("tag", tag);  // 태그 검색기능
@@ -58,8 +68,8 @@ public class ArticleController {
         }
 
         // 선택한 카테고리 정보 추가
-        Category majorCategory = article.getCategory();
-        model.addAttribute("selectedCategoryId", majorCategory != null ? majorCategory.getId() : null);
+        BoardCategory boardCategory = article.getBoardCategory();
+        model.addAttribute("selectedCategoryId", boardCategory != null ? boardCategory.getId() : null);
         model.addAttribute("categories", categoryService.getAllCategories()); // 모든 카테고리 목록 가져오기
 
         return "article_detail";
@@ -67,7 +77,7 @@ public class ArticleController {
 
     @GetMapping("/create")
     public String create(ArticleForm articleForm, Model model) {
-        model.addAttribute("categories", categoryService.getList(0).getContent());
+        model.addAttribute("boardCategory", this.boardCategoryService.getList()); // 카테고리 가져오기
         return "article_form";
     }
 
@@ -79,8 +89,8 @@ public class ArticleController {
             return "article_form";
         }
         SiteUser author = this.userService.getUser(principal.getName());
-        Category category = articleForm.getCategory();
-        this.articleService.createArticle(articleForm.getTitle(), articleForm.getContent(), author, category, articleForm.getTags());
+        BoardCategory boardCategory = articleForm.getBoardCategory();
+        this.articleService.createArticle(articleForm.getTitle(), articleForm.getContent(), author, boardCategory,articleForm.getTags());
         return "redirect:/article/list";
     }
 
@@ -94,7 +104,9 @@ public class ArticleController {
 
         articleForm.setTitle(article.getTitle());
         articleForm.setContent(article.getContent());
-        articleForm.setCategory(article.getCategory());
+        articleForm.setBoardCategory(articleForm.getBoardCategory());
+        model.addAttribute("articleForm",articleForm);
+        model.addAttribute("categories",categoryService.getAllCategories());
 
 
         // 태그를 설정할 때 '#'를 제거하고 추가
@@ -115,7 +127,6 @@ public class ArticleController {
     }
 
 
-
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/modify/{id}")
     public String modifyArticle(@Valid ArticleForm articleForm, BindingResult bindingResult,
@@ -129,8 +140,8 @@ public class ArticleController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
         }
 
-
-        this.articleService.modify(article, articleForm.getTitle(), articleForm.getContent(), articleForm.getCategory(), articleForm.getTags()); // 수정 메서드 호출
+        BoardCategory boardCategory = articleForm.getBoardCategory(); // 카테고리 추가
+        this.articleService.modify(article, articleForm.getTitle(), articleForm.getContent(), boardCategory, articleForm.getTags()); // 수정 메서드 호출
         return String.format("redirect:/article/detail/%s", id);
     }
 
