@@ -20,6 +20,7 @@
       </div>
       <div sec:authorize="isAuthenticated()" th:if="${user.email != null} and ${#authentication.getPrincipal().username} == ${user.email}">
         <button class="btn-b" th:onclick="@{|window.location.href = '/blog/edit/${user.email}';|}"><span class="f-size-14 f-weight-5">수정</span></button>
+        <button class="btn-b" th:onclick="@{|window.location.href = '/user/password';|}"><span class="f-size-14 f-weight-5">비밀번호 재설정</span></button>
       </div>
       <!-- 로그인 했을 때 보일 이웃추가 -->
       <div sec:authorize="isAuthenticated()" th:if="${user.email != null} and ${#authentication.getPrincipal().username} != ${user.email}">
@@ -32,8 +33,8 @@
     </div>
     <div class="post-box dp-flex-clmb">
       <div class="category">
-        <div class="ctgr-box-in btn"><span>최신순</span></div>
-        <div class="ctgr-box-my btn"><span>인기순</span></div>
+        <a href="/blog/{{user.email}}?sort=latest">최신순</a>
+        <a href="/blog/{{user.email}}?sort=popular">인기순</a>
       </div>
       <div class="post-list dp-flex-clmb">
         <!-- 활동 내역 표시 -->
@@ -47,15 +48,15 @@
             <div class="text-box"><span class="f-size-14" th:text="${log.cafeName}"></span></div>
             <div class="view-box">
               <div class="img-box"><img th:src="@{/img/Eye.png}" alt="조회수 아이콘"></div>
-              <span class="f-size-14" th:text="${log.view}"></span>
+              <span class="f-size-14" th:text="${log.view != null ? log.view : 0}"></span>
             </div>
             <div class="rcmd-box">
               <div class="img-box"><img th:src="@{/img/Heart.png}" alt="추천 아이콘"></div>
-              <span class="f-size-14" th:text="${log.voter}"></span>
+              <span class="f-size-14" th:text="${log.voter != null ? log.voter : 0}"></span>
             </div>
             <div class="cmt-box">
               <div class="img-box"><img th:src="@{/img/Message_circle.png}" alt="댓글 아이콘"></div>
-              <span class="f-size-14" th:text="${log.comment}"></span>
+              <span class="f-size-14" th:text="${log.comment != null ? log.comment : 0}"></span>
             </div>
           </div>
         </div>
@@ -90,7 +91,7 @@
 <!-- 자바 스크립트 -->
 <script layout:fragment="script" type='text/javascript'>
   $(document).ready(function() {
-      // 추가적인 JavaScript 코드
+
   });
 </script>
 </html>
