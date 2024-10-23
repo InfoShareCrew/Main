@@ -1,5 +1,6 @@
 package com.infoShare.calog.domain.Article;
 
+import com.infoShare.calog.domain.BoardCategory.BoardCategory;
 import com.infoShare.calog.domain.Category.Category;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -15,6 +16,6 @@ public class ArticleForm {
     @NotEmpty(message = "내용은 필수사항입니다.")
     private String content;
 
-    @NotNull(message = "카테고리는 필수사항입니다.")
-    private Category category;
+    @NotNull(message = "게시판 선택은 필수사항입니다.")
+    private BoardCategory boardCategory;
 }

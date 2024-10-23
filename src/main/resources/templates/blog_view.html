@@ -9,7 +9,7 @@
   <div class="center personal-container personal">
     <div class="profile-box">
       <div class="img-box">
-        <img th:src="@{|/file/${user.profileImg != null ? user.profileImg : 'user_basic.png'}|}" alt="프로필이미지" />
+        <img th:src="@{|/file/${user.profileImg != null ? user.profileImg : 'user/user_basic.png'}|}" alt="프로필이미지" />
       </div>
       <div class="detail-box">
         <div class="text-box uname"><span class="f-size-18 f-weight-6" th:text="${user.nickname}"></span></div>
@@ -20,6 +20,14 @@
       </div>
       <div sec:authorize="isAuthenticated()" th:if="${user.email != null} and ${#authentication.getPrincipal().username} == ${user.email}">
         <button class="btn-b" th:onclick="@{|window.location.href = '/blog/edit/${user.email}';|}"><span class="f-size-14 f-weight-5">수정</span></button>
+      </div>
+      <!-- 로그인 했을 때 보일 이웃추가 -->
+      <div sec:authorize="isAuthenticated()" th:if="${user.email != null} and ${#authentication.getPrincipal().username} != ${user.email}">
+        <a class="btn btn-primary f-size-14 f-weight-5" th:href="@{|/neighbors/add/${user.email}|}">이웃추가</a>
+      </div>
+      <!-- 로그인 안 했을 때 보일 이웃추가 -->
+      <div sec:authorize="isAnonymous()">
+        <a class="btn btn-primary f-size-14 f-weight-5" th:href="@{|/neighbors/add/${user.email}|}">이웃추가</a>
       </div>
     </div>
     <div class="post-box dp-flex-clmb">
@@ -52,33 +60,33 @@
           </div>
         </div>
       </div>
-      <div class="my-cafe-container">
-        <div class="text-box"><span class="f-size-18 f-weight-6" th:text="${user.nickname} + '님이 가입 중인 카페'"></span></div>
-        <div class="cafe-list">
-          <div class="post" th:each="cafe, iterStat : ${activityCafes}" th:if="${iterStat.index < 3}">
-            <div class="profile-img img-box">
-              <img th:src="@{/img/e2729fba28172ae8831a761a9c60d35c.jpg}" alt="카페 프로필 사진">
+    </div>
+    <div class="my-cafe-container">
+      <div class="text-box"><span class="f-size-18 f-weight-6" th:text="${user.nickname} + '님이 가입 중인 카페'"></span></div>
+      <div class="cafe-list">
+        <div class="post" th:each="cafe, iterStat : ${activityCafes}" th:if="${iterStat.index < 3}">
+          <div class="profile-img img-box">
+            <img th:src="@{|/file/cafe/${cafe['profileImg'] != null ? cafe['profileImg'] : 'user_basic.png'}|}" alt="카페 프로필 사진">
+          </div>
+          <div class="content-2 dp-flex-clmb">
+            <div class="title">
+              <a class="f-size-16 f-weight-6" th:href="@{|/cafe/${cafe.cafeId}|}" th:text="${cafe.Name}"></a>
             </div>
-            <div class="content-2 dp-flex-clmb">
-              <div class="title">
-                <a class="f-size-16 f-weight-6" th:href="@{|/cafe/${cafe.cafeId}|}" th:text="${cafe.Name}"></a>
+            <div class="full-w" th:text="${cafe.intro}"></div>
+            <div class="detail">
+              <div class="user-box">
+                <div class="img-box"><img th:src="@{/img/person.png}" alt="유저 아이콘"></div>
+                <div class="text-box"><span class="f-size-13">1000</span></div>
               </div>
-              <div class="full-w" th:text="${cafe.intro}"></div>
-              <div class="detail">
-                <div class="user-box">
-                  <div class="img-box"><img th:src="@{/img/person.png}" alt="유저 아이콘"></div>
-                  <div class="text-box"><span class="f-size-13">1000</span></div>
-                </div>
-                <div class="text-box"><span class="f-size-13">세부 카테고리</span></div>
-              </div>
+              <div class="text-box"><span class="f-size-13">세부 카테고리</span></div>
             </div>
           </div>
         </div>
-        <div class="right-side"></div>
       </div>
     </div>
   </div>
-</div>
+  <div class="right-side"></div>
+  </div>
 <!-- 자바 스크립트 -->
 <script layout:fragment="script" type='text/javascript'>
   $(document).ready(function() {

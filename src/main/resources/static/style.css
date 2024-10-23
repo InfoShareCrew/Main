@@ -97,8 +97,7 @@ nav > div {display: flex; width: 100%;}
 .signup-container .agree-box {display: flex; flex-direction: row; justify-content: space-between;}
 .signup-container .agree-box span {color: var(--x-999999); text-decoration: underline; cursor: pointer;}
 
-
-/***** 개인페이지 & 이웃 *****/
+/***** 개인페이지 *****/
 .personal-container .profile-box {display: flex; gap: 16px;}
 .profile-box .img-box {width: 120px; height: 120px; border-radius: 60px;}
 .personal-container .profile-box .detail-box {padding: 16px; flex-grow: 1; display: flex; flex-direction: column; gap: 8px;}
@@ -114,11 +113,10 @@ nav > div {display: flex; width: 100%;}
 .my-cafe-container .cafe-list .profile-img {width: 48px; height: 48px; border-radius: 24px;}
 .my-cafe-container .cafe-list .content > div {gap: 8px;}
 .my-cafe-container .cafe-list .content-2 {display: flex; flex-direction: column; gap: 8px;}
-.my-cafe-container .content-2 > div {display: flex; flex-direction: column; gap: 4px;}
+.my-cafe-container .content-2 > div {display: flex; gap: 4px;}
 .my-cafe-container .detail {display: flex; gap: 8px; align-items: center; color: var(--d-3d-3d-3);}
 .my-cafe-container .detail .user-box {display: flex; gap: 4px;}
 .my-cafe-container .user-box > .img-box {width: 18px; height: 18px;}
-.neighbor .profile-box .address {display: block;}
 
 
 /***** 개인페이지 편집 *****/
@@ -130,3 +128,9 @@ nav > div {display: flex; width: 100%;}
 .personal-edit-container .intro-box > textarea {width: 100%; margin-left: 10px;}
 .personal-edit-container .address-box > input {width: 100%; margin-left: 10px;}
 .personal-edit-container .submit-box {justify-content: flex-end;}
+
+/***** 이웃 *****/
+.neighbor-box {display: flex; flex-direction: column; gap: 16px;}
+.neighborList {display: flex; flex-direction: column; gap: 8px;}
+.neighborList > a {display: flex; gap: 16px; align-items: center;}
+.neighborList .img-box {width: 48px; height: 48px; border-radius: 24px;}
