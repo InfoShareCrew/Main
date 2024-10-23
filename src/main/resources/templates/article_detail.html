@@ -1,162 +1,195 @@
-<html layout:decorate="~{layout}">
-<div layout:fragment="content" class="main-contents">
-  <h1> 게시판 </h1>
-  <h2 class="border-bottom py-2" th:text="${article.title}">제목</h2>
-  <h5>해시태그</h5>
-  <div th:if="${#lists.size(article.tags) > 0}">
-    <span th:each="tag : ${article.tags}" class="badge bg-secondary me-1">
+<html layout:decorate="~{cafe_layout}">
+<div layout:fragment="content" class="main-contents board-detail">
+  <div class="text-box"><a th:href="@{|/cafe/${cafe.id}/${article.boardCategory.name}|}" class="link f-size-16" th:text="|> ${article.boardCategory.name}|"></a></div>
+  <div class="contents">
+    <div class="title-box text-box f-size-28 f-weight-6">
+      <span th:text="${article.title}"></span>
+    </div>
+    <div class="author-box">
+      <div class="img-box">
+        <img th:src="@{|/file/${article.author.profileImg != null ? article.author.profileImg : 'user/user_basic.png'}|}" alt="작성자 프로필 이미지">
+      </div>
+      <div class="right-box">
+        <div class="" th:if="${article.author != null}">
+          <span class="f-weight-6" th:text="${article.author.nickname}"></span>
+          <!-- 로그인 했을 때 보일 이웃추가 -->
+          <div sec:authorize="isAuthenticated()" th:if="${article.author.email != null} and ${#authentication.getPrincipal().username} != ${article.author.email}">
+            <a class="btn btn-primary f-size-13" th:href="@{|/neighbors/add/${article.author.email}|}">이웃추가</a>
+          </div>
+          <!-- 로그인 안 했을 때 보일 이웃추가 -->
+          <div sec:authorize="isAnonymous()">
+            <a class="btn btn-primary f-size-13" th:href="@{|/neighbors/add/${article.author.email}|}">이웃추가</a>
+          </div>
+        </div>
+        <div class="f-size-13" th:text="${#temporals.format(article.createdDate, 'yyyy-MM-dd HH:mm')}"></div>
+      </div>
+        <a th:href="@{|/article/modify/${article.id}|}" class="btn btn-primary f-size-13"
+          sec:authorize="isAuthenticated()"
+          th:if="${userNickname == article.author.nickname}"
+          th:text="수정"></a>
+        <a onclick="return confirm('정말 삭제하시겠습니까?')"
+          th:href="@{|/article/delete/${article.id}|}" class="btn btn-primary f-size-13"
+          sec:authorize="isAuthenticated()"
+          th:if="${userNickname == article.author.nickname}"
+          th:text="삭제"></a>
+    </div>
+    <div class="contents-box f-size-18">
+      <div class="" th:utext="${@commonUtil.markdown(article.content)}"></div>
+    </div>
+  </div>
+  <!-- 해시태그 -->
+  <div class="tag-box" th:if="${#lists.size(article.tags) > 0}">
+    <span th:each="tag : ${article.tags}" class="">
         <a th:href="@{/article/list(tag=${tag.name})}" th:text="${tag.name}" style="color: inherit; text-decoration: none;"></a>
     </span>
   </div>
-  <div th:if="${#lists.size(article.tags) == 0}">
-    <span>등록된 해시태그가 없습니다.</span>
+  <div class="add-func f-size-16">
+    <a id="article_recommend" class="" data-voted="false">
+      <div class="img-box">
+        <img th:src="@{/img/Heart.png}" alt="추천 아이콘">
+      </div>
+      <span id="article_recommend_count" th:text="${#lists.size(article.voter)}"></span>
+    </a>
+    <div>
+      <div class="img-box">
+        <img th:src="@{/img/Message_circle.png}" alt="댓글 아이콘">
+      </div>
+      <span th:text="${#lists.size(article.commentList)}"></span>
+    </div>
   </div>
-  <div class="card my-3">
-    <div class="card-body">
-      <div class="card-text" th:utext="${@commonUtil.markdown(article.content)}"></div>
-      <div class="d-flex justify-content-end">
-        <div class="badge bg-light text-dark p-2 text-start">
-          <div class="mb-2" th:if="${article.author != null}">
-            <span th:text="${article.author.nickname}"></span>
+  <div class="comment-box">
+    <div class="comment-list">
+      <div class="comment" th:each="comment, loop : ${article.commentList}" th:classappend="!${loop.last} ? 'border-bottom-1'">
+        <div class="img-box">
+          <img th:src="@{|/file/${comment.author.profileImg != null ? article.author.profileImg : 'user/user_basic.png'}|}" alt="댓글 프로필 이미지">
+        </div>
+        <div class="right-box">
+          <div class="text-box f-size-16 f-weight-6" th:if="${comment.author != null}" th:text="${comment.author.nickname}"></div>
+          <div class="text-box f-size-16" th:text="${comment.content}"></div>
+          <div class="add-func">
+            <div class="text-box f-size-13 f-color-d3" th:text="${#temporals.format(comment.createdDate, 'yyyy-MM-dd HH:mm')}"></div>
+            <a id="comment_recommend" class="btn f-size-13" data-voted="false">
+              <input name="comment_id" type="hidden" th:value="${comment.id}">
+              <img th:src="@{/img/Heart.png}" alt="추천 아이콘">
+              <span id="comment_recommend_count" th:text="${#lists.size(comment.voter)}"></span>
+            </a>
+            <a th:href="@{|/comment/modify/${comment.id}|}" class="btn btn-primary f-size-13"
+                sec:authorize="isAuthenticated()"
+                th:if="${userNickname == comment.author.nickname}"
+                th:text="수정">
+            </a>
+            <a onclick="return confirm('정말 삭제하시겠습니까?')"
+                th:href="@{|/comment/delete/${comment.id}|}" class="btn btn-primary f-size-13"
+                sec:authorize="isAuthenticated()"
+                th:if="${userNickname == comment.author.nickname}"
+                th:text="삭제">
+            </a>
           </div>
-          <div th:text="${#temporals.format(article.createdDate, 'yyyy-MM-dd HH:mm')}"></div>
-        </div>
-        <a id="article_recommend" class="recommend btn btn-sm btn-outline-secondary" data-voted="false">
-          추천
-          <span id="article_recommend_count" class="badge rounded-pill bg-success"
-                th:text="${#lists.size(article.voter)}"></span>
-        </a>
-        <a th:href="@{|/article/modify/${article.id}|}" class="btn btn-sm btn-outline-secondary"
-           sec:authorize="isAuthenticated()"
-           th:if="${userNickname == article.author.nickname}"
-           th:text="수정"></a>
-        <a onclick="return confirm('정말 삭제하시겠습니까?')"
-           th:href="@{|/article/delete/${article.id}|}" class="delete btn btn-sm btn-outline-secondary"
-           sec:authorize="isAuthenticated()"
-           th:if="${userNickname == article.author.nickname}"
-           th:text="삭제"></a>
-      </div>
-    </div>
-  </div>
-
-  <h5 class="border-bottom my-3 py-2" th:text="${#lists.size(article.commentList)} + '개의 답변이 있습니다.'"></h5>
-
-  <div class="card my-3" th:each="comment : ${article.commentList}">
-    <div class="card-body">
-      <div class="card-text" style="white-space: pre-line;" th:text="${comment.content}"></div>
-      <div class="mb-2" th:if="${comment.author != null}">
-        <span th:text="${comment.author.nickname}"></span>
-      </div>
-      <div class="d-flex justify-content-end">
-        <div class="badge bg-light text-dark p-2 text-start">
-          <div th:text="${#temporals.format(comment.createdDate, 'yyyy-MM-dd HH:mm')}"></div>
         </div>
       </div>
-      <a class="comment_recommend recommend btn btn-sm btn-outline-secondary" data-voted="false">
-        <input name="comment_id" type="hidden" th:value="${comment.id}">
-        추천
-        <span class="comment_recommend_count badge rounded-pill bg-success"
-              th:text="${#lists.size(comment.voter)}"></span>
-      </a>
-
-      <div class="my-3">
-        <a th:href="@{|/comment/modify/${comment.id}|}" class="btn btn-sm btn-outline-secondary"
-           sec:authorize="isAuthenticated()"
-           th:if="${userNickname == comment.author.nickname}"
-           th:text="수정"></a>
-        <a onclick="return confirm('정말 삭제하시겠습니까?')"
-           th:href="@{|/comment/delete/${comment.id}|}" class="delete btn btn-sm btn-outline-secondary"
-           sec:authorize="isAuthenticated()"
-           th:if="${userNickname == comment.author.nickname}"
-           th:text="삭제"></a>
+    </div>
+    <form th:action="@{|/comment/create/${article.id}|}" th:object="${commentForm}" method="post">
+      <div class="" role="alert" th:if="${#fields.hasAnyErrors()}">
+        <div th:each="err : ${#fields.allErrors()}" th:text="${err}"></div>
       </div>
-    </div>
+      <textarea th:field="*{content}" rows="5" class="btn-b"></textarea>
+      <input type="submit" class="btn btn-primary" value="답글달기">
+    </form>
   </div>
-
-  <form th:action="@{|/comment/create/${article.id}|}" th:object="${commentForm}" method="post">
-    <div class="alert alert-danger" role="alert" th:if="${#fields.hasAnyErrors()}">
-      <div th:each="err : ${#fields.allErrors()}" th:text="${err}"></div>
-    </div>
-    <textarea th:field="*{content}" rows="10" class="form-control"></textarea>
-    <input type="submit" value="답글달기">
-  </form>
-
-  <a th:href="|/article/list|" class="btn btn-primary">목록</a>
+  <!-- <a th:href="|/cafe/${cafe.id}/${article.boardCategory.name}|" class="btn-b">목록</a> -->
 </div>
+<script layout:fragment="script" type='text/javascript'>
+$(document).ready(function() {
+  var articleId = [[${article.id}]];
 
-</html>
+  $("#article_recommend").on("click", function() {
+    var _this = $(this);
+    var voted = _this.data("voted");
 
-<script th:inline="javascript">
-  $(document).ready(function() {
-      var articleId = [[${article.id}]];
-
-      $("#article_recommend").on("click", function() {
-          var _this = $(this);
-          var voted = _this.data("voted");
-
-          var message = voted ? "정말로 추천을 취소하시겠습니까?" : "정말로 추천하시겠습니까?";
-          if (confirm(message)) {
-              if (voted) {
-                  $.ajax({
-                      url: "/article/unvote/" + articleId,
-                      type: "GET",
-                      success: function(response) {
-                          $("#article_recommend_count").text(response);
-                          _this.data("voted", false);
-                      },
-                      error: function(xhr, status, error) {
-                          console.log("오류 발생", error);
-                      }
-                  });
-              } else {
-                  $.ajax({
-                      url: "/article/vote/" + articleId,
-                      type: "GET",
-                      success: function(response) {
-                          $("#article_recommend_count").text(response);
-                          _this.data("voted", true);
-                      },
-                      error: function(xhr, status, error) {
-                          console.log("오류 발생", error);
-                      }
-                  });
-              }
+    var message = voted ? "정말로 추천을 취소하시겠습니까?" : "정말로 추천하시겠습니까?";
+    if (confirm(message)) {
+      if (voted) {
+        $.ajax({
+          url: "/article/unvote/" + articleId,
+          type: "GET",
+          success: function(response) {
+            if (response.includes('<form') && response.includes('login')) {
+              window.location.href = '/user/login';
+            } else {
+              $("#article_recommend_count").text(response);
+              _this.data("voted", false);
+            }
+          },
+          error: function(xhr, status, error) {
+            console.log("오류 발생", error);
+            window.location.href = "/user/login";
           }
-      });
-
-      $(".comment_recommend").on("click", function() {
-          var _this = $(this);
-          var voted = _this.data("voted");
-          var commentId = _this.find('input[name=comment_id]').val();
-
-          var message = voted ? "정말로 추천을 취소하시겠습니까?" : "정말로 추천하시겠습니까?";
-          if (confirm(message)) {
-              if (voted) {
-                  $.ajax({
-                      url: "/comment/unvote/" + commentId,
-                      type: "GET",
-                      success: function(response) {
-                          _this.find(".comment_recommend_count").text(response);
-                          _this.data("voted", false);
-                      },
-                      error: function(xhr, status, error) {
-                          console.log("오류 발생", error);
-                      }
-                  });
-              } else {
-                  $.ajax({
-                      url: "/comment/vote/" + commentId,
-                      type: "GET",
-                      success: function(response) {
-                          _this.find(".comment_recommend_count").text(response);
-                          _this.data("voted", true);
-                      },
-                      error: function(xhr, status, error) {
-                          console.log("오류 발생", error);
-                      }
-                  });
-              }
+        });
+      } else {
+        $.ajax({
+          url: "/article/vote/" + articleId,
+          type: "GET",
+          success: function(response) {
+            if (response.includes('<form') && response.includes('login')) {
+              window.location.href = '/user/login';
+            } else {
+              $("#article_recommend_count").text(response);
+              _this.data("voted", true);
+            }
+          },
+          error: function(xhr, status, error) {
+            console.log("오류 발생", error);
+            window.location.href = "/user/login";
           }
-      });
+        });
+      }
+    }
   });
+
+  $("#comment_recommend").on("click", function() {
+    var _this = $(this);
+    var voted = _this.data("voted");
+    var commentId = _this.find('input[name=comment_id]').val();
+
+    var message = voted ? "정말로 추천을 취소하시겠습니까?" : "정말로 추천하시겠습니까?";
+    if (confirm(message)) {
+      if (voted) {
+        $.ajax({
+          url: "/comment/unvote/" + commentId,
+          type: "GET",
+          success: function(response) {
+            if (response.includes('<form') && response.includes('login')) {
+              window.location.href = '/user/login';
+            } else {
+              _this.find("#comment_recommend_count").text(response);
+              _this.data("voted", false);
+            }
+          },
+          error: function(xhr, status, error) {
+            console.log("오류 발생", error);
+            window.location.href = "/user/login";
+          }
+        });
+      } else {
+        $.ajax({
+          url: "/comment/vote/" + commentId,
+          type: "GET",
+          success: function(response) {
+            if (response.includes('<form') && response.includes('login')) {
+              window.location.href = '/user/login';
+            } else {
+              _this.find("#comment_recommend_count").text(response);
+              _this.data("voted", true);
+            }
+          },
+          error: function(xhr, status, error) {
+            console.log("오류 발생", error);
+            window.location.href = "/user/login";
+          }
+        });
+      }
+    }
+  });
+});
 </script>
+</html>

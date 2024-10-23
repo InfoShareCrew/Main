@@ -11,7 +11,7 @@ a:hover {color: var(--d-3d-3d-3);}
 a.btn {text-align: center;}
 ul,li {margin: 0; padding: 0; list-style: none;}
 input, input:focus, button {border: none; background-color: var(--ffffff-0);}
-img {border: 1px solid var(--d-3d-3d-3); width: 100%; object-fit: cover;}
+img {width: 100%; object-fit: cover;}
 button {cursor: pointer; background-color: var(--ffffff);}
 span {font-family: 'Pretendard-Regular';}
 
@@ -97,6 +97,7 @@ nav > div {display: flex; width: 100%;}
 .signup-container .agree-box {display: flex; flex-direction: row; justify-content: space-between;}
 .signup-container .agree-box span {color: var(--x-999999); text-decoration: underline; cursor: pointer;}
 
+
 /***** 개인페이지 *****/
 .personal-container .profile-box {display: flex; gap: 16px;}
 .profile-box .img-box {width: 120px; height: 120px; border-radius: 60px;}
@@ -129,8 +130,15 @@ nav > div {display: flex; width: 100%;}
 .personal-edit-container .address-box > input {width: 100%; margin-left: 10px;}
 .personal-edit-container .submit-box {justify-content: flex-end;}
 
+
 /***** 이웃 *****/
 .neighbor-box {display: flex; flex-direction: column; gap: 16px;}
 .neighborList {display: flex; flex-direction: column; gap: 8px;}
 .neighborList > a {display: flex; gap: 16px; align-items: center;}
 .neighborList .img-box {width: 48px; height: 48px; border-radius: 24px;}
+
+
+/***** 페이지네이션 *****/
+.pagination {display: flex; justify-content: center;}
+.pagination ul {display:flex; border: 1px solid var(--d-3d-3d-3); border-radius: 10px; overflow: hidden;}
+.pagination li {width: 40px; height: 35px; display: flex; justify-content: center; align-items: center;}
