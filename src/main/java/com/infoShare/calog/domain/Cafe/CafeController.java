@@ -50,10 +50,6 @@ public class CafeController {
         Cafe cafe = this.cafeService.getCafeById(cafeId);
         model.addAttribute("cafe", cafe);
 
-        SiteUser author = this.userService.getUser(principal.getName()); // 현재 사용자 가져오기
-        List<Category> userCategories = categoryService.getCategoriesByUser(author); // 사용자의 카테고리 가져오기
-        model.addAttribute("categories", userCategories); // 모델에 추가
-
         // 인기글 5개 가져오기
         List<Article> popularArticles = this.articleService.getPopularArticles(5);
         model.addAttribute("popularArticles", popularArticles);
@@ -264,5 +260,18 @@ public class CafeController {
         }
         this.articleService.delete(article);
         return String.format("redirect:/cafe/%s/%s", cafeId, boardName);
+    }
+
+    @GetMapping("/search")
+    public String searchCafe(@RequestParam("kw") String keyword, Model model) {
+        List<Cafe> cafes = cafeService.findByName(keyword); // 키워드로 카페 검색
+
+        if (!cafes.isEmpty()) {
+            model.addAttribute("cafes", cafes);
+            return "search"; // 검색 결과를 보여줄 페이지
+        } else {
+            model.addAttribute("error", "카페를 찾을 수 없습니다.");
+            return "search"; // 검색 실패 시 보여줄 페이지
+        }
     }
 }

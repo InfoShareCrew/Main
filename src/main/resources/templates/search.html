@@ -33,6 +33,7 @@
         </a>
       </div>
     </div>
+
     <div sec:authorize="!isAuthenticated()">
       <div class="hot-box">
         <div class="title"><span class="f-size-18 f-weight-6">Info Share</span></div>
@@ -43,6 +44,33 @@
           <p>함께 성장하고, 나누고, 배우는 여정에 여러분을 초대합니다. 인포쉐어와 함께 더 나은 세상을 만들어 가요!</p>
         </div>
       </div>
+    </div>
+
+    <!-- 검색 결과 -->
+    <div class="search-results">
+      <div class="title"><span class="f-size-18 f-weight-6">검색 결과</span></div>
+      <div th:if="${error}">
+        <p th:text="${error}" class="error-message"></p>
+      </div>
+      <div th:if="${cafes}">
+        <div th:each="cafe : ${cafes}">
+          <a th:href="@{|/cafe/${cafe.id}|}" class="cafe-box-1">
+            <div class="profile-img img-box">
+              <img th:src="@{|/file/${cafe.profileImg != null ? cafe.profileImg : 'cafe/user_basic.png'}|}" alt="카페 프로필 이미지" class="profile-img" />
+            </div>
+            <div class="content">
+              <div class="title"><span class="f-size-16 f-weight-6" th:text="${cafe.name}">카페이름</span></div>
+              <div class="intro"><span class="f-size-14 f-weight-5" th:text="${cafe.intro}">카페 소개글</span></div>
+            </div>
+          </a>
+        </div>
+      </div>
+      <div th:if="${#lists.isEmpty(cafes)}">
+        <p>검색 결과가 없습니다.</p>
+      </div>
+    </div>
+
+
   </div>
   <div class="right-side"></div>
 </div>
@@ -50,21 +78,20 @@
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <!-- 자바 스크립트 -->
 <script layout:fragment="script" type='text/javascript'>
- $(document).ready(function() {
-  $("#cafe-in").click(() => {
-    $("#cafe-in-list").addClass("d-block");
-    $("#cafe-in-list").removeClass("d-none");
-    $("#cafe-my-list").addClass("d-none");
-    $("#cafe-my-list").removeClass("d-block");
-  })
+  $(document).ready(function() {
+   $("#cafe-in").click(() => {
+     $("#cafe-in-list").addClass("d-block");
+     $("#cafe-in-list").removeClass("d-none");
+     $("#cafe-my-list").addClass("d-none");
+     $("#cafe-my-list").removeClass("d-block");
+   })
 
-  $("#cafe-my").click(() => {
-    $("#cafe-my-list").addClass("d-block");
-    $("#cafe-my-list").removeClass("d-none");
-    $("#cafe-in-list").addClass("d-none");
-    $("#cafe-in-list").removeClass("d-block");
+   $("#cafe-my").click(() => {
+     $("#cafe-my-list").addClass("d-block");
+     $("#cafe-my-list").removeClass("d-none");
+     $("#cafe-in-list").addClass("d-none");
+     $("#cafe-in-list").removeClass("d-block");
+   })
   })
- })
-
 </script>
 </html>

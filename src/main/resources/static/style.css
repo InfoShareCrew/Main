@@ -39,7 +39,7 @@ nav > div {display: flex; width: 100%;}
 .main-contents > div > .left-side ul:first-child > a {background-color: var(--colourmainblue-100);}
 .main-contents > div > .air-box {width: 160px;}
 .main-contents > .center {border-left: 1px solid var(--d-3d-3d-3); padding: 0 32px; display: flex; flex-direction: column; gap: 64px; flex-grow: 1;}
-/* my-cafe-box */
+/* my-cafe-box */ 
 .center > .my-cafe-box {display: flex; flex-direction: column; gap: 16px;}
 .my-cafe-box .category {display: flex; gap: 16px;}
 .my-cafe-box .category > div {cursor: pointer;}

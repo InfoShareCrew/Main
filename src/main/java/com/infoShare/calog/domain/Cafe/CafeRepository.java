@@ -15,5 +15,7 @@ import java.util.List;
 public interface CafeRepository extends JpaRepository<Cafe,Long> {
     List<Cafe> findAllByManager(SiteUser manager);
     List<Category> findByAuthor(SiteUser author);
+
+    List<Cafe> findByNameContainingIgnoreCase(String name);
 }
 
