@@ -89,6 +89,9 @@ public class UserService {
         // 3. 빌더를 사용하여 기존 정보와 수정된 비밀번호로 새 객체 생성
         SiteUser updatedUser = SiteUser.builder()
                 .id(siteUser.getId()) // 기존 ID 유지
+                .intro(siteUser.getIntro()) // 기존 intro 유지
+                .address(siteUser.getAddress()) // 기존 address 유지
+                .profileImg(siteUser.getProfileImg()) // 기존 profileImg 유지
                 .nickname(siteUser.getNickname()) // 기존 사용자명 유지
                 .email(siteUser.getEmail()) // 기존 이메일 유지
                 .password(encodedPassword) // 인코딩된 비밀번호 설정

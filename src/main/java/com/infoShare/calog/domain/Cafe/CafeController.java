@@ -120,7 +120,6 @@ public class CafeController {
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/create")
     public String create(@Valid CafeForm cafeForm, BindingResult bindingResult,Principal principal) {
-
         if (bindingResult.hasErrors()) {
             return "cafe_form";
         }
