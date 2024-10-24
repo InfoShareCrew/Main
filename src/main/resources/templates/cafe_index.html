@@ -10,28 +10,49 @@
   <div class="center">
     <!-- 인기글 -->
     <div class="hot-box">
-      <div class="title"><span class="f-size-18 f-weight-6">실시간 인기글</span></div>
+      <div class="title"><span class="f-size-18 f-weight-6">인기글</span></div>
       <div class="post-list">
-        <div>
-          <div class="title"><span class="f-size-16 f-weight-6">글 제목</span></div>
-          <div class="detail">
-            <div class="text-box"><span>카페이름</span></div>
-            <div class="view-box">
-              <div class="img-box"><img th:src="@{img/Eye.png}" alt="조회수 아이콘"></div>
-              <span class="f-size-14">1000</span>
+        <div th:each="article : ${popularArticles}">
+          <div>
+            <div class="title">
+              <a th:href="@{/article/detail/{id}(id=${article.id})}" class="f-size-16 f-weight-6" th:text="${article.title}"></a>
             </div>
-            <div class="rcmd-box">
-              <div class="img-box"><img th:src="@{img/Heart.png}" alt="추천 아이콘"></div>
-              <span class="f-size-14">24</span>
-            </div>
-            <div class="cmt-box">
-              <div class="img-box"><img th:src="@{img/Message_circle.png}" alt="댓글 아이콘"></div>
-              <span class="f-size-14">24</span>
+            <div class="detail">
+              <div class="text-box"><span th:text="${article.author.nickname}"></span></div>
+              <div class="view-box">
+                <div class="img-box"><img th:src="@{img/Eye.png}" alt="조회수 아이콘"></div>
+                <span class="f-size-14" th:text="${article.view}"></span>
+              </div>
+              <div class="rcmd-box">
+                <div class="img-box"><img th:src="@{img/Heart.png}" alt="추천 아이콘"></div>
+                <span class="f-size-14" th:text="${article.voter.size()}"></span>
+              </div>
+              <div class="cmt-box">
+                <div class="img-box"><img th:src="@{img/Message_circle.png}" alt="댓글 아이콘"></div>
+                <span class="f-size-14" th:text="${article.commentList.size()}"></span>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
+
+    <div class="hot-box">
+      <div class="title"><span class="f-size-18 f-weight-6">카테고리</span></div>
+      <div class="post-list">
+        <div th:each="category : ${categories}">
+          <div class="title">
+            <span class="f-size-16 f-weight-6" th:text="${category.majorCategory}"></span>
+          </div>
+          <div class="detail">
+            <div class="text-box">
+              <span th:text="${category.minorCategory}"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
   <div class="right-side"></div>
 </div>

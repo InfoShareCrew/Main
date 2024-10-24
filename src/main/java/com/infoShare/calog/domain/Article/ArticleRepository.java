@@ -23,6 +23,9 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
     Page<Article> findByTitleContainingOrContentContaining(String title, String content, Pageable pageable);
     Page<Article> findByTags_Name(String tagName, Pageable pageable);
     int countByTags(Tag tag); // 특정 태그에 속하는 게시글 수
+
+    @Query("SELECT a FROM Article a ORDER BY a.view DESC")
+    List<Article> findTopPopularArticles(Pageable pageable); // 인기글 가져오기
 }
 
 //    @Query(

@@ -71,4 +71,9 @@ public class CategoryService {
         Pageable pageable = PageRequest.of(page, 10, Sort.by(Sort.Order.desc("createdDate")));
         return categoryRepository.findByMajorCategoryContainingOrMinorCategoryContaining(keyword, keyword, pageable);
     }
+
+    public List<Category> getCategoriesByUser(SiteUser author) {
+        return categoryRepository.findByAuthor(author);
+    }
+
 }

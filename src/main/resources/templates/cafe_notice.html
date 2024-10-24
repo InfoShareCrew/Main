@@ -7,7 +7,7 @@
       <div class="text-box">
         <span class="f-size-28 f-weight-6">공지사항</span>
       </div>
-      <a sec:authorize="isAuthenticated()" th:if="${#authentication.getPrincipal().username} == ${cafe.maneger.email}" th:href="@{|/cafe/${cafe.id}/notice/create|}" class="btn btn-primary">글쓰기</a>
+      <a sec:authorize="isAuthenticated()" th:if="${#authentication.getPrincipal().username} == ${cafe.manager.email}" th:href="@{|/cafe/${cafe.id}/notice/create|}" class="btn btn-primary">글쓰기</a>
     </div>
     <table>
       <thead>
