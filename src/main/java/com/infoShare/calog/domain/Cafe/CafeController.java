@@ -93,7 +93,7 @@ public class CafeController {
     }
 
 //    @GetMapping("/{cafeId}/suggest")
-//    public String suggest(Model model, @PathVariable(va2lue = "cafeId") Long cafeId,
+//    public String suggest(Model model, @PathVariable(value = "cafeId") Long cafeId,
 //                          @RequestParam(value = "page",defaultValue = "0") int page,
 //                          @RequestParam(value = "kw" ,defaultValue = "") String kw
 //    ) {
