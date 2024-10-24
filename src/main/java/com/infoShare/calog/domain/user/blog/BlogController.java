@@ -99,7 +99,6 @@ public class BlogController {
 
         SiteUser siteUser = userService.findByEmail(principal.getName());
 
-        // TODO: 프로필 사진 변경하지 않고 저장할 시 빈 파일 저장되는 거 디버깅하기
         String profileImg = null;
         if (!image.isEmpty()) {
             profileImg = this.utilService.saveImage("user", image);

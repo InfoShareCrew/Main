@@ -28,7 +28,7 @@
           th:if="${userNickname == article.author.nickname}"
           th:text="수정"></a>
         <a onclick="return confirm('정말 삭제하시겠습니까?')"
-          th:href="@{|/article/delete/${article.id}|}" class="btn btn-primary f-size-13"
+          th:href="@{|/cafe/${cafe.id}/${article.boardCategory.name}/delete/${article.id}|}" class="btn btn-primary f-size-13"
           sec:authorize="isAuthenticated()"
           th:if="${userNickname == article.author.nickname}"
           th:text="삭제"></a>
@@ -61,7 +61,7 @@
     <div class="comment-list">
       <div class="comment" th:each="comment, loop : ${article.commentList}" th:classappend="!${loop.last} ? 'border-bottom-1'">
         <div class="img-box">
-          <img th:src="@{|/file/${comment.author.profileImg != null ? article.author.profileImg : 'user/user_basic.png'}|}" alt="댓글 프로필 이미지">
+          <img th:src="@{|/file/${comment.author.profileImg != null ? comment.author.profileImg : 'user/user_basic.png'}|}" alt="댓글 프로필 이미지">
         </div>
         <div class="right-box">
           <div class="text-box f-size-16 f-weight-6" th:if="${comment.author != null}" th:text="${comment.author.nickname}"></div>

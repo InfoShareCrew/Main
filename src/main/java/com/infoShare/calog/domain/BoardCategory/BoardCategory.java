@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -24,6 +25,8 @@ public class BoardCategory {
     @OneToMany(mappedBy = "boardCategory")
     private List<Article> articles;
 
-    @OneToMany(mappedBy = "boardCategory")
-    private List<Cafe> cafe;
+    // BoardCategory와 Cafe 간의 ManyToOne 관계 설정
+    @ManyToOne
+    @JoinColumn(name = "cafe_id")
+    private Cafe cafe;
 }

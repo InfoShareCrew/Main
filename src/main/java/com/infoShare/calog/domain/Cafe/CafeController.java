@@ -24,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.security.Principal;
+import java.util.HashSet;
 
 @Controller
 @RequiredArgsConstructor
@@ -48,55 +49,6 @@ public class CafeController {
         model.addAttribute("cafe", cafe);
         return "cafe_index";
     }
-
-    @GetMapping("/{cafeId}/{boardName}")
-    public String notice(Model model, @PathVariable(value = "cafeId") Long cafeId,
-                       @PathVariable(value = "boardName") String boardName,
-                       @RequestParam(value = "page",defaultValue = "0") int page,
-                       @RequestParam(value = "kw" ,defaultValue = "") String kw
-                                                                                ) {
-        Page<Article> paging;
-
-        if (kw != null && !kw.isEmpty()) {
-            // 검색 기능 추가
-            paging = this.articleService.searchArticles(kw, page, boardName);
-        } else {
-            // 기본 목록
-            paging = this.articleService.getList(page);
-        }
-
-        Cafe cafe = this.cafeService.getCafeById(cafeId);
-
-        BoardCategory boardCategory = this.boardCategoryService.getCategoryByName(boardName);
-
-        model.addAttribute("paging", paging);
-        model.addAttribute("cafe", cafe);
-        model.addAttribute("boardCategory", boardCategory);
-        model.addAttribute("boardName", boardName);
-        return "article_list";
-    }
-
-//    @GetMapping("/{cafeId}/suggest")
-//    public String suggest(Model model, @PathVariable(value = "cafeId") Long cafeId,
-//                          @RequestParam(value = "page",defaultValue = "0") int page,
-//                          @RequestParam(value = "kw" ,defaultValue = "") String kw
-//    ) {
-//        Page<Article> paging;
-//
-//        if (kw != null && !kw.isEmpty()) {
-//            // 검색 기능 추가
-//            paging = this.articleService.searchArticles(kw, page);
-//        } else {
-//            // 기본 목록
-//            paging = this.articleService.getList(page);
-//        }
-//
-//        model.addAttribute("paging", paging);
-//        Cafe cafe = this.cafeService.getCafeById(cafeId);
-//        model.addAttribute("cafe", cafe);
-//        return "article_list";
-//    }
-
 
     @GetMapping("/{cafeId}/detail/{id}")  // 카페 세부페이지
     public String detail(Model model, @PathVariable(value = "cafeId") Long cafeId, @PathVariable(value = "id") Long articleId, CommentForm commentForm, Principal principal) {
@@ -126,7 +78,10 @@ public class CafeController {
         }
 
         SiteUser author = this.userService.getUser(principal.getName());
-        Cafe createdCafe = this.cafeService.create(cafeForm.getName(),cafeForm.getIntro(),author);
+        Cafe createdCafe = this.cafeService.create(cafeForm.getName(),
+                                                    cafeForm.getIntro(),
+                                                    author
+        );
         return String.format("redirect:/cafe/%s", createdCafe.getId());
     }
 
@@ -171,7 +126,6 @@ public class CafeController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
         }
 
-        // TODO: 프로필 사진 변경하지 않고 저장할 시 빈 파일 저장되는 거 디버깅하기
         String profileImg = null;
         if (!image.isEmpty()) {
             profileImg = this.utilService.saveImage("cafe", image);
@@ -218,37 +172,87 @@ public class CafeController {
         return String.format("redirect:/cafe/%s", cafeId);
     }
 
-    @PreAuthorize("isAuthenticated()")
-    @GetMapping("/{cafeId}/notice/create")
-    public String noticeCreate(Model model, ArticleForm articleForm, @PathVariable(value = "cafeId") Long cafeId, Principal principal) {
+    @GetMapping("/{cafeId}/{boardName}")
+    public String boardList(Model model,
+                            @PathVariable(value = "cafeId") Long cafeId,
+                            @PathVariable(value = "boardName") String boardName,
+                            @RequestParam(value = "page",defaultValue = "0") int page,
+                            @RequestParam(value = "kw" ,defaultValue = "") String kw) {
+        Page<Article> paging;
+
+        if (kw != null && !kw.isEmpty()) {
+            // 검색 기능 추가
+            paging = this.articleService.searchArticles(kw, page, boardName);
+        } else {
+            // 기본 목록
+            paging = this.articleService.getList(page, boardName);
+        }
+
         Cafe cafe = this.cafeService.getCafeById(cafeId);
-        if (!cafe.getManeger().getEmail().equals(principal.getName())) {
+
+        BoardCategory boardCategory = this.boardCategoryService.getCategoryByNameAndCafeId(boardName, cafeId);
+
+        model.addAttribute("paging", paging);
+        model.addAttribute("cafe", cafe);
+        model.addAttribute("boardCategory", boardCategory);
+        return "article_list";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/{cafeId}/{boardName}/create")
+    public String articleCreate(Model model,
+                                ArticleForm articleForm,
+                                @PathVariable(value = "cafeId") Long cafeId,
+                                @PathVariable(value = "boardName") String boardName,
+                                Principal principal) {
+        Cafe cafe = this.cafeService.getCafeById(cafeId);
+
+        if ((!cafe.getManeger().getEmail().equals(principal.getName()) && boardName.equals("공지사항"))) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
         }
-        articleForm.setBoardCategory(this.boardCategoryService.getNoticeCategory());
-        model.addAttribute("boardCategoryList", this.boardCategoryService.getList());
+
+        articleForm.setBoardName(boardName);
         model.addAttribute("cafe", cafe);
         return "article_form";
     }
 
     @PreAuthorize("isAuthenticated()")
-    @PostMapping("/{cafeId}/notice/create")
-    public String noticeCreate(@Valid ArticleForm articleForm,
+    @PostMapping("/{cafeId}/{boardName}/create")
+    public String articleCreate(Model model,
+                               @Valid ArticleForm articleForm,
                                @PathVariable(value = "cafeId") Long cafeId,
+                               @PathVariable(value = "boardName") String boardName,
                                BindingResult bindingResult,
                                Principal principal) {
+        Cafe cafe = this.cafeService.getCafeById(cafeId);
+
         if (bindingResult.hasErrors()) {
+            model.addAttribute("cafe", cafe);
             return "article_form";
         }
-        Cafe cafe = this.cafeService.getCafeById(cafeId);
-        articleForm.setBoardCategory(this.boardCategoryService.getNoticeCategory());
+
         this.articleService.createArticle(
                 articleForm.getTitle(),
                 articleForm.getContent(),
                 this.userService.findByEmail(principal.getName()),
-                articleForm.getBoardCategory(),
+                this.boardCategoryService.getCategoryByName(boardName),
+                this.cafeService.getCafeById(cafeId),
                 articleForm.getTags()
         );
-        return String.format("redirect:/cafe/%s/공지사항", cafeId);
+        return String.format("redirect:/cafe/%s/%s", cafeId, boardName);
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/{cafeId}/{boardName}/delete/{articleId}")
+    public String articleDelete(@PathVariable(value = "cafeId") Long cafeId,
+                                @PathVariable(value = "boardName") String boardName,
+                                @PathVariable(value = "articleId") Long articleId,
+                                Principal principal) {
+        Article article = this.articleService.getArticleById(articleId);
+        if (!article.getAuthor().getEmail().equals(principal.getName())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "삭제권한이 없습니다.");
+        }
+        this.articleService.delete(article);
+        return String.format("redirect:/cafe/%s/%s", cafeId, boardName);
     }
 }

@@ -12,9 +12,14 @@
         >카페 편집</a>
         <!-- 로그인 했을 때 보이는 가입하기 버튼 -->
         <span sec:authorize="isAuthenticated()" th:if="${#authentication.getPrincipal().username} != ${cafe.maneger.email}">
-          <span th:each="user : ${cafe.users}">
-            <span th:if="${user.name == #authentication.getPrincipal().username}">
-              <!-- Do something when a match is found -->
+          <span th:with="isMember=${false}">
+            <span th:each="user : ${cafe.users}">
+              <span th:if="${user.name == #authentication.getPrincipal().username}">
+                <span th:with="isMember=${true}"></span>
+              </span>
+            </span>
+            <span th:if="${!isMember}">
+              <!-- 현재 유저가 카페 회원이 아닌 경우 가입하기 버튼 표시 -->
               <a th:href="@{|/cafe/signup/${cafe.id}|}" class="btn-b f-size-13">카페 가입하기</a>
             </span>
           </span>
@@ -25,13 +30,15 @@
     </div>
     <div class="menu-list">
       <ul class="f-size-16">
-        <li class="menu-1"><a th:href="@{|/cafe/${cafe.id}/공지사항|}" class="full-w">공지사항</a></li>
-        <li class="menu-2"><a th:href="@{|/cafe/${cafe.id}/건의게시판|}" class="full-w">건의게시판</a></li>
+        <li class="menu-1"><a th:href="@{|/cafe/${cafe.id}/notice|}" class="full-w">notice</a></li>
+        <li class="menu-2"><a th:href="@{|/cafe/${cafe.id}/suggest|}" class="full-w">suggest</a></li>
       </ul>
       <hr>
-      <!-- <ul th:each="{board_category : ${categoryList}}">
-        <li th:text="board_category.name"></li>
-      </ul> -->
+      <ul th:each="boardCategory : ${cafe.boardCategory}" th:if="${boardCategory.name != 'notice'} AND ${boardCategory.name != 'suggest'}">
+        <li>
+          <a th:href="|/cafe/${cafe.id}/${boardCategory.name}|" th:text="${boardCategory.name}"></a>
+        </li>
+      </ul>
     </div>
   </div>
 </div>

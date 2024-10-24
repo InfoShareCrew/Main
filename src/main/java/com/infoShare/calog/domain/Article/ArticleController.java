@@ -53,7 +53,7 @@ public class ArticleController {
         model.addAttribute("paging", paging);
         model.addAttribute("kw", kw);
         model.addAttribute("tag", tag);  // 태그 검색기능
-        return "article_list";
+        return "search_list";
     }
 
     @GetMapping("/detail/{id}")
@@ -89,8 +89,8 @@ public class ArticleController {
             return "article_form";
         }
         SiteUser author = this.userService.getUser(principal.getName());
-        BoardCategory boardCategory = articleForm.getBoardCategory();
-        this.articleService.createArticle(articleForm.getTitle(), articleForm.getContent(), author, boardCategory,articleForm.getTags());
+//        BoardCategory boardCategory = boardCategoryService.getCategoryByName(articleForm.getBoardName());
+//        this.articleService.createArticle(articleForm.getTitle(), articleForm.getContent(), author, boardCategory,articleForm.getTags());
         return "redirect:/article/list";
     }
 
@@ -104,7 +104,6 @@ public class ArticleController {
 
         articleForm.setTitle(article.getTitle());
         articleForm.setContent(article.getContent());
-        articleForm.setBoardCategory(articleForm.getBoardCategory());
         model.addAttribute("articleForm",articleForm);
         model.addAttribute("categories",categoryService.getAllCategories());
 
@@ -140,7 +139,7 @@ public class ArticleController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
         }
 
-        BoardCategory boardCategory = articleForm.getBoardCategory(); // 카테고리 추가
+        BoardCategory boardCategory = boardCategoryService.getCategoryByName(article.getBoardCategory().getName()); // 카테고리 추가
         this.articleService.modify(article, articleForm.getTitle(), articleForm.getContent(), boardCategory, articleForm.getTags()); // 수정 메서드 호출
         return String.format("redirect:/article/detail/%s", id);
     }

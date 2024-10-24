@@ -1,19 +1,5 @@
-<html layout:decorate="~{cafe_layout}">
+<html layout:decorate="~{layout}">
 <div layout:fragment="content" class="main-contents dp-flex-clmb board-list">
-  <div class="title-box">
-    <span th:text="${boardCategory.name}" class="f-size-28 f-weight-6"> 게시판 </span>
-    <a sec:authorize="isAuthenticated()" 
-      th:if="(${#authentication.getPrincipal().username} != ${cafe.maneger.email} AND ${boardCategory.name} != 'notice') OR (${#authentication.getPrincipal().username} == ${cafe.maneger.email} AND ${boardCategory.name} == 'notice')" 
-      th:href="@{|/cafe/${cafe.id}/${boardCategory.name}/create|}" 
-      class="btn btn-primary">글쓰기</a>
-  </div>
-  <!-- 검색 폼 추가 -->
-  <form method="get" th:action="@{|/cafe/${cafe.id}/${boardCategory.name}|}">
-    <input type="text" name="kw" placeholder="제목 또는 내용을 입력" value=""/>
-    <!--해시태그 검색 폼 추가-->
-    <input type="text" name="tag" placeholder="해시태그를 입력하세요 (예:해시태그)" value=""/>
-    <button type="submit">검색</button>
-  </form>
   <table>
     <thead>
     <tr class="f-size-16 f-weight-6">
@@ -29,10 +15,10 @@
     <tr th:each="article, loop : ${paging.content}" class="f-size-14">
       <td th:text="${paging.totalElements - (paging.number * paging.size) - loop.index}"></td>
       <td style="text-align: left;">
-        <a th:href="@{|/cafe/${cafe.id}/detail/${article.id}|}" th:text="${article.title}"></a>
+        <a th:href="@{|/cafe/${article.cafe.maneger.email}/detail/${article.id}|}" th:text="${article.title}"></a>
         <span class="f-size-13 f-color-d3"
-                th:if="${#lists.size(article.commentList) > 0}"
-                th:text="|[${#lists.size(article.commentList)}]|">
+              th:if="${#lists.size(article.commentList) > 0}"
+              th:text="|[${#lists.size(article.commentList)}]|">
         </span>
       </td>
       <td th:text="${#temporals.format(article.createdDate, 'yyyy-MM-dd HH:mm')}"></td>

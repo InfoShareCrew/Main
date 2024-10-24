@@ -2,6 +2,7 @@ package com.infoShare.calog.domain.Article;
 
 import com.infoShare.calog.domain.BoardCategory.BoardCategory;
 import com.infoShare.calog.domain.BoardCategory.BoardCategoryService;
+import com.infoShare.calog.domain.Cafe.Cafe;
 import com.infoShare.calog.domain.Category.Category;
 import com.infoShare.calog.domain.DataNotFoundException;
 import com.infoShare.calog.domain.Tag.Tag;
@@ -31,6 +32,13 @@ public class ArticleService {
         return this.articleRepository.findAll(pageable);
     }
 
+    public Page<Article> getList(int page, String boardName) {
+        List<Sort.Order> sorts = new ArrayList<>();
+        sorts.add(Sort.Order.desc("createdDate"));
+        Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
+        return this.articleRepository.findByBoardCategoryName(pageable, boardName);
+    }
+
     public Article getArticleById(Long id) {
         Optional<Article> article = this.articleRepository.findById(id);
         if (article.isPresent()) {
@@ -44,11 +52,12 @@ public class ArticleService {
     }
 
 
-    public void createArticle(String title, String content, SiteUser author, BoardCategory boardCategory,String tag) {
+    public void createArticle(String title, String content, SiteUser author, BoardCategory boardCategory, Cafe cafe, String tag) {
         Article article = new Article();
         article.setTitle(title);
         article.setContent(content);
         article.setBoardCategory(boardCategory);
+        article.setCafe(cafe);
         article.setAuthor(author);
         Set<Tag>  tags = tagService.processTags(tag);
         article.setTags(tags);
@@ -106,6 +115,6 @@ public class ArticleService {
 
     public Page<Article> searchArticles(String keyword, int page, String boardName) {
         Pageable pageable = PageRequest.of(page, 10, Sort.by(Sort.Order.desc("createdDate")));
-        return articleRepository.findByTitleContainingOrContentContainingAndBoardCategoryId(keyword, keyword, pageable);
+        return articleRepository.findByTitleContainingOrContentContainingAndBoardCategoryId(keyword, keyword, boardName, pageable);
     }
 }
