@@ -1,5 +1,5 @@
 <html layout:decorate="~{layout}">
-<div layout:fragment="content" class="main-contents dp-flex-clmb board-list">
+<div layout:fragment="content" class="main-contents dp-flex-clmb tag-list">
   <table>
     <thead>
     <tr class="f-size-16 f-weight-6">
@@ -14,8 +14,8 @@
     <tbody>
     <tr th:each="article, loop : ${paging.content}" class="f-size-14">
       <td th:text="${paging.totalElements - (paging.number * paging.size) - loop.index}"></td>
-      <td style="text-align: left;">
-        <a th:href="@{|/cafe/${article.cafe.maneger.email}/detail/${article.id}|}" th:text="${article.title}"></a>
+      <td style="text-align: left; padding: 0 16px;">
+        <a th:href="@{|/cafe/${article.cafe.id}/detail/${article.id}|}" th:text="${article.title}"></a>
         <span class="f-size-13 f-color-d3"
               th:if="${#lists.size(article.commentList) > 0}"
               th:text="|[${#lists.size(article.commentList)}]|">

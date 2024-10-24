@@ -17,6 +17,7 @@
     <div class="neighbor-box">
       <div class="title-box"><span class="f-size-18 f-weight-6">이웃</span></div>
       <div class="neighborList">
+        <div class="text-box" th:if="${neighborList == null or (neighborList.size() == 0)}"><span class="f-size-16">이웃을 추가해보세요!</span></div>
         <a th:href="@{|/blog/${neighbor.email}|}" th:each="neighbor : ${neighborList}">
           <div class="img-box"><img th:src="@{|/file/${neighbor.profileImg != null ? neighbor.profileImg : 'user/user_basic.png'}|}" alt="이웃 프로필 이미지"></div>
           <div class="text-box">
@@ -30,6 +31,9 @@
 </div>
 <!-- 자바 스크립트 -->
 <script layout:fragment="script" type='text/javascript'>
+$(document).ready(function() {
+  $("#neighbor").addClass("active");
+})
 </script>
 </html>
 
