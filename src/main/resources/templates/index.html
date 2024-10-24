@@ -7,10 +7,11 @@
     <div class="my-cafe-box" sec:authorize="isAuthenticated()">
       <div class="title"><span class="f-size-18 f-weight-6">내 카페</span></div>
       <div class="category">
-        <div class="ctgr-box-in btn" id="cafe-in"><span>가입한 카페</span></div>
+        <div class="ctgr-box-in btn active" id="cafe-in"><span>가입한 카페</span></div>
         <div class="ctgr-box-my btn" id="cafe-my"><span>내가 만든 카페</span></div>
       </div>
       <div class="cafe-list" id="cafe-in-list">
+        <div class="text-box" th:if="${cafeList == null or (cafeList.size() == 0)}"><span class="f-size-16">카페를 가입해 보세요!</span></div>
         <a th:each="cafe : ${cafeList}" th:href="@{|/cafe/${cafe.id}|}" class="cafe-box-1">
           <div class="profile-img img-box">
             <img th:src="@{|/file/${cafe.profileImg != null ? cafe.profileImg : 'cafe/user_basic.png'}|}" alt="카페 프로필 사진">
@@ -22,6 +23,7 @@
         </a>
       </div>
       <div class="cafe-list d-none" id="cafe-my-list">
+        <div class="text-box" th:if="${myCafeList == null or (myCafeList.size() == 0)}"><span class="f-size-16">카페를 만들어 보세요!</span></div>
         <a th:each="cafe : ${myCafeList}" th:href="@{|/cafe/${cafe.id}|}" class="cafe-box-1">
           <div class="profile-img img-box">
             <img th:src="@{|/file/${cafe.profileImg != null ? cafe.profileImg : 'cafe/user_basic.png'}|}" alt="카페 프로필 사진">
@@ -33,19 +35,48 @@
         </a>
       </div>
     </div>
-
-    <div sec:authorize="!isAuthenticated()">
-      <div class="hot-box">
-        <div class="title"><span class="f-size-18 f-weight-6">Info Share</span></div>
-        <div class="intro-text">
-          <p> 지식과 정보를 나누는 소통의 플랫폼입니다. </p>
-          <p> 다양한 주제의 카페에서 사람들과 함께 이야기하며, 유용한 정보를 서로 공유해 보세요.</p>
-          <p> 여러분의 경험과 아이디어는 누군가에게 큰 도움이 될 수 있습니다.</p>
-          <p>함께 성장하고, 나누고, 배우는 여정에 여러분을 초대합니다. 인포쉐어와 함께 더 나은 세상을 만들어 가요!</p>
+    <div class="personal-container hot-post-box">
+      <div class="title"><span class="f-size-18 f-weight-6">인기글</span></div>
+      <div class="post-list dp-flex-clmb">
+        <div class="post" th:each="article : ${hotList}">
+          <div class="title">
+            <a class="f-size-16 f-weight-6"
+              th:href="@{|/cafe/${article.cafe.id}/detail/${article.id}|}"
+              th:text="${article.title}"></a>
+          </div>
+          <div class="detail-box">
+            <div class="text-box"><span class="f-size-14" th:text="${article.cafe.name}"></span></div>
+            <div class="view-box">
+              <div class="img-box"><img th:src="@{/img/Eye.png}" alt="조회수 아이콘"></div>
+              <span class="f-size-14" th:text="${article.view != null ? article.view : 0}"></span>
+            </div>
+            <div class="rcmd-box">
+              <div class="img-box"><img th:src="@{/img/Heart.png}" alt="추천 아이콘"></div>
+              <span class="f-size-14" th:text="${article.voter != null ? article.voter.size() : 0}"></span>
+            </div>
+            <div class="cmt-box">
+              <div class="img-box"><img th:src="@{/img/Message_circle.png}" alt="댓글 아이콘"></div>
+              <span class="f-size-14" th:text="${article.commentList != null ? article.commentList.size() : 0}"></span>
+            </div>
+          </div>
         </div>
       </div>
-
-
+    </div>
+    <div>
+      <div class="home-intro-box">
+        <div class="img-box"><img th:src="@{/img/background.jpg}" alt="배경 일러스트"></div>
+        <div class="background-filter"></div>
+        <div class="contents">
+          <div class="title"><span class="f-size-18 f-weight-6">Info Share</span></div>
+          <div class="intro-text">
+            <p> 지식과 정보를 나누는 소통의 플랫폼입니다. </p>
+            <p> 다양한 주제의 카페에서 사람들과 함께 이야기하며, 유용한 정보를 서로 공유해 보세요.</p>
+            <p> 여러분의 경험과 아이디어는 누군가에게 큰 도움이 될 수 있습니다.</p>
+            <p>함께 성장하고, 나누고, 배우는 여정에 여러분을 초대합니다. 인포쉐어와 함께 더 나은 세상을 만들어 가요!</p>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
   <div class="right-side"></div>
 </div>
@@ -54,11 +85,19 @@
 <!-- 자바 스크립트 -->
 <script layout:fragment="script" type='text/javascript'>
  $(document).ready(function() {
+  $("#home").addClass("active");
+  // $("#home").removeClass("disabled");
+  // $("#neighbor").addClass("active");
+  // $("#neighbor").removeClass("disabled");
   $("#cafe-in").click(() => {
     $("#cafe-in-list").addClass("d-block");
     $("#cafe-in-list").removeClass("d-none");
     $("#cafe-my-list").addClass("d-none");
     $("#cafe-my-list").removeClass("d-block");
+    $("#cafe-in").addClass("active");
+    $("#cafe-in").removeClass("disabled");
+    $("#cafe-my").addClass("disabled");
+    $("#cafe-my").removeClass("active");
   })
 
   $("#cafe-my").click(() => {
@@ -66,6 +105,10 @@
     $("#cafe-my-list").removeClass("d-none");
     $("#cafe-in-list").addClass("d-none");
     $("#cafe-in-list").removeClass("d-block");
+    $("#cafe-my").addClass("active");
+    $("#cafe-my").removeClass("disabled");
+    $("#cafe-in").addClass("disabled");
+    $("#cafe-in").removeClass("active");
   })
  })
 

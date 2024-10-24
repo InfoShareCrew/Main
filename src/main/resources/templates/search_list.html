@@ -15,7 +15,7 @@
     <tr th:each="article, loop : ${paging.content}" class="f-size-14">
       <td th:text="${paging.totalElements - (paging.number * paging.size) - loop.index}"></td>
       <td style="text-align: left;">
-        <a th:href="@{|/cafe/${article.cafe.maneger.email}/detail/${article.id}|}" th:text="${article.title}"></a>
+        <a th:href="@{|/cafe/${article.cafe.manager.email}/detail/${article.id}|}" th:text="${article.title}"></a>
         <span class="f-size-13 f-color-d3"
               th:if="${#lists.size(article.commentList) > 0}"
               th:text="|[${#lists.size(article.commentList)}]|">
