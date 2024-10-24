@@ -31,8 +31,11 @@ public class Cafe extends BaseEntity {
     @OneToMany(mappedBy = "cafe", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<BoardCategory> boardCategory = new HashSet<>();
 
+    @ManyToOne(optional = false) // 매니저가 필수일 경우
+    private SiteUser manager;
+
     @ManyToOne
-    private SiteUser maneger;
+    private SiteUser author;
 
     private String profileImg;
 

@@ -1,14 +1,20 @@
 package com.infoShare.calog.domain.user;
 
-import com.infoShare.calog.domain.user.blog.BlogForm;
 import com.infoShare.calog.domain.user.email.EmailService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import java.security.Principal;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -55,16 +61,42 @@ public class UserController {
         return ResponseEntity.ok("권한이 부여되었습니다.");
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/password")
-    public String modifyPassword(@ModelAttribute("userPasswordForm") UserFindPasswordForm userPasswordForm) {
-        return "modify_password";
+    public String ModifyPasswordForm(Model model) {
+        // 사용자 객체 생성
+        UserFindPasswordForm userFindPasswordForm = new UserFindPasswordForm();
+        model.addAttribute("userFindPasswordForm", userFindPasswordForm);
+        return "modify_password"; // 비밀번호 변경 폼 뷰
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/password")
-    public String modifyPassword(@Valid UserFindPasswordForm userPasswordForm, BindingResult bindingResult) {
+    public String showModifyPasswordForm(@ModelAttribute("userFindPasswordForm") @Valid UserFindPasswordForm userFindPasswordForm,
+                                         BindingResult bindingResult, Principal principal) {
         if (bindingResult.hasErrors()) {
             return "modify_password";
         }
-        return "redirect:/";
+
+        // 현재 로그인한 사용자의 이메일을 가져오기
+        String email = principal.getName(); // 현재 인증된 사용자의 이메일
+
+        Optional<SiteUser> optionalUser = this.userService.findUserByEmail(email);
+
+        // 사용자가 존재하지 않을 경우 처리
+        if (optionalUser.isEmpty()) {
+            bindingResult.reject("error.siteUser", "사용자를 찾을 수 없습니다."); // 에러 메시지 추가
+            return "modify_password"; // 에러가 있을 경우 다시 폼으로 돌아감
+        }
+
+        // 비밀번호 확인 로직
+        if (!userFindPasswordForm.getPassword().equals(userFindPasswordForm.getPassword_check())) {
+            bindingResult.rejectValue("password_check", "error.siteUser", "비밀번호가 일치하지 않습니다.");
+            return "modify_password"; // 에러가 있을 경우 다시 폼으로 돌아감
+        }
+
+        SiteUser siteUser = optionalUser.get();
+        this.userService.modifypassword(siteUser.getId(), userFindPasswordForm.getPassword()); // 사용자 ID를 넘김
+        return "redirect:/"; // 비밀번호 변경 후 리다이렉트
     }
 }

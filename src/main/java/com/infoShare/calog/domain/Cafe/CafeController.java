@@ -5,6 +5,7 @@ import com.infoShare.calog.domain.Article.ArticleForm;
 import com.infoShare.calog.domain.Article.ArticleService;
 import com.infoShare.calog.domain.BoardCategory.BoardCategory;
 import com.infoShare.calog.domain.BoardCategory.BoardCategoryService;
+import com.infoShare.calog.domain.Category.Category;
 import com.infoShare.calog.domain.Category.CategoryService;
 import com.infoShare.calog.domain.Comment.CommentForm;
 import com.infoShare.calog.domain.user.SiteUser;
@@ -24,7 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.security.Principal;
-import java.util.HashSet;
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -35,11 +36,12 @@ public class CafeController {
     private final ArticleService articleService;
     private final BoardCategoryService boardCategoryService;
     private final UtilService utilService;
+    private final CategoryService categoryService;
 
     @GetMapping("/{cafeId}")
     public String list(Model model,
                        @ModelAttribute("basedEntity") BaseEntity baseEntity,
-                        @PathVariable(value = "cafeId") Long cafeId
+                        @PathVariable(value = "cafeId") Long cafeId,Principal principal
 //                       @RequestParam(value = "page",defaultValue = "0") int page,
 //                       @RequestParam(value = "kw" ,defaultValue = "") String kw
                                                                                     ) {
@@ -47,6 +49,15 @@ public class CafeController {
 //        model.addAttribute("paging", paging);
         Cafe cafe = this.cafeService.getCafeById(cafeId);
         model.addAttribute("cafe", cafe);
+
+        SiteUser author = this.userService.getUser(principal.getName()); // 현재 사용자 가져오기
+        List<Category> userCategories = categoryService.getCategoriesByUser(author); // 사용자의 카테고리 가져오기
+        model.addAttribute("categories", userCategories); // 모델에 추가
+
+        // 인기글 5개 가져오기
+        List<Article> popularArticles = this.articleService.getPopularArticles(5);
+        model.addAttribute("popularArticles", popularArticles);
+
         return "cafe_index";
     }
 
@@ -72,7 +83,6 @@ public class CafeController {
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/create")
     public String create(@Valid CafeForm cafeForm, BindingResult bindingResult,Principal principal) {
-
         if (bindingResult.hasErrors()) {
             return "cafe_form";
         }
@@ -91,7 +101,7 @@ public class CafeController {
                              @PathVariable("id") Long id,
                              Principal principal) {
         Cafe cafe = this.cafeService.getCafeById(id);
-        if(!cafe.getManeger().getEmail().equals(principal.getName())){
+        if(!cafe.getManager().getEmail().equals(principal.getName())){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
         }
 
@@ -122,7 +132,7 @@ public class CafeController {
         }
 
         Cafe cafe = this.cafeService.getCafeById(id);
-        if (!cafe.getManeger().getEmail().equals(principal.getName())) {
+        if (!cafe.getManager().getEmail().equals(principal.getName())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
         }
 
@@ -141,7 +151,7 @@ public class CafeController {
     @GetMapping("/delete/{id}")
     public String deleteCafe(Principal principal, @PathVariable("id") Long id) {
         Cafe cafe = this.cafeService.getCafeById(id);
-        if (!cafe.getManeger().getEmail().equals(principal.getName())) {
+        if (!cafe.getManager().getEmail().equals(principal.getName())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "삭제권한이 없습니다.");
         }
         this.cafeService.deleteCafe(cafe);
@@ -207,7 +217,7 @@ public class CafeController {
                                 Principal principal) {
         Cafe cafe = this.cafeService.getCafeById(cafeId);
 
-        if ((!cafe.getManeger().getEmail().equals(principal.getName()) && boardName.equals("공지사항"))) {
+        if ((!cafe.getManager().getEmail().equals(principal.getName()) && boardName.equals("공지사항"))) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
         }
 

@@ -4,6 +4,8 @@ import java.util.Set;
 
 import com.infoShare.calog.domain.BoardCategory.BoardCategory;
 import com.infoShare.calog.domain.BoardCategory.BoardCategoryService;
+import java.util.*;
+
 import com.infoShare.calog.domain.DataNotFoundException;
 import com.infoShare.calog.domain.user.SiteUser;
 import com.infoShare.calog.domain.user.UserService;
@@ -13,10 +15,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -39,7 +37,7 @@ public class CafeService {
     }
 
     public List<Cafe> getOwnList(String userEmail) {        // 내가 만든 카페 리스트
-        return cafeRepository.findAllByManeger(userService.getUser(userEmail));
+        return cafeRepository.findAllByManager(userService.getUser(userEmail));
     }
 
     public Cafe getCafeById(Long id) {
@@ -56,11 +54,11 @@ public class CafeService {
                 .orElseThrow(() -> new IllegalArgumentException("Invalid cafe ID"));
     }
 
-    public Cafe create(String name, String intro , SiteUser maneger) {
+    public Cafe create(String name, String intro ,SiteUser manager) {
         Cafe cafe = new Cafe();
         cafe.setName(name);
         cafe.setIntro(intro);
-        cafe.setManeger(maneger);
+        cafe.setManager(manager);
 
         this.cafeRepository.save(cafe);
 

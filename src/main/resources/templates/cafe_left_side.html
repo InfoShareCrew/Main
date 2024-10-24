@@ -7,11 +7,11 @@
       <div class="text-box">
         <a th:href="@{|/cafe/${cafe.id}|}" class="f-size-16 f-weight-6 btn" th:text="${cafe.name}"></a>
         <a sec:authorize="isAuthenticated()"
-           th:if="${#authentication.getPrincipal().username} == ${cafe.maneger.email}"
+           th:if="${#authentication.getPrincipal().username} == ${cafe.manager.email}"
            th:href="@{|/cafe/modify/${cafe.id}|}" class="f-size-13 f-color-d3 btn"
         >카페 편집</a>
         <!-- 로그인 했을 때 보이는 가입하기 버튼 -->
-        <span sec:authorize="isAuthenticated()" th:if="${#authentication.getPrincipal().username} != ${cafe.maneger.email}">
+        <span sec:authorize="isAuthenticated()" th:if="${#authentication.getPrincipal().username} != ${cafe.manager.email}">
           <span th:with="isMember=${false}">
             <span th:each="user : ${cafe.users}">
               <span th:if="${user.name == #authentication.getPrincipal().username}">

@@ -2,9 +2,9 @@
 <div layout:fragment="content" class="main-contents dp-flex-clmb board-list">
   <div class="title-box">
     <span th:text="${boardCategory.name}" class="f-size-28 f-weight-6"> 게시판 </span>
-    <a sec:authorize="isAuthenticated()" 
-      th:if="(${#authentication.getPrincipal().username} != ${cafe.maneger.email} AND ${boardCategory.name} != 'notice') OR (${#authentication.getPrincipal().username} == ${cafe.maneger.email} AND ${boardCategory.name} == 'notice')" 
-      th:href="@{|/cafe/${cafe.id}/${boardCategory.name}/create|}" 
+    <a sec:authorize="isAuthenticated()"
+      th:if="(${#authentication.getPrincipal().username} != ${cafe.manager.email} AND ${boardCategory.name} != 'notice') OR (${#authentication.getPrincipal().username} == ${cafe.manager.email} AND ${boardCategory.name} == 'notice')"
+      th:href="@{|/cafe/${cafe.id}/${boardCategory.name}/create|}"
       class="btn btn-primary">글쓰기</a>
   </div>
   <!-- 검색 폼 추가 -->

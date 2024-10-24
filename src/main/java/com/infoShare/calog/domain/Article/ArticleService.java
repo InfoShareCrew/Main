@@ -6,7 +6,6 @@ import com.infoShare.calog.domain.Cafe.Cafe;
 import com.infoShare.calog.domain.Category.Category;
 import com.infoShare.calog.domain.DataNotFoundException;
 import com.infoShare.calog.domain.Tag.Tag;
-import com.infoShare.calog.domain.Tag.TagRepository;
 import com.infoShare.calog.domain.Tag.TagService;
 import com.infoShare.calog.domain.user.SiteUser;
 import lombok.RequiredArgsConstructor;
@@ -59,7 +58,7 @@ public class ArticleService {
         article.setBoardCategory(boardCategory);
         article.setCafe(cafe);
         article.setAuthor(author);
-        Set<Tag>  tags = tagService.processTags(tag);
+        Set<Tag> tags = tagService.processTags(tag);
         article.setTags(tags);
         this.articleRepository.save(article);
     }
@@ -74,7 +73,7 @@ public class ArticleService {
     }
 
 
-    public void modify(Article article, String title, String content, BoardCategory boardCategory,String tag) {
+    public void modify(Article article, String title, String content, BoardCategory boardCategory, String tag) {
         article.setTitle(title);
         article.setContent(content);
         article.setBoardCategory(boardCategory);
@@ -116,5 +115,10 @@ public class ArticleService {
     public Page<Article> searchArticles(String keyword, int page, String boardName) {
         Pageable pageable = PageRequest.of(page, 10, Sort.by(Sort.Order.desc("createdDate")));
         return articleRepository.findByTitleContainingOrContentContainingAndBoardCategoryId(keyword, keyword, boardName, pageable);
+    }
+
+    // 인기게시글 가져오기
+    public List<Article> getPopularArticles(int limit) {
+        return articleRepository.findTopPopularArticles(PageRequest.of(0, limit));
     }
 }
