@@ -8,6 +8,7 @@ import com.infoShare.calog.domain.BoardCategory.BoardCategoryService;
 import com.infoShare.calog.domain.Category.Category;
 import com.infoShare.calog.domain.Category.CategoryService;
 import com.infoShare.calog.domain.Comment.CommentForm;
+import com.infoShare.calog.domain.Tag.Tag;
 import com.infoShare.calog.domain.user.SiteUser;
 import com.infoShare.calog.domain.user.UserService;
 import com.infoShare.calog.global.Util.UtilService;
@@ -26,6 +27,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
@@ -42,16 +44,12 @@ public class CafeController {
     public String list(Model model,
                        @ModelAttribute("basedEntity") BaseEntity baseEntity,
                         @PathVariable(value = "cafeId") Long cafeId,Principal principal
-//                       @RequestParam(value = "page",defaultValue = "0") int page,
-//                       @RequestParam(value = "kw" ,defaultValue = "") String kw
                                                                                     ) {
-//        Page<Cafe> paging = this.cafeService.getList(page);
-//        model.addAttribute("paging", paging);
         Cafe cafe = this.cafeService.getCafeById(cafeId);
         model.addAttribute("cafe", cafe);
 
         // 인기글 5개 가져오기
-        List<Article> popularArticles = this.articleService.getPopularArticles(5);
+        List<Article> popularArticles = this.articleService.getPopularArticlesForCafe(5, cafeId);
         model.addAttribute("popularArticles", popularArticles);
 
         return "cafe_index";
@@ -94,11 +92,11 @@ public class CafeController {
     }
 
     @PreAuthorize("isAuthenticated()")
-    @GetMapping("/modify/{id}")
+    @GetMapping("/modify/{cafeId}")
     public String modifyCafe(CafeForm cafeForm,
-                             @PathVariable("id") Long id,
+                             @PathVariable("cafeId") Long cafeId,
                              Principal principal) {
-        Cafe cafe = this.cafeService.getCafeById(id);
+        Cafe cafe = this.cafeService.getCafeById(cafeId);
         if(!cafe.getManager().getEmail().equals(principal.getName())){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
         }
@@ -118,9 +116,9 @@ public class CafeController {
     }
 
     @PreAuthorize("isAuthenticated()")
-    @PostMapping("/modify/{id}")
+    @PostMapping("/modify/{cafeId}")
     public String modifyCafe(@Valid CafeForm cafeForm,
-                             @PathVariable("id") Long id,
+                             @PathVariable("cafeId") Long cafeId,
                              @RequestParam(value = "profile-img") MultipartFile image,
                              BindingResult bindingResult,
                              Principal principal){
@@ -129,7 +127,7 @@ public class CafeController {
             return "cafe_form";
         }
 
-        Cafe cafe = this.cafeService.getCafeById(id);
+        Cafe cafe = this.cafeService.getCafeById(cafeId);
         if (!cafe.getManager().getEmail().equals(principal.getName())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
         }
@@ -142,13 +140,13 @@ public class CafeController {
         }
 
         this.cafeService.modifyCafe(cafe,cafeForm.getName(),cafeForm.getIntro(), profileImg);
-        return String.format("redirect:/cafe/%s", id);
+        return String.format("redirect:/cafe/%s", cafeId);
     }
 
     @PreAuthorize("isAuthenticated()")
-    @GetMapping("/delete/{id}")
-    public String deleteCafe(Principal principal, @PathVariable("id") Long id) {
-        Cafe cafe = this.cafeService.getCafeById(id);
+    @GetMapping("/delete/{cafeId}")
+    public String deleteCafe(Principal principal, @PathVariable("cafeId") Long cafeId) {
+        Cafe cafe = this.cafeService.getCafeById(cafeId);
         if (!cafe.getManager().getEmail().equals(principal.getName())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "삭제권한이 없습니다.");
         }
@@ -157,14 +155,14 @@ public class CafeController {
     }
 
     @PreAuthorize("isAuthenticated()")
-    @GetMapping("/vote/{id}")
+    @GetMapping("/vote/{cafeId}")
     @ResponseBody
-    public String cafeVote(@PathVariable("id") Long id, Principal principal) {
-        Cafe cafe= this.cafeService.getCafeById(id);
+    public String cafeVote(@PathVariable("cafeId") Long cafeId, Principal principal) {
+        Cafe cafe= this.cafeService.getCafeById(cafeId);
         SiteUser siteUser = this.userService.getUser(principal.getName());
         this.cafeService.vote(cafe, siteUser);
 
-        Cafe votedCafe = this.cafeService.getCafeById(id);
+        Cafe votedCafe = this.cafeService.getCafeById(cafeId);
         Integer count = votedCafe.getVoter().size();
         return count.toString();
     }
@@ -244,10 +242,62 @@ public class CafeController {
                 articleForm.getTitle(),
                 articleForm.getContent(),
                 this.userService.findByEmail(principal.getName()),
-                this.boardCategoryService.getCategoryByName(boardName),
+                this.boardCategoryService.getCategoryByNameAndCafeId(boardName, cafeId),
                 this.cafeService.getCafeById(cafeId),
                 articleForm.getTags()
         );
+        return String.format("redirect:/cafe/%s/%s", cafeId, boardName);
+    }
+
+    @GetMapping("/{cafeId}/{boardName}/modify/{articleId}")
+    public String modifyArticle(Model model,
+                                ArticleForm articleForm,
+                                @PathVariable(value = "cafeId") Long cafeId,
+                                @PathVariable(value = "boardName") String boardName,
+                                @PathVariable(value = "articleId") Long articleId,
+                                Principal principal) {
+        Cafe cafe = this.cafeService.getCafeById(cafeId);
+
+        if ((!cafe.getManager().getEmail().equals(principal.getName()) && boardName.equals("공지사항"))) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
+        }
+
+        Article article = this.articleService.getArticleById(articleId);
+        String tagString = article.getTags().stream()
+                .map(Tag::getName) // Tag 객체에서 이름을 가져옵니다.
+                .collect(Collectors.joining(", "));
+
+        articleForm.setTitle(article.getTitle());
+        articleForm.setContent(article.getContent());
+        articleForm.setBoardName(article.getBoardCategory().getName());
+        articleForm.setTags(tagString);
+        articleForm.setBoardName(boardName);
+
+        model.addAttribute("cafe", cafe);
+
+        return "article_form";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/{cafeId}/{boardName}/modify/{articleId}")
+    public String modifyArticle(Model model,
+                                @Valid ArticleForm articleForm,
+                                @PathVariable(value = "cafeId") Long cafeId,
+                                @PathVariable(value = "boardName") String boardName,
+                                @PathVariable(value = "articleId") Long articleId,
+                                BindingResult bindingResult,
+                                Principal principal) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("categories", categoryService.getAllCategories()); // 카테고리가져오기
+            return "article_form";
+        }
+        Article article = this.articleService.getArticleById(articleId);
+
+        this.articleService.modify(article,
+                                    articleForm.getTitle(),
+                                    articleForm.getContent(),
+                                    this.boardCategoryService.getCategoryByName(articleForm.getBoardName()),
+                                    articleForm.getTags());
         return String.format("redirect:/cafe/%s/%s", cafeId, boardName);
     }
 

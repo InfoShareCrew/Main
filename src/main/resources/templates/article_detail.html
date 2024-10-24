@@ -23,7 +23,7 @@
         </div>
         <div class="f-size-13" th:text="${#temporals.format(article.createdDate, 'yyyy-MM-dd HH:mm')}"></div>
       </div>
-        <a th:href="@{|/article/modify/${article.id}|}" class="btn btn-primary f-size-13"
+        <a th:href="@{|/cafe/${cafe.id}/${article.boardCategory.name}/modify/${article.id}|}" class="btn btn-primary f-size-13"
           sec:authorize="isAuthenticated()"
           th:if="${userNickname == article.author.nickname}"
           th:text="수정"></a>

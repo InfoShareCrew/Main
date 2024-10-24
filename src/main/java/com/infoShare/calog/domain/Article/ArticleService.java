@@ -15,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -36,6 +37,13 @@ public class ArticleService {
         sorts.add(Sort.Order.desc("createdDate"));
         Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
         return this.articleRepository.findByBoardCategoryName(pageable, boardName);
+    }
+
+    public Page<Article> getList(int page, String boardName, Long cafeId) {
+        List<Sort.Order> sorts = new ArrayList<>();
+        sorts.add(Sort.Order.desc("createdDate"));
+        Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
+        return this.articleRepository.findByBoardCategoryNameAndCafeId(pageable, boardName, cafeId);
     }
 
     public Article getArticleById(Long id) {
@@ -80,6 +88,7 @@ public class ArticleService {
         // 해시태그 처리
         Set<Tag> tags = tagService.processTags(tag);
         article.setTags(tags);
+        article.setModifiedDate(LocalDateTime.now());
 
         this.articleRepository.save(article);
     }
@@ -117,11 +126,15 @@ public class ArticleService {
         return articleRepository.findByTitleContainingOrContentContainingAndBoardCategoryId(keyword, keyword, boardName, pageable);
     }
 
-    // 인기게시글 가져오기
+    public Page<Article> searchArticles(String keyword, int page, String boardName, Long cafeId) {
+        Pageable pageable = PageRequest.of(page, 10, Sort.by(Sort.Order.desc("createdDate")));
+        return articleRepository.findByTitleContainingOrContentContainingAndBoardCategoryAndCafeId(keyword, keyword, boardName, cafeId, pageable);
+    }
+
+    // 인기게시글 가져오기 - 전체
     public List<Article> getPopularArticles(int limit) {
         return articleRepository.findTopPopularArticles(PageRequest.of(0, limit));
     }
-
 
     // 태그와 게시물로 검색
     public Page<Article> searchArticlesByTag(String tag, int page, String boardName) {

@@ -7,10 +7,11 @@
     <div class="my-cafe-box" sec:authorize="isAuthenticated()">
       <div class="title"><span class="f-size-18 f-weight-6">내 카페</span></div>
       <div class="category">
-        <div class="ctgr-box-in btn" id="cafe-in"><span>가입한 카페</span></div>
+        <div class="ctgr-box-in btn active" id="cafe-in"><span>가입한 카페</span></div>
         <div class="ctgr-box-my btn" id="cafe-my"><span>내가 만든 카페</span></div>
       </div>
       <div class="cafe-list" id="cafe-in-list">
+        <div class="text-box" th:if="${cafeList == null or (cafeList.size() == 0)}"><span class="f-size-16">카페를 가입해 보세요!</span></div>
         <a th:each="cafe : ${cafeList}" th:href="@{|/cafe/${cafe.id}|}" class="cafe-box-1">
           <div class="profile-img img-box">
             <img th:src="@{|/file/${cafe.profileImg != null ? cafe.profileImg : 'cafe/user_basic.png'}|}" alt="카페 프로필 사진">
@@ -22,6 +23,7 @@
         </a>
       </div>
       <div class="cafe-list d-none" id="cafe-my-list">
+        <div class="text-box" th:if="${myCafeList == null or (myCafeList.size() == 0)}"><span class="f-size-16">카페를 만들어 보세요!</span></div>
         <a th:each="cafe : ${myCafeList}" th:href="@{|/cafe/${cafe.id}|}" class="cafe-box-1">
           <div class="profile-img img-box">
             <img th:src="@{|/file/${cafe.profileImg != null ? cafe.profileImg : 'cafe/user_basic.png'}|}" alt="카페 프로필 사진">
