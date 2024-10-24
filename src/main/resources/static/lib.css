@@ -13,6 +13,7 @@
 .f-weight-7 {font-weight: 700;}
 /* border */
 .border-1 {border: var(--x000000-5) solid 1px;}
+.border-bottom-1 {border-bottom: var(--x000000-5) solid 1px;}
 /* color */
 .f-color-d3 {color: var(--d-3d-3d-3);}
 
@@ -45,6 +46,7 @@
 .btn {display: block; padding: 8px 8px; border-radius: 10px; cursor: pointer;}
 .btn-b {display: block; padding: 8px 8px; border-radius: 10px; border: 1px solid var(--d-3d-3d-3);}
 .btn-primary {background-color: var(--x-0d-6efd); color: var(--ffffff);}
+.link {color: var(--x-0d-6efd);}
 .home-img {height: 33px;}
 .input {display: block; padding: 8px 8px; border-radius: 10px; border: 1px solid var(--d-3d-3d-3);}
 .kakao {background-color: var(--kakao);}

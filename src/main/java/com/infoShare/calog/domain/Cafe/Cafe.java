@@ -1,5 +1,6 @@
 package com.infoShare.calog.domain.Cafe;
 
+import java.util.HashSet;
 import com.infoShare.calog.domain.BoardCategory.BoardCategory;
 import com.infoShare.calog.domain.Category.Category;
 import com.infoShare.calog.domain.Suggestion.Suggestion;
@@ -26,8 +27,9 @@ public class Cafe extends BaseEntity {
     @ManyToOne
     private Category category;
 
-    @OneToMany
-    private Set<BoardCategory> boardCategory;
+    // Cafe와 BoardCategory 간의 OneToMany 관계 설정
+    @OneToMany(mappedBy = "cafe", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<BoardCategory> boardCategory = new HashSet<>();
 
     @ManyToOne(optional = false) // 매니저가 필수일 경우
     private SiteUser manager;
@@ -46,4 +48,13 @@ public class Cafe extends BaseEntity {
     @OneToMany(mappedBy = "cafe")
     private List<Suggestion> suggestions;
 
+//    @PrePersist
+//    public void initBoardCategories() {
+//        if (this.boardCategory == null || this.boardCategory.isEmpty()) {
+//            BoardCategory defaultCategory = new BoardCategory();
+//            defaultCategory.setName("자유게시판");
+//            this.boardCategory = new HashSet<>();
+//            this.boardCategory.add(defaultCategory);
+//        }
+//    }
 }

@@ -7,6 +7,9 @@ $(document).ready(function() {
         if (user.profileImg != null) {
             $("#profile-img").attr('src', `/file/${user.profileImg}`);
         }
+        if (user.redirectUrl) {
+            window.location.href = user.redirectUrl;  // 리다이렉트 처리
+        }
     })
     .fail(function(jqXHR, textStatus, errorThrown) {
         console.log("get요청 실패: " + textStatus);

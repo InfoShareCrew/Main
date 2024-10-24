@@ -5,10 +5,11 @@ body {display: flex;}
 .main-contents > div > .left-side {position: relative;}
 .main-contents > div >  .left-side ul {display: flex; flex-direction: column; gap: 8px;}
 .main-contents >  div > .left-side ul:first-child > a {background-color: var(--colourmainblue-300);}
-.left-side > .cafe-info {display: flex; gap: 16px; border: 1px solid var(--d-3d-3d-3); border-radius: 5px; padding: 8px;}
+.left-side > .cafe-info {display: flex; gap: 16px; border: 1px solid var(--d-3d-3d-3); border-radius: 5px; padding: 8px; width: 100%; box-sizing: border-box; align-items: center;}
+.left-side > .cafe-info >.text-box {text-wrap: nowrap;}
 .cafe-info > .img-box {width: 48px; height: 48px; border-radius: 24px;}
 .cafe-info > .text-box {display: flex; flex-direction: column; justify-content: space-between;}
-.left-side > .menu-list {padding: 16px 0;}
+.left-side > .menu-list {margin: 16px 0; padding: 8px 0;}
 
 
 /***** 카페 배너 *****/
@@ -16,11 +17,39 @@ body {display: flex;}
 .cafe-banner > a {display: flex; justify-content: center; background-color: var(--x000000-5);}
 .cafe-banner > a > .text-box {width: 1110px; padding: 32px;}
 
+
 /***** 카페 홈화면 *****/
 .main-contents {padding: 16px; margin-top: 0px;}
 
-/***** 카페 공지사항 *****/
+
+/***** 카페 게시판 목록 *****/
 .board-list .title-box {display: flex; justify-content: space-between;}
+.board-list form {display: flex; gap: 8px;}
+.board-list table tr {height: 40px; text-align: center;}
+.board-list table tr td {padding: 0 16px;}
+.board-list table thead tr {background-color: var(--x000000-5);}
+
+
+/***** 카페 게시판 상세 페이지 *****/
+.board-detail {flex-direction: column;}
+.board-detail .contents {display: flex; flex-direction: column; gap: 16px;}
+.board-detail .contents .author-box {display: flex; align-items: center; gap: 16px;}
+.author-box .img-box {width: 40px; height: 40px; border-radius: 20px;}
+.author-box .right-box {display: flex; flex-direction: column; gap: 4px;}
+.author-box .right-box > div {display: flex; align-items: center; gap: 8px;}
+.board-detail .contents-box {border-top: 1px solid var(--d-3d-3d-3); padding: 8px 0;}
+.board-detail .add-func {display: flex; align-items: center; gap: 8px;}
+.board-detail .add-func > a {display: flex; align-items: center; gap: 4px; cursor: pointer;}
+.board-detail .add-func > div {display: flex; align-items: center; gap: 4px;}
+.board-detail .add-func .img-box {width: 20px; height: 20px;}
+.board-detail .comment-box form {display: flex; gap: 16px; align-items: center;}
+.comment-box form textarea {flex-grow: 1; flex-basis: 0;}
+.board-detail .comment-list {padding: 16px 0;}
+.comment-list .comment {display: flex; gap: 8px; padding: 16px 0 8px 0;}
+.comment-list .comment .img-box {width: 40px; height: 40px; border-radius: 20px;}
+.comment-list .comment .right-box {display: flex; flex-direction: column; gap: 8px;}
+.comment-list .add-func {display: flex; align-items: center; gap: 8px;}
+
 
 /***** 카페 생성 폼 *****/
 .cafeForm {margin-top: 72px; padding: 32px;}
@@ -33,6 +62,3 @@ body {display: flex;}
 .cafeForm .form label {text-wrap: nowrap;}
 .cafeForm .form input.btn {margin-left: auto; margin-right: 0;}
 .cafeForm .input-box input, textarea {width: 300px;}
-
-
-

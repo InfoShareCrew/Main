@@ -1,5 +1,9 @@
 package com.infoShare.calog.domain.Cafe;
 
+import java.util.Set;
+
+import com.infoShare.calog.domain.BoardCategory.BoardCategory;
+import com.infoShare.calog.domain.BoardCategory.BoardCategoryService;
 import java.util.*;
 
 import com.infoShare.calog.domain.DataNotFoundException;
@@ -18,6 +22,7 @@ public class CafeService {
 
     private final CafeRepository cafeRepository;
     private final UserService userService;
+    private final BoardCategoryService boardCategoryService;
 
     public Page<Cafe> getList(int page) {
         List<Sort.Order> sorts = new ArrayList<>();
@@ -26,12 +31,8 @@ public class CafeService {
         return this.cafeRepository.findAll(pageable);
     }
 
-    public List<Cafe> getMyList(String userEmail) { // 내가 가입한 카페 리스트
-        SiteUser user = userService.getUser(userEmail);
-        if (user == null) {
-            throw new DataNotFoundException("User not found with email: " + userEmail);
-        }
-        Set<Cafe> cafeSet = user.getCafe();
+    public List<Cafe> getMyList(String userEmail) {        // 내가 가입한 카페 리스트
+        Set<Cafe> cafeSet = userService.getUser(userEmail).getCafe();
         return new ArrayList<>(cafeSet);
     }
 
@@ -58,7 +59,14 @@ public class CafeService {
         cafe.setName(name);
         cafe.setIntro(intro);
         cafe.setManager(manager);
-        return cafeRepository.save(cafe);
+
+        this.cafeRepository.save(cafe);
+
+        this.boardCategoryService.create(cafe, "notice");
+        this.boardCategoryService.create(cafe, "suggest");
+        this.boardCategoryService.create(cafe, "free");
+
+        return cafe;
     }
 
     public void modifyCafe(Cafe cafe, String name, String intro, String profileImg) {
