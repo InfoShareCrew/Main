@@ -51,13 +51,10 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
 
     int countByTags(Tag tag); // 특정 태그에 속하는 게시글 수
 
-    @Query("SELECT a FROM Article a ORDER BY a.view DESC") // 인기글 가져오기 - 전체
-    List<Article> findTopPopularArticles(Pageable pageable);
+    @Query("SELECT a FROM Article a ORDER BY a.view DESC")
+    List<Article> findTopPopularArticles(Pageable pageable); // 인기글 가져오기
 
-    @Query("SELECT a FROM Article a " +   // 인기글 가져오기 - 카페
-            "WHERE a.cafe.id = :cafeId " +
-            "ORDER BY a.view DESC")
-    List<Article> findTopPopularArticlesByCafeId(@Param("cafeId") Long cafeId, Pageable pageable);
+    Page<Article> findByTags_NameContainingIgnoreCaseAndBoardCategory_Name(String tag, String boardName, Pageable pageable);
 }
 
 //    @Query(
