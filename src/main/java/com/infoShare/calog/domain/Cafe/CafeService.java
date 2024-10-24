@@ -1,6 +1,7 @@
 package com.infoShare.calog.domain.Cafe;
 
-import java.util.Set;
+import java.util.*;
+
 import com.infoShare.calog.domain.DataNotFoundException;
 import com.infoShare.calog.domain.user.SiteUser;
 import com.infoShare.calog.domain.user.UserService;
@@ -10,10 +11,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -29,14 +26,17 @@ public class CafeService {
         return this.cafeRepository.findAll(pageable);
     }
 
-    public List<Cafe> getMyList(String userEmail) {        // 내가 가입한 카페 리스트
-//        return cafeRepository.findAllByManeger(userService.getUser(userEmail));//TODO: 여기 편집
-        Set<Cafe> cafeSet = userService.getUser(userEmail).getCafe();
+    public List<Cafe> getMyList(String userEmail) { // 내가 가입한 카페 리스트
+        SiteUser user = userService.getUser(userEmail);
+        if (user == null) {
+            throw new DataNotFoundException("User not found with email: " + userEmail);
+        }
+        Set<Cafe> cafeSet = user.getCafe();
         return new ArrayList<>(cafeSet);
     }
 
     public List<Cafe> getOwnList(String userEmail) {        // 내가 만든 카페 리스트
-        return cafeRepository.findAllByManeger(userService.getUser(userEmail));
+        return cafeRepository.findAllByManager(userService.getUser(userEmail));
     }
 
     public Cafe getCafeById(Long id) {
@@ -53,11 +53,11 @@ public class CafeService {
                 .orElseThrow(() -> new IllegalArgumentException("Invalid cafe ID"));
     }
 
-    public Cafe create(String name, String intro ,SiteUser maneger) {
+    public Cafe create(String name, String intro ,SiteUser manager) {
         Cafe cafe = new Cafe();
         cafe.setName(name);
         cafe.setIntro(intro);
-        cafe.setManeger(maneger);
+        cafe.setManager(manager);
         return cafeRepository.save(cafe);
     }
 

@@ -35,7 +35,7 @@ public class ActivityLogService {
     public List<Map<String, Object>> getActivityCafesByUserId(Long userId) {
         String sql = "SELECT c.name AS name, c.intro AS intro, c.category_id AS category, c.id AS cafeId " +
                 "FROM cafe c " +
-                "JOIN Site_User u ON c.maneger_id = u.id " +
+                "JOIN Site_User u ON c.manager_id = u.id " +
                 "WHERE u.id = ? " +
                 "GROUP BY c.name, c.intro, c.category_id " +
                 "ORDER BY c.created_date DESC";

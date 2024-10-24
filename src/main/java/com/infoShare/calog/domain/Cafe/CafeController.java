@@ -5,14 +5,18 @@ import com.infoShare.calog.domain.Article.ArticleForm;
 import com.infoShare.calog.domain.Article.ArticleService;
 import com.infoShare.calog.domain.BoardCategory.BoardCategory;
 import com.infoShare.calog.domain.BoardCategory.BoardCategoryService;
+import com.infoShare.calog.domain.Category.Category;
 import com.infoShare.calog.domain.Category.CategoryService;
 import com.infoShare.calog.domain.Comment.CommentForm;
+import com.infoShare.calog.domain.Tag.Tag;
+import com.infoShare.calog.domain.Tag.TagService;
 import com.infoShare.calog.domain.user.SiteUser;
 import com.infoShare.calog.domain.user.UserService;
 import com.infoShare.calog.global.Util.UtilService;
 import com.infoShare.calog.global.jpa.BaseEntity;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.checkerframework.checker.units.qual.C;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,6 +28,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.security.Principal;
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -34,11 +39,13 @@ public class CafeController {
     private final ArticleService articleService;
     private final BoardCategoryService boardCategoryService;
     private final UtilService utilService;
+    private final CategoryService categoryService;
+    private final TagService tagService;
 
     @GetMapping("/{cafeId}")
     public String list(Model model,
                        @ModelAttribute("basedEntity") BaseEntity baseEntity,
-                        @PathVariable(value = "cafeId") Long cafeId
+                        @PathVariable(value = "cafeId") Long cafeId,Principal principal
 //                       @RequestParam(value = "page",defaultValue = "0") int page,
 //                       @RequestParam(value = "kw" ,defaultValue = "") String kw
                                                                                     ) {
@@ -46,6 +53,15 @@ public class CafeController {
 //        model.addAttribute("paging", paging);
         Cafe cafe = this.cafeService.getCafeById(cafeId);
         model.addAttribute("cafe", cafe);
+
+        SiteUser author = this.userService.getUser(principal.getName()); // 현재 사용자 가져오기
+        List<Category> userCategories = categoryService.getCategoriesByUser(author); // 사용자의 카테고리 가져오기
+        model.addAttribute("categories", userCategories); // 모델에 추가
+
+        // 인기글 5개 가져오기
+        List<Article> popularArticles = this.articleService.getPopularArticles(5);
+        model.addAttribute("popularArticles", popularArticles);
+
         return "cafe_index";
     }
 
@@ -77,7 +93,7 @@ public class CafeController {
     }
 
 //    @GetMapping("/{cafeId}/suggest")
-//    public String suggest(Model model, @PathVariable(value = "cafeId") Long cafeId,
+//    public String suggest(Model model, @PathVariable(va2lue = "cafeId") Long cafeId,
 //                          @RequestParam(value = "page",defaultValue = "0") int page,
 //                          @RequestParam(value = "kw" ,defaultValue = "") String kw
 //    ) {
@@ -136,7 +152,7 @@ public class CafeController {
                              @PathVariable("id") Long id,
                              Principal principal) {
         Cafe cafe = this.cafeService.getCafeById(id);
-        if(!cafe.getManeger().getEmail().equals(principal.getName())){
+        if(!cafe.getManager().getEmail().equals(principal.getName())){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
         }
 
@@ -167,7 +183,7 @@ public class CafeController {
         }
 
         Cafe cafe = this.cafeService.getCafeById(id);
-        if (!cafe.getManeger().getEmail().equals(principal.getName())) {
+        if (!cafe.getManager().getEmail().equals(principal.getName())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
         }
 
@@ -187,7 +203,7 @@ public class CafeController {
     @GetMapping("/delete/{id}")
     public String deleteCafe(Principal principal, @PathVariable("id") Long id) {
         Cafe cafe = this.cafeService.getCafeById(id);
-        if (!cafe.getManeger().getEmail().equals(principal.getName())) {
+        if (!cafe.getManager().getEmail().equals(principal.getName())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "삭제권한이 없습니다.");
         }
         this.cafeService.deleteCafe(cafe);
@@ -222,7 +238,7 @@ public class CafeController {
     @GetMapping("/{cafeId}/notice/create")
     public String noticeCreate(Model model, ArticleForm articleForm, @PathVariable(value = "cafeId") Long cafeId, Principal principal) {
         Cafe cafe = this.cafeService.getCafeById(cafeId);
-        if (!cafe.getManeger().getEmail().equals(principal.getName())) {
+        if (!cafe.getManager().getEmail().equals(principal.getName())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
         }
         articleForm.setBoardCategory(this.boardCategoryService.getNoticeCategory());
@@ -240,6 +256,7 @@ public class CafeController {
         if (bindingResult.hasErrors()) {
             return "article_form";
         }
+
         Cafe cafe = this.cafeService.getCafeById(cafeId);
         articleForm.setBoardCategory(this.boardCategoryService.getNoticeCategory());
         this.articleService.createArticle(
@@ -249,6 +266,6 @@ public class CafeController {
                 articleForm.getBoardCategory(),
                 articleForm.getTags()
         );
-        return String.format("redirect:/cafe/%s/공지사항", cafeId);
+        return String.format("redirect:/cafe/%s/notice", cafeId);
     }
 }
