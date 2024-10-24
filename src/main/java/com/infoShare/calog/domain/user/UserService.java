@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -75,5 +76,30 @@ public class UserService {
         return userRepository.findByEmail(email)
                 .map(SiteUser::getId)
                 .orElse(null); // User가 없으면 null 반환
+    }
+
+    public void modifypassword(Long userId, String password) {
+        // 1. 기존 사용자 조회
+        SiteUser siteUser = userRepository.findById(userId)
+                .orElseThrow(() -> new DataNotFoundException("User not found")); // 사용자 없을 경우 예외 처리
+
+        // 2. 비밀번호 인코딩
+        String encodedPassword = passwordEncoder.encode(password);
+
+        // 3. 빌더를 사용하여 기존 정보와 수정된 비밀번호로 새 객체 생성
+        SiteUser updatedUser = SiteUser.builder()
+                .id(siteUser.getId()) // 기존 ID 유지
+                .nickname(siteUser.getNickname()) // 기존 사용자명 유지
+                .email(siteUser.getEmail()) // 기존 이메일 유지
+                .password(encodedPassword) // 인코딩된 비밀번호 설정
+                .modifiedDate(LocalDateTime.now()) // 수정 날짜 업데이트
+                .build();
+
+        // 4. 사용자 정보 저장
+        userRepository.save(updatedUser); // 새로운 사용자 정보 저장
+    }
+
+    public Optional<SiteUser> findUserByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 }
