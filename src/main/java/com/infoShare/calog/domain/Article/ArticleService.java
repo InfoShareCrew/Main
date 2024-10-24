@@ -121,4 +121,24 @@ public class ArticleService {
     public List<Article> getPopularArticles(int limit) {
         return articleRepository.findTopPopularArticles(PageRequest.of(0, limit));
     }
+
+
+    // 태그와 게시물로 검색
+    public Page<Article> searchArticlesByTag(String tag, int page, String boardName) {
+        Pageable pageable = PageRequest.of(page, 10);
+        return articleRepository.findByTags_NameContainingIgnoreCaseAndBoardCategory_Name(tag, boardName, pageable);
+    }
+
+    // 태그 검색
+    public Page<Article> getArticlesByTag(String tagName, int page) {
+        Pageable pageable = PageRequest.of(page, 10);
+        return articleRepository.findByTags_Name(tagName, pageable);
+    }
+
+    // 조회수 증가
+    public void incrementViews(Long articleId) {
+        Article article = getArticleById(articleId);
+        article.setView(article.getView() + 1);
+        articleRepository.save(article); // 저장하여 변경사항 반영
+    }
 }

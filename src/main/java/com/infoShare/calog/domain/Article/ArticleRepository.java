@@ -32,6 +32,8 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
 
     @Query("SELECT a FROM Article a ORDER BY a.view DESC")
     List<Article> findTopPopularArticles(Pageable pageable); // 인기글 가져오기
+
+    Page<Article> findByTags_NameContainingIgnoreCaseAndBoardCategory_Name(String tag, String boardName, Pageable pageable);
 }
 
 //    @Query(

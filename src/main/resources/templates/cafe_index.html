@@ -15,7 +15,9 @@
         <div th:each="article : ${popularArticles}">
           <div>
             <div class="title">
-              <a th:href="@{/article/detail/{id}(id=${article.id})}" class="f-size-16 f-weight-6" th:text="${article.title}"></a>
+              <a th:href="@{/cafe/{cafeId}/detail/{articleId}(cafeId=${cafe.id}, articleId=${article.id})}"
+                 class="f-size-16 f-weight-6"
+                 th:text="${article.title}"></a>
             </div>
             <div class="detail">
               <div class="text-box"><span th:text="${article.author.nickname}"></span></div>
