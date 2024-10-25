@@ -48,17 +48,13 @@ nav > div {display: flex; width: 100%;}
 .my-cafe-box .cafe-list .content {display: flex; flex-direction: column; gap: 8px; flex-grow: 1;}
 .my-cafe-box .post-list > div {display: flex; justify-content: space-between;}
 .my-cafe-box .post-list span {text-wrap: nowrap;}
+/* home-intro-box */
+.home-intro-box {position: relative;}
+.home-intro-box .img-box {position: absolute; width: 100%; height: 100%; border-radius: 10px; z-index: -10;}
+.home-intro-box .contents {padding: 32px;}
 /* hot-box */
-.main-contents .hot-box {display: flex; flex-direction: column; gap: 16px;}
-.hot-box > div {width: 100%;}
-.hot-box .thumb-list {display: flex; gap: 16px;}
-.hot-box .thumb-list > div {flex-grow: 1; display: flex; flex-direction: column; gap: 4px;}
-.hot-box .thumb-list .content {color: var(--x-999999);}
-.hot-box .post-list > div {display: flex; flex-direction: column; gap: 8px;}
-.hot-box .img-box {height: 120px; border-radius: 20px;}
-.hot-box .detail {display: flex; gap: 8px;}
-.hot-box .detail > div {display: flex; gap: 4px;}
-.hot-box .detail .img-box {width: 18px; height: 18px;}
+.hot-post-box {display: flex; flex-direction: column; gap: 16px;}
+.hot-post-box .post-list {display: flex; flex-direction: column; gap: 8px;}
 /* hot-box */
 .main-contents .category-hot-box {display: flex; flex-direction: column; gap: 16px;}
 .category-hot-box .category {display: flex;}
@@ -102,6 +98,7 @@ nav > div {display: flex; width: 100%;}
 .personal-container .profile-box {display: flex; gap: 16px;}
 .profile-box .img-box {width: 120px; height: 120px; border-radius: 60px;}
 .personal-container .profile-box .detail-box {padding: 16px; flex-grow: 1; display: flex; flex-direction: column; gap: 8px;}
+.personal-container .setting-box {display: flex; flex-direction: column; gap: 8px;}
 .personal-container .post-box {gap: 16px;}
 .personal-container .post-box .category {display: flex; gap: 16px;}
 .personal-container .post-box .post-list {gap: 8px;}
@@ -136,6 +133,10 @@ nav > div {display: flex; width: 100%;}
 .neighborList {display: flex; flex-direction: column; gap: 8px;}
 .neighborList > a {display: flex; gap: 16px; align-items: center;}
 .neighborList .img-box {width: 48px; height: 48px; border-radius: 24px;}
+
+/***** 태그 리스트 *****/
+.tag-list table tr {height: 40px; text-align: center;}
+.tag-list thead th {background-color: var(--x000000-5);}
 
 
 /***** 페이지네이션 *****/

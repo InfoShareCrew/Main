@@ -1,5 +1,7 @@
 package com.infoShare.calog;
 
+import com.infoShare.calog.domain.Article.Article;
+import com.infoShare.calog.domain.Article.ArticleService;
 import com.infoShare.calog.domain.Cafe.Cafe;
 import com.infoShare.calog.domain.Cafe.CafeService;
 import com.infoShare.calog.domain.user.UserService;
@@ -16,7 +18,7 @@ import java.util.List;
 @Controller
 @RequiredArgsConstructor
 public class MainController {
-    private final UserService userService;
+    private final ArticleService articleService;
     private final CafeService cafeService;
 
     //    기본 홈 화면
@@ -25,11 +27,13 @@ public class MainController {
         List<Cafe> cafeList = null;
         List<Cafe> myCafeList = null;
         if (principal != null) {
-            cafeList = cafeService.getMyList(principal.getName());
-            myCafeList = cafeService.getOwnList(principal.getName());
+            cafeList = this.cafeService.getMyList(principal.getName());
+            myCafeList = this.cafeService.getOwnList(principal.getName());
         }
+        List<Article> hotList = this.articleService.getPopularArticles(5);
         model.addAttribute("cafeList", cafeList);
         model.addAttribute("myCafeList", myCafeList);
+        model.addAttribute("hotList", hotList);
         return "index";
     }
 }
