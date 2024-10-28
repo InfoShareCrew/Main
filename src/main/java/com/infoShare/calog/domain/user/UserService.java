@@ -28,6 +28,7 @@ public class UserService {
                 .email(email)
                 .password(passwordEncoder.encode(password)) // 입력받은 비밀번호로 설정
                 .nickname(nickname)
+                .createdDate(LocalDateTime.now())
                 .build();
         return userRepository.save(siteUser);
     }
@@ -95,6 +96,7 @@ public class UserService {
                 .nickname(siteUser.getNickname()) // 기존 사용자명 유지
                 .email(siteUser.getEmail()) // 기존 이메일 유지
                 .password(encodedPassword) // 인코딩된 비밀번호 설정
+                .createdDate(siteUser.getCreatedDate()) // 기존 생성 날짜 유지
                 .modifiedDate(LocalDateTime.now()) // 수정 날짜 업데이트
                 .build();
 
