@@ -1,5 +1,11 @@
 package com.infoShare.calog.domain.Notice;
 
+import com.infoShare.calog.domain.Article.Article;
+import com.infoShare.calog.domain.Article.ArticleService;
+import com.infoShare.calog.domain.BoardCategory.BoardCategory;
+import com.infoShare.calog.domain.BoardCategory.BoardCategoryService;
+import com.infoShare.calog.domain.Cafe.Cafe;
+import com.infoShare.calog.domain.Cafe.CafeService;
 import com.infoShare.calog.domain.Comment.Comment;
 import com.infoShare.calog.domain.Comment.CommentForm;
 import com.infoShare.calog.domain.user.SiteUser;
@@ -20,53 +26,75 @@ import java.security.Principal;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("notice")
+@RequestMapping("/cafe/{cafeId}/notice")
 public class NoticeController {
+    private final CafeService cafeService;
     private final NoticeService noticeService;
     private final UserService userService;
 
-    @GetMapping("/list")
+    @GetMapping("")
     public String list(Model model,
-                       @ModelAttribute("basedEntity") BaseEntity baseEntity,
-                       @RequestParam(value = "page", defaultValue = "0") int page,
-                       @RequestParam(value = "kw", defaultValue = "") String kw) {
+                       @PathVariable(value = "cafeId") Long cafeId,
+                       @RequestParam(value = "page",defaultValue = "0") int page,
+                       @RequestParam(value = "kw" ,defaultValue = "") String kw) {
         Page<Notice> paging;
 
         if (kw != null && !kw.isEmpty()) {
             // 검색 기능 추가
-            paging = this.noticeService.searchNotices(kw, page);
+            paging = this.noticeService.searchNotices(kw, page, cafeId);
         } else {
             // 기본 목록
-            paging = this.noticeService.getList(page);
+            paging = this.noticeService.getList(page, cafeId);
         }
 
+        Cafe cafe = this.cafeService.getCafeById(cafeId);
+
         model.addAttribute("paging", paging);
-        model.addAttribute("kw", kw); // 검색어를 모델에 추가
+        model.addAttribute("cafe", cafe);
         return "notice_list";
     }
 
 
     @GetMapping("/create")
-    public String create(NoticeForm noticeForm, Model model) {
+    public String create(Model model,
+                         NoticeForm noticeForm,
+                         @PathVariable("cafeId") Long cafeId) {
+        Cafe cafe = this.cafeService.getCafeById(cafeId);
+        model.addAttribute("cafe", cafe);
         return "notice_form";
     }
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/create")
-    public String create(@Valid NoticeForm noticeForm, BindingResult bindingResult, Principal principal) {
+    public String create(@Valid NoticeForm noticeForm,
+                         @PathVariable("cafeId") Long cafeId,
+                         BindingResult bindingResult,
+                         Principal principal) {
         if (bindingResult.hasErrors()) {
             return "notice_form";
         }
-        SiteUser author = this.userService.getUser(principal.getName());
-        this.noticeService.create(noticeForm.getTitle(), noticeForm.getContent(), author);
-        return "redirect:/notice/list";
+
+        Cafe cafe = cafeService.getCafeById(cafeId);
+
+        if (!cafe.getManager().getEmail().equals(principal.getName())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "생성권한이 없습니다.");
+        }
+
+        this.noticeService.create(noticeForm.getTitle(),
+                                    noticeForm.getContent(),
+                                    this.userService.findByEmail(principal.getName()),
+                                    cafe);
+        return String.format("redirect:/cafe/%s/notice", cafeId);
     }
 
 
     @GetMapping("/detail/{id}")
-    public String detail(Model model, @PathVariable(value = "id") Long id, CommentForm commentForm, Principal principal) {
+    public String detail(Model model,
+                         CommentForm commentForm,
+                         @PathVariable(value = "id") Long id,
+                         @PathVariable(value = "cafeId") Long cafeId,
+                         Principal principal) {
         Notice notice = this.noticeService.getNoticeById(id);
-        model.addAttribute("notice", notice);
         this.noticeService.viewUp(notice);
 
         if (principal != null) {
@@ -74,20 +102,33 @@ public class NoticeController {
             model.addAttribute("userNickname", user.getNickname());
         }
 
+        Cafe cafe = this.cafeService.getCafeById(cafeId);
+
+        model.addAttribute("notice", notice);
+        model.addAttribute("cafe", cafe);
         return "notice_detail";
     }
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/modify/{id}")
-    public String modify(NoticeForm noticeForm, @PathVariable("id") Long id, Model model, Principal principal) {
+    public String modify(Model model,
+                         NoticeForm noticeForm,
+                         @PathVariable("id") Long id,
+                         @PathVariable(value = "cafeId") Long cafeId,
+                         Principal principal) {
         Notice notice = this.noticeService.getNoticeById(id);
+
         if (!notice.getAuthor().getEmail().equals(principal.getName())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
         }
 
+        Cafe cafe = this.cafeService.getCafeById(cafeId);
+
         noticeForm.setTitle(notice.getTitle());
         noticeForm.setContent(notice.getContent());
+
         model.addAttribute("noticeForm", noticeForm);
+        model.addAttribute("cafe", cafe);
         return "notice_form";
     }
 

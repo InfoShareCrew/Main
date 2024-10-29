@@ -1,22 +1,33 @@
-<html layout:decorate="~{layout}">
-<div layout:fragment="content" class="container">
-  <h5 class="my-3 border-bottom pb-2">공지 등록</h5>
-  <form method="post" th:object="${noticeForm}">
-    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-    <!-- 오류 메시지 -->
-    <div class="alert alert-danger" role="alert" th:if="${#fields.hasAnyErrors()}">
-      <div th:each="err: ${#fields.allErrors()}" th:text="${err}"/>
-    </div>
-    <!-- 입력 -->
-    <div class="mb-3">
-      <label for="title" class="form-label">공지제목</label>
-      <input type="text" th:field="*{title}" class="form-control">
-    </div>
-    <div class="mb-3">
-      <label for="content" class="form-label">공지내용</label>
-      <textarea th:field="*{content}" rows="10" class="form-control"></textarea>
-    </div>
-    <button type="submit" class="btn btn-primary my-2">등록하기</button>
+<html layout:decorate="~{cafe_layout}">
+<div layout:fragment="content" class="container articleForm">
+  <div class="text-box">
+    <a th:href="@{|/cafe/${cafe.id}/notice|}" class="link f-size-16">&gt; 공지사항</a>
+  </div>
+  <div class="text-box">
+    <span class="f-size-18 f-weight-6">글 등록</span>
+  </div>
+  <form method="post" th:object="${noticeForm}" th:action="@{|/cafe/${cafe.id}/notice/create|}">
+      <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+      <!--오류메세지-->
+      <div class="" role="alert" th:if="${#fields.hasAnyErrors()}">
+        <div th:each="err: ${#fields.allErrors()}" th:text="${err}"></div>
+      </div>
+      <!--입력-->
+      <div>
+        <label for="title" class="">제목</label>
+        <input type="text" th:field="*{title}" class="input">
+      </div>
+      <div>
+        <label for="content" class="">내용</label>
+        <textarea th:field="*{content}" rows="10" class="input"></textarea>
+      </div>
+      <!-- 카테고리 -->
+      <div>
+        <label for="category" class="">카테고리</label>
+        <div class="text-box"><span>공지사항</span></div>
+      </div>
+
+      <input type="submit" class="btn btn-primary" value="등록하기">
   </form>
 </div>
 </html>

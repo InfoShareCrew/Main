@@ -21,10 +21,12 @@
 <div th:replace="~{cafe_banner :: cafeBannerFragment }"></div>
 
 <div class="main-contents">
-<!-- 카페 고정 왼쪽 사이드 -->
-<div th:replace="~{cafe_left_side :: cafeLeftSideFragment }"></div>
-<!--기본 템플릿 안에 삽입될 박스-->
-<th:block layout:fragment="content"></th:block>
+  <!-- 카페 고정 왼쪽 사이드 -->
+  <div th:replace="~{cafe_left_side :: cafeLeftSideFragment }"></div>
+  <!--기본 템플릿 안에 삽입될 박스-->
+  <th:block layout:fragment="content"></th:block>
+  <!-- 오른쪽 여백 -->
+  <div class="right-side"></div>
 </div>
 <!-- 자바스크립트 -->
 <!-- 각 템플릿에서 작성 -->
