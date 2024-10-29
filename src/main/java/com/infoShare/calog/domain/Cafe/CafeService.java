@@ -62,8 +62,6 @@ public class CafeService {
 
         this.cafeRepository.save(cafe);
 
-        this.boardCategoryService.create(cafe, "notice");
-        this.boardCategoryService.create(cafe, "suggest");
         this.boardCategoryService.create(cafe, "free");
 
         return cafe;

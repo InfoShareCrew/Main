@@ -1,22 +1,32 @@
-<html layout:decorate="~{layout}">
-<div layout:fragment="content" class="container">
-  <h5 class="my-3 border-bottom pb-2">글 등록</h5>
-  <form method="post" th:object="${suggestionForm}">
-    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-    <!--오류메세지-->
-    <div class="alert alert-danger" role="alert" th:if="${#fields.hasAnyErrors()}">
-      <div th:each="err: ${#fields.allErrors()}" th:text="${err}"/>
+<html layout:decorate="~{cafe_layout}">
+<div layout:fragment="content" class="container articleForm">
+  <div class="title-box">
+    <div class="text-box"><a th:href="@{|/cafe/${cafe.id}/suggestion|}" class="link f-size-16">> 건의게시판</a></div>
+    <div class="text-box">
+      <span class="f-size-18 f-weight-6">글 등록</span>
     </div>
-    <!--입력-->
-    <div class="mb-3">
-      <label for="title" class="form-label">제목</label>
-      <input type="text" th:field="*{title}" class="form-control">
-    </div>
-    <div class="mb-3">
-      <label for="content" class="form-label">내용</label>
-      <textarea th:field="*{content}" rows="10" class="form-control"></textarea>
-    </div>
-    <input type="submit" value="등록하기" class="btn btn-primary my-2">
-  </form>
-</div>
+    <form method="post" th:object="${suggestionForm}" th:action="@{|/cafe/${cafe.id}/suggestion/create|}">
+      <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+      <!--오류메세지-->
+      <div class="" role="alert" th:if="${#fields.hasAnyErrors()}">
+        <div th:each="err: ${#fields.allErrors()}" th:text="${err}"></div>
+      </div>
+      <!--입력-->
+      <div class="">
+        <label for="title" class="">제목</label>
+        <input type="text" th:field="*{title}" class="input">
+      </div>
+      <div class="">
+        <label for="content" class="">내용</label>
+        <textarea th:field="*{content}" rows="10" class="input"></textarea>
+      </div>
+      <!-- 카테고리 -->
+      <div class="">
+        <label for="category" class="">카테고리</label>
+        <div class="text-box"><span>건의게시판</span></div>
+      </div>
+
+      <input type="submit" class="btn btn-primary" value="등록하기"/>
+    </form>
+  </div>
 </html>

@@ -3,6 +3,7 @@ package com.infoShare.calog.domain.Notice;
 import com.infoShare.calog.domain.BoardCategory.BoardCategory;
 import com.infoShare.calog.domain.Cafe.Cafe;
 import com.infoShare.calog.domain.Comment.Comment;
+import com.infoShare.calog.domain.Tag.Tag;
 import com.infoShare.calog.domain.user.SiteUser;
 import com.infoShare.calog.global.jpa.BaseEntity;
 import jakarta.persistence.*;
