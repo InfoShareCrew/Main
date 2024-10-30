@@ -15,7 +15,9 @@
         <div class="text-box uname"><span class="f-size-18 f-weight-6" th:text="${user.nickname}"></span></div>
         <div class="text-box intro"><span class="f-size-14" th:text="${user.intro}"></span></div>
         <div class="address">
-          <div class="text-box" th:if="addressList != null" th:each="address : ${addressList}"><a class="f-size-14" th:href="${address}" th:text="${address}" target="_blank"></a></div>
+          <div class="text-box" th:if="${addressList != null}" th:each="address : ${addressList}">
+            <a class="f-size-14" th:href="${address}" th:text="${address}" target="_blank"></a>
+          </div>
         </div>
       </div>
       <div class="setting-box" sec:authorize="isAuthenticated()" th:if="${user.email != null} and ${#authentication.getPrincipal().username} == ${user.email}">

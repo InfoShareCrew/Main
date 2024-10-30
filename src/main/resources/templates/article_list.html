@@ -40,7 +40,7 @@
       <td><span th:text="${article.view} != null ? ${article.view}:0"></span></td>
       <td>
     <span th:each="tag : ${article.tags}" class="tag">
-        <a th:href="@{|/tags/list?kw=${tag.name}|}" th:text="${tag.name}"></a>
+        <a th:href="@{/article/list(tag=${tag.name})}" th:text="${tag.name}"></a>
     </span>
       </td>
 

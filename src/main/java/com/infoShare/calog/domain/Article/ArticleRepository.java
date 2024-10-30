@@ -58,6 +58,12 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
             "WHERE a.cafe.id = :cafeId " +
             "ORDER BY a.view DESC")
     List<Article> findTopPopularArticlesByCafeId(@Param("cafeId") Long cafeId, Pageable pageable);
+
+    Page<Article> findByTags_NameContainingIgnoreCaseAndBoardCategory_Name(String tag, String boardName, Pageable pageable);
+
+//    @Query("SELECT a FROM Article a WHERE a.author.id = :userId ORDER BY a.view DESC")
+//    List<Article> findTopByAuthorIdOrderByViewDesc(@Param("userId") Long userId, Pageable pageable);
+
 }
 
 //    @Query(

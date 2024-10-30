@@ -160,4 +160,9 @@ public class ArticleService {
         article.setView(article.getView() + 1);
         articleRepository.save(article); // 저장하여 변경사항 반영
     }
+
+//   public List<Article> getTopArticlesByUser(Long userId, int limit) {
+//      return articleRepository.findTopByAuthorIdOrderByViewDesc(userId, PageRequest.of(0, limit));
+//    }
+
 }
