@@ -24,12 +24,12 @@
     <tbody>
     <tr th:each="suggestion, loop : ${paging.content}" class="f-size-14">
       <td th:text="${paging.totalElements - (paging.number * paging.size) - loop.index}"></td>
-      <td style="text-align: left;">
+      <td style="text-align: left;" class="suggest-title">
         <a th:href="@{|/cafe/${cafe.id}/suggestion/detail/${suggestion.id}|}" th:text="${suggestion.title}"></a>
-        <span class="f-size-13 f-color-d3"
-              th:if="${#lists.size(suggestion.commentList) > 0}"
-              th:text="|[${#lists.size(suggestion.commentList)}]|">
-        </span>
+        <a th:each="comment : ${suggestionCommentList}"
+           th:if="${comment.suggestionId} == ${suggestion.id}"
+           th:href="@{|/cafe/${cafe.id}/suggestion/${suggestion.id}/comment/detail/${comment.id}|}"
+           th:text="${comment.title}"></a>
       </td>
       <td th:text="${#temporals.format(suggestion.createdDate, 'yyyy-MM-dd HH:mm')}"></td>
       <td><span th:if="${suggestion.author != null}" th:text="${suggestion.author.nickname}"></span></td>

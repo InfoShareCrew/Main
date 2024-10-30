@@ -3,52 +3,48 @@
   <div class="text-box"><a th:href="@{|/cafe/${cafe.id}/suggestion|}" class="link f-size-16">> 건의게시판</a></div>
   <div class="contents">
     <div class="title-box text-box f-size-28 f-weight-6">
-      <span th:text="${suggestion.title}"></span>
-      <a th:href="@{|/cafe/${cafe.id}/suggestion/${suggestion.id}/comment|}" class="btn btn-primary f-size-13"
-         sec:authorize="isAuthenticated()"
-         th:if="${#authentication.getPrincipal().username} == ${cafe.manager.email}"
-         >답변달기</a>
+      <span th:text="${comment.title}"></span>
     </div>
     <div class="author-box">
       <div class="img-box">
-        <img th:src="@{|/file/${suggestion.author.profileImg != null ? suggestion.author.profileImg : 'user/user_basic.png'}|}" alt="작성자 프로필 이미지">
+        <img th:src="@{|/file/${comment.author.profileImg != null ? comment.author.profileImg : 'user/user_basic.png'}|}" alt="작성자 프로필 이미지">
       </div>
       <div class="right-box">
-        <div class="" th:if="${suggestion.author != null}">
-          <span class="f-weight-6" th:text="${suggestion.author.nickname}"></span>
+        <div class="" th:if="${comment.author != null}">
+          <span class="f-weight-6" th:text="${comment.author.nickname}"></span>
           <!-- 로그인 했을 때 보일 이웃추가 -->
-          <div sec:authorize="isAuthenticated()" th:if="${suggestion.author.email != null} and ${#authentication.getPrincipal().username} != ${suggestion.author.email}">
-            <a class="btn btn-primary f-size-13" th:href="@{|/neighbors/add/${suggestion.author.email}|}">이웃추가</a>
+          <div sec:authorize="isAuthenticated()" th:if="${comment.author.email != null} and ${#authentication.getPrincipal().username} != ${comment.author.email}">
+            <a class="btn btn-primary f-size-13" th:href="@{|/neighbors/add/${comment.author.email}|}">이웃추가</a>
           </div>
           <!-- 로그인 안 했을 때 보일 이웃추가 -->
           <div sec:authorize="isAnonymous()">
-            <a class="btn btn-primary f-size-13" th:href="@{|/neighbors/add/${suggestion.author.email}|}">이웃추가</a>
+            <a class="btn btn-primary f-size-13" th:href="@{|/neighbors/add/${comment.author.email}|}">이웃추가</a>
           </div>
         </div>
-        <div class="f-size-13" th:text="${#temporals.format(suggestion.createdDate, 'yyyy-MM-dd HH:mm')}"></div>
+        <div class="f-size-13" th:text="${#temporals.format(comment.createdDate, 'yyyy-MM-dd HH:mm')}"></div>
       </div>
-      <a th:href="@{|/cafe/${cafe.id}/suggestion/modify/${suggestion.id}|}" class="btn btn-primary f-size-13"
+      <a th:href="@{|/cafe/${cafe.id}/comment/modify/${comment.id}|}" class="btn btn-primary f-size-13"
          sec:authorize="isAuthenticated()"
-         th:if="${userNickname == suggestion.author.nickname}"
+         th:if="${userNickname == comment.author.nickname}"
          th:text="수정"></a>
       <a onclick="return confirm('정말 삭제하시겠습니까?')"
-         th:href="@{|/cafe/${cafe.id}/suggestion/delete/${suggestion.id}|}" class="btn btn-primary f-size-13"
+         th:href="@{|/cafe/${cafe.id}/comment/delete/${comment.id}|}" class="btn btn-primary f-size-13"
          sec:authorize="isAuthenticated()"
-         th:if="${userNickname == suggestion.author.nickname}"
+         th:if="${userNickname == comment.author.nickname}"
          th:text="삭제"></a>
     </div>
     <div class="contents-box f-size-18">
-      <div class="" th:utext="${@commonUtil.markdown(suggestion.content)}"></div>
+      <div class="" th:utext="${@commonUtil.markdown(comment.content)}"></div>
     </div>
   </div>
-  <!-- <a th:href="|/cafe/${cafe.id}/suggestion|" class="btn-b">목록</a> -->
+  <!-- <a th:href="|/cafe/${cafe.id}/comment|" class="btn-b">목록</a> -->
 </div>
 <script layout:fragment="script" type='text/javascript'>
   $(document).ready(function() {
-    var suggestionId = [[${suggestion.id}]];
+    var commentId = [[${comment.id}]];
     var cafeId = [[${cafe.id}]]
 
-    $("#suggestion_recommend").on("click", function() {
+    $("#comment_recommend").on("click", function() {
       var _this = $(this);
       var voted = _this.data("voted");
 
@@ -56,13 +52,13 @@
       if (confirm(message)) {
         if (voted) {
           $.ajax({
-            url: "/cafe/" + cafeId + "/suggestion/unvote/" + suggestionId,
+            url: "/cafe/" + cafeId + "/comment/unvote/" + commentId,
             type: "GET",
             success: function(response) {
               if (response.includes('<form') && response.includes('login')) {
                 window.location.href = '/user/login';
               } else {
-                $("#suggestion_recommend_count").text(response);
+                $("#comment_recommend_count").text(response);
                 _this.data("voted", false);
               }
             },
@@ -72,13 +68,13 @@
           });
         } else {
           $.ajax({
-            url: "/cafe/" + cafeId + "/suggestion/vote/" + suggestionId,
+            url: "/cafe/" + cafeId + "/comment/vote/" + commentId,
             type: "GET",
             success: function(response) {
               if (response.includes('<form') && response.includes('login')) {
                 window.location.href = '/user/login';
               } else {
-                $("#suggestion_recommend_count").text(response);
+                $("#comment_recommend_count").text(response);
                 _this.data("voted", true);
               }
             },

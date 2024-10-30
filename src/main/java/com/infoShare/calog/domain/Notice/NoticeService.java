@@ -74,19 +74,6 @@ public class NoticeService {
         this.noticeRepository.delete(notice);
     }
 
-    public void vote(Notice notice, SiteUser siteUser) {
-        notice.getVoter().add(siteUser);
-        this.noticeRepository.save(notice);
-    }
-
-
-    public void cancelVote(Notice notice, SiteUser siteUser) {
-        notice.getVoter().remove(siteUser);
-        this.noticeRepository.save(notice);
-    } //추천 취소
-
-
-
     public Page<Notice> searchNotices(String keyword, int page) {
         Pageable pageable = PageRequest.of(page, 10, Sort.by(Sort.Order.desc("createdDate")));
         return noticeRepository.findByTitleContainingOrContentContaining(keyword, keyword, pageable);

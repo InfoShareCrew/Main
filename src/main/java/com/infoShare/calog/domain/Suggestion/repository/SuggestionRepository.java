@@ -1,6 +1,6 @@
-package com.infoShare.calog.domain.Suggestion;
+package com.infoShare.calog.domain.Suggestion.repository;
 
-import com.infoShare.calog.domain.Notice.Notice;
+import com.infoShare.calog.domain.Suggestion.entity.Suggestion;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,7 +14,7 @@ public interface SuggestionRepository extends JpaRepository<Suggestion, Long> {
 
     Page<Suggestion> findByTitleContainingOrContentContaining(String title, String content, Pageable pageable);
 
-    @Query("SELECT a FROM Notice a " +
+    @Query("SELECT a FROM Suggestion a " +
             "JOIN a.cafe c " +  // cafe와의 조인을 추가
             "WHERE (a.title LIKE %:title% OR a.content LIKE %:content%) " +
             "AND c.id = :cafeId")  // cafeId 조건 추가

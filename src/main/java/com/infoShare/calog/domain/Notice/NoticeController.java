@@ -149,38 +149,12 @@ public class NoticeController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/delete/{id}")
-    public String delete(Principal principal, @PathVariable("id") Long id) {
+    public String delete(Principal principal, @PathVariable("id") Long id, @PathVariable("cafeId") Long cafeId) {
         Notice notice = this.noticeService.getNoticeById(id);
         if (!notice.getAuthor().getEmail().equals(principal.getName())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "삭제권한이 없습니다.");
         }
         this.noticeService.delete(notice);
-        return "redirect:/notice/list";
-    }
-
-    @PreAuthorize("isAuthenticated()")
-    @GetMapping("/vote/{id}")
-    @ResponseBody
-    public String vote(@PathVariable("id") Long id, Principal principal) {
-        Notice notice = this.noticeService.getNoticeById(id);
-        SiteUser siteUser = this.userService.getUser(principal.getName());
-        this.noticeService.vote(notice, siteUser);
-
-        Notice votedNotice = this.noticeService.getNoticeById(id);
-        Integer count = votedNotice.getVoter().size();
-        return count.toString();
-    }
-
-    @PreAuthorize("isAuthenticated()")
-    @GetMapping("/unvote/{id}")  //추천취소
-    @ResponseBody
-    public String cancelVote(@PathVariable("id") Long id, Principal principal) {
-        Notice notice = this.noticeService.getNoticeById(id);
-        SiteUser siteUser = this.userService.getUser(principal.getName());
-        this.noticeService.cancelVote(notice, siteUser);
-
-        Notice votedNotice = this.noticeService.getNoticeById(id);
-        Integer count = notice.getVoter().size();
-        return count.toString();
+        return String.format("redirect:/cafe/%s/notice/list", cafeId);
     }
 }

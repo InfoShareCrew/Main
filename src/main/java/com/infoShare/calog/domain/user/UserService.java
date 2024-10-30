@@ -28,7 +28,6 @@ public class UserService {
                 .email(email)
                 .password(passwordEncoder.encode(password)) // 입력받은 비밀번호로 설정
                 .nickname(nickname)
-                .createdDate(LocalDateTime.now())
                 .build();
         return userRepository.save(siteUser);
     }
