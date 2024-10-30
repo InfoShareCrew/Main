@@ -65,6 +65,7 @@ public class CafeController {
 
         Cafe cafe = this.cafeService.getCafeById(cafeId);
         Article article = this.articleService.getArticleById(articleId);
+        this.articleService.viewUp(article);
         model.addAttribute("cafe", cafe);
         model.addAttribute("article", article);
         return "article_detail";

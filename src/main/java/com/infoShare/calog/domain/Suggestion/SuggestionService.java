@@ -1,7 +1,8 @@
 package com.infoShare.calog.domain.Suggestion;
 
+import com.infoShare.calog.domain.Cafe.Cafe;
 import com.infoShare.calog.domain.DataNotFoundException;
-import com.infoShare.calog.domain.Notice.Notice;
+import com.infoShare.calog.domain.Suggestion.Suggestion;
 import com.infoShare.calog.domain.user.SiteUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -19,15 +20,20 @@ import java.util.Optional;
 public class SuggestionService {
     private final SuggestionRepository suggestionRepository;
 
-    public Page<Suggestion> getList(int page) {
+    public Page<Suggestion> getList(int page, Long cafeId) {
         List<Sort.Order> sorts = new ArrayList<>();
         sorts.add(Sort.Order.desc("createdDate"));
         Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
-        return this.suggestionRepository.findAll(pageable);
+        return this.suggestionRepository.findByCafeId(pageable, cafeId);
+    }
+
+    public Page<Suggestion> searchSuggestions(String keyword, int page, Long cafeId) {
+        Pageable pageable = PageRequest.of(page, 10, Sort.by(Sort.Order.desc("createdDate")));
+        return suggestionRepository.findByTitleContainingOrContentContainingAndCafeId(keyword, keyword, cafeId, pageable);
     }
 
     public Suggestion getSuggestionById(Long id) {
-        Optional<Suggestion> suggestion = this.suggestionRepository.findById(id);
+        Optional<Suggestion> suggestion  = this.suggestionRepository.findById(id);
         if (suggestion.isPresent()) {
             if (suggestion.get().getAuthor() == null) {
                 throw new DataNotFoundException("Author not found for suggestion");
@@ -38,11 +44,13 @@ public class SuggestionService {
         }
     }
 
-    public void createSuggestion(String title, String content, SiteUser author) {
+
+    public void create(String title, String content, SiteUser author, Cafe cafe) {
         Suggestion suggestion = new Suggestion();
         suggestion.setTitle(title);
         suggestion.setContent(content);
         suggestion.setAuthor(author);
+        suggestion.setCafe(cafe);
         this.suggestionRepository.save(suggestion);
     }
 
@@ -55,7 +63,8 @@ public class SuggestionService {
         return this.suggestionRepository.findById(id);
     }
 
-    public void modifySuggestion(Suggestion suggestion, String title, String content) {
+
+    public void modify(Suggestion suggestion, String title, String content) {
         suggestion.setTitle(title);
         suggestion.setContent(content);
         this.suggestionRepository.save(suggestion);
@@ -75,6 +84,7 @@ public class SuggestionService {
         suggestion.getVoter().remove(siteUser);
         this.suggestionRepository.save(suggestion);
     } //추천 취소
+
 
 
     public Page<Suggestion> searchSuggestions(String keyword, int page) {

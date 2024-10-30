@@ -66,7 +66,7 @@
       </div>
     </div>
     <div class="my-cafe-container">
-      <div class="text-box"><span class="f-size-18 f-weight-6" th:text="${user.nickname} + '님이 가입 중인 카페'"></span></div>
+      <div class="text-box"><span class="f-size-18 f-weight-6" th:text="${user.nickname} + '님이 가입한 & 개설한 카페'"></span></div>
       <div class="cafe-list">
         <div class="post" th:each="cafe, itemStat : ${activityCafes}" th:if="${itemStat.index < 3}">
           <div class="profile-img img-box">
