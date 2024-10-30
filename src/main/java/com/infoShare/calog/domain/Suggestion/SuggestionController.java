@@ -5,7 +5,8 @@ import com.infoShare.calog.domain.Article.ArticleService;
 import com.infoShare.calog.domain.Cafe.Cafe;
 import com.infoShare.calog.domain.Cafe.CafeService;
 import com.infoShare.calog.domain.Comment.CommentForm;
-import com.infoShare.calog.domain.Notice.Notice;
+import com.infoShare.calog.domain.Suggestion.Suggestion;
+import com.infoShare.calog.domain.Suggestion.SuggestionForm;
 import com.infoShare.calog.domain.user.SiteUser;
 import com.infoShare.calog.domain.user.UserService;
 import com.infoShare.calog.global.jpa.BaseEntity;
@@ -24,82 +25,120 @@ import java.security.Principal;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("suggestion")
+@RequestMapping("/cafe/{cafeId}/suggestion")
 public class SuggestionController {
     private final SuggestionService suggestionService;
     private final UserService userService;
-    private final ArticleService articleService;
     private final CafeService cafeService;
 
-    @GetMapping("/list")
+    @GetMapping("")
     public String list(Model model,
-                       @ModelAttribute("basedEntity") BaseEntity baseEntity,
-                       @RequestParam(value = "page", defaultValue = "0") int page,
-                       @RequestParam(value = "kw", defaultValue = "") String kw) {
+                       @PathVariable(value = "cafeId") Long cafeId,
+                       @RequestParam(value = "page",defaultValue = "0") int page,
+                       @RequestParam(value = "kw" ,defaultValue = "") String kw) {
         Page<Suggestion> paging;
 
         if (kw != null && !kw.isEmpty()) {
             // 검색 기능 추가
-            paging = this.suggestionService.searchSuggestions(kw, page);
+            paging = this.suggestionService.searchSuggestions(kw, page, cafeId);
         } else {
             // 기본 목록
-            paging = this.suggestionService.getList(page);
+            paging = this.suggestionService.getList(page, cafeId);
         }
+
+        Cafe cafe = this.cafeService.getCafeById(cafeId);
 
         model.addAttribute("paging", paging);
-        model.addAttribute("kw", kw); // 검색어를 모델에 추가
-        return "suggestion_list"; // 뷰 이름도 변경
+        model.addAttribute("cafe", cafe);
+        return "suggestion_list";
     }
 
-    @GetMapping("/detail/{id}")
-    public String detail(Model model, @PathVariable(value = "id") Long id, CommentForm commentForm,Principal principal) {
-        Suggestion suggestion = this.suggestionService.getSuggestionById(id);
-        model.addAttribute("suggestion", suggestion);
-        model.addAttribute("article", suggestion);
-        this.suggestionService.viewUp(suggestion);
 
-        if (principal != null) {
-            SiteUser user = userService.getUser(principal.getName());
-            model.addAttribute("userNickname", user.getNickname()); // 닉네임 필드가 있을 경우
-        }
-
-        return "suggestion_detail";
-    }
-
-    @PreAuthorize("isAuthenticated()")
     @GetMapping("/create")
-    public String create(SuggestionForm suggestionForm) {
+    public String create(Model model,
+                         SuggestionForm suggestionForm,
+                         @PathVariable("cafeId") Long cafeId) {
+        Cafe cafe = this.cafeService.getCafeById(cafeId);
+        model.addAttribute("cafe", cafe);
         return "suggestion_form";
     }
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/create")
-    public String create(@Valid SuggestionForm suggestionForm, BindingResult bindingResult,Principal principal) {
+    public String create(@Valid SuggestionForm suggestionForm,
+                         @PathVariable("cafeId") Long cafeId,
+                         BindingResult bindingResult,
+                         Principal principal) {
         if (bindingResult.hasErrors()) {
             return "suggestion_form";
         }
-        SiteUser author = this.userService.getUser(principal.getName());
-        this.suggestionService.createSuggestion(suggestionForm.getTitle(), suggestionForm.getContent(),author);
-        return "redirect:/suggestion/list";
+
+        Cafe cafe = cafeService.getCafeById(cafeId);
+        SiteUser user = userService.getUser(principal.getName());
+
+        if (!user.getCafe().contains(cafe)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "생성권한이 없습니다.");
+        }
+
+        this.suggestionService.create(suggestionForm.getTitle(),
+                suggestionForm.getContent(),
+                this.userService.findByEmail(principal.getName()),
+                cafe);
+        return String.format("redirect:/cafe/%s/suggestion", cafeId);
+    }
+
+
+    @GetMapping("/detail/{id}")
+    public String detail(Model model,
+                         CommentForm commentForm,
+                         @PathVariable(value = "id") Long id,
+                         @PathVariable(value = "cafeId") Long cafeId,
+                         Principal principal) {
+        Suggestion suggestion = this.suggestionService.getSuggestionById(id);
+        this.suggestionService.viewUp(suggestion);
+
+        if (principal != null) {
+            SiteUser user = userService.getUser(principal.getName());
+            model.addAttribute("userNickname", user.getNickname());
+        }
+
+        Cafe cafe = this.cafeService.getCafeById(cafeId);
+
+        model.addAttribute("suggestion", suggestion);
+        model.addAttribute("cafe", cafe);
+        return "suggestion_detail";
     }
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/modify/{id}")
-    public String modify(SuggestionForm suggestionForm, @PathVariable(value = "id") Long id,Principal principal) {
+    public String modify(Model model,
+                         SuggestionForm suggestionForm,
+                         @PathVariable("id") Long id,
+                         @PathVariable(value = "cafeId") Long cafeId,
+                         Principal principal) {
         Suggestion suggestion = this.suggestionService.getSuggestionById(id);
 
-        if(!suggestion.getAuthor().getEmail().equals(principal.getName())){
+        if (!suggestion.getAuthor().getEmail().equals(principal.getName())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
         }
+
+        Cafe cafe = this.cafeService.getCafeById(cafeId);
+
         suggestionForm.setTitle(suggestion.getTitle());
         suggestionForm.setContent(suggestion.getContent());
+
+        model.addAttribute("suggestionForm", suggestionForm);
+        model.addAttribute("cafe", cafe);
         return "suggestion_form";
     }
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/modify/{id}")
-    public String modifySuggestion(@Valid SuggestionForm suggestionForm, BindingResult bindingResult,
-                                   Principal principal, @PathVariable("id") Long id) {
+    public String modify(@Valid SuggestionForm suggestionForm,
+                         @PathVariable("id") Long id,
+                         @PathVariable("cafeId") Long cafeId,
+                         BindingResult bindingResult,
+                         Principal principal) {
         if (bindingResult.hasErrors()) {
             return "suggestion_form";
         }
@@ -107,31 +146,33 @@ public class SuggestionController {
         if (!suggestion.getAuthor().getEmail().equals(principal.getName())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
         }
-        this.suggestionService.modifySuggestion(suggestion, suggestionForm.getTitle(), suggestionForm.getContent());
-        return String.format("redirect:/suggestion/detail/%s", id);
+        this.suggestionService.modify(suggestion, suggestionForm.getTitle(), suggestionForm.getContent()); // 수정 메서드 호출
+        return String.format("redirect:/cafe/%s/suggestion/detail/%s", cafeId, id);
     }
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/delete/{id}")
-    public String deleteSuggestion(Principal principal, @PathVariable("id") Long id) {
+    public String delete(@PathVariable("id") Long id,
+                         @PathVariable("cafeId") Long cafeId,
+                         Principal principal) {
         Suggestion suggestion = this.suggestionService.getSuggestionById(id);
         if (!suggestion.getAuthor().getEmail().equals(principal.getName())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "삭제권한이 없습니다.");
         }
         this.suggestionService.delete(suggestion);
-        return "redirect:/suggestion/list";
+        return String.format("redirect:/cafe/%s/suggestion", cafeId);
     }
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/vote/{id}")
     @ResponseBody
-    public String suggestionVote(@PathVariable("id") Long id, Principal principal) {
+    public String vote(@PathVariable("id") Long id, Principal principal) {
         Suggestion suggestion = this.suggestionService.getSuggestionById(id);
         SiteUser siteUser = this.userService.getUser(principal.getName());
+
         this.suggestionService.vote(suggestion, siteUser);
 
-        Suggestion votedSuggestion = this.suggestionService.getSuggestionById(id);
-        Integer count = votedSuggestion.getVoter().size();
+        Integer count = suggestion.getVoter().size();
         return count.toString();
     }
 
@@ -143,7 +184,6 @@ public class SuggestionController {
         SiteUser siteUser = this.userService.getUser(principal.getName());
         this.suggestionService.cancelVote(suggestion, siteUser);
 
-        Suggestion votedSuggestion = this.suggestionService.getSuggestionById(id);
         Integer count = suggestion.getVoter().size();
         return count.toString();
     }

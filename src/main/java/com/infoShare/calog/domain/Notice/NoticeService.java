@@ -1,6 +1,7 @@
 package com.infoShare.calog.domain.Notice;
 
 import com.infoShare.calog.domain.Article.Article;
+import com.infoShare.calog.domain.Cafe.Cafe;
 import com.infoShare.calog.domain.DataNotFoundException;
 import com.infoShare.calog.domain.user.SiteUser;
 import lombok.RequiredArgsConstructor;
@@ -19,11 +20,16 @@ import java.util.Optional;
 public class NoticeService {
     private final NoticeRepository noticeRepository;
 
-    public Page<Notice> getList(int page) {
+    public Page<Notice> getList(int page, Long cafeId) {
         List<Sort.Order> sorts = new ArrayList<>();
         sorts.add(Sort.Order.desc("createdDate"));
         Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
-        return this.noticeRepository.findAll(pageable);
+        return this.noticeRepository.findByCafeId(pageable, cafeId);
+    }
+
+    public Page<Notice> searchNotices(String keyword, int page, Long cafeId) {
+        Pageable pageable = PageRequest.of(page, 10, Sort.by(Sort.Order.desc("createdDate")));
+        return noticeRepository.findByTitleContainingOrContentContainingAndCafeId(keyword, keyword, cafeId, pageable);
     }
 
     public Notice getNoticeById(Long id) {
@@ -39,11 +45,12 @@ public class NoticeService {
     }
 
 
-    public void create(String title, String content, SiteUser author) {
+    public void create(String title, String content, SiteUser author, Cafe cafe) {
         Notice notice = new Notice();
         notice.setTitle(title);
         notice.setContent(content);
         notice.setAuthor(author);
+        notice.setCafe(cafe);
         this.noticeRepository.save(notice);
     }
 

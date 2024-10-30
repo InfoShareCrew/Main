@@ -31,7 +31,7 @@
     <div class="menu-list">
       <ul class="f-size-16">
         <li class="menu-1"><a th:href="@{|/cafe/${cafe.id}/notice|}" class="full-w">notice</a></li>
-        <li class="menu-2"><a th:href="@{|/cafe/${cafe.id}/suggest|}" class="full-w">suggest</a></li>
+        <li class="menu-2"><a th:href="@{|/cafe/${cafe.id}/suggestion|}" class="full-w">suggest</a></li>
       </ul>
       <hr>
       <ul th:each="boardCategory : ${cafe.boardCategory}" th:if="${boardCategory.name != 'notice'} AND ${boardCategory.name != 'suggest'}">
