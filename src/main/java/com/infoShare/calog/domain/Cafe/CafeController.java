@@ -61,6 +61,8 @@ public class CafeController {
             SiteUser user = this.userService.getUser(principal.getName());
             model.addAttribute("userNickname", user.getNickname());
         }
+        this.articleService.incrementViews(articleId);
+
         Cafe cafe = this.cafeService.getCafeById(cafeId);
         Article article = this.articleService.getArticleById(articleId);
         this.articleService.viewUp(article);
@@ -181,25 +183,26 @@ public class CafeController {
     public String boardList(Model model,
                             @PathVariable(value = "cafeId") Long cafeId,
                             @PathVariable(value = "boardName") String boardName,
-                            @RequestParam(value = "page",defaultValue = "0") int page,
-                            @RequestParam(value = "kw" ,defaultValue = "") String kw) {
+                            @RequestParam(value = "page", defaultValue = "0") int page,
+                            @RequestParam(value = "kw", defaultValue = "") String kw,
+                            @RequestParam(value = "tag", required = false) String tag) {
         Page<Article> paging;
 
         if (kw != null && !kw.isEmpty()) {
-            // 검색 기능 추가
             paging = this.articleService.searchArticles(kw, page, boardName, cafeId);
+        } else if (tag != null && !tag.isEmpty()) {
+            paging = this.articleService.searchArticlesByTag(tag, page, boardName);
         } else {
-            // 기본 목록
             paging = this.articleService.getList(page, boardName, cafeId);
         }
 
         Cafe cafe = this.cafeService.getCafeById(cafeId);
-
         BoardCategory boardCategory = this.boardCategoryService.getCategoryByNameAndCafeId(boardName, cafeId);
 
         model.addAttribute("paging", paging);
         model.addAttribute("cafe", cafe);
         model.addAttribute("boardCategory", boardCategory);
+        model.addAttribute("tag", tag);  // 태그 검색기능
         return "article_list";
     }
 
@@ -311,5 +314,18 @@ public class CafeController {
         }
         this.articleService.delete(article);
         return String.format("redirect:/cafe/%s/%s", cafeId, boardName);
+    }
+
+    @GetMapping("/search")
+    public String searchCafe(@RequestParam("kw") String keyword, Model model) {
+        List<Cafe> cafes = cafeService.findByName(keyword); // 키워드로 카페 검색
+
+        if (!cafes.isEmpty()) {
+            model.addAttribute("cafes", cafes);
+            return "index"; // 검색 결과를 보여줄 페이지
+        } else {
+            model.addAttribute("error", "카페를 찾을 수 없습니다.");
+            return "index"; // 검색 실패 시 보여줄 페이지
+        }
     }
 }

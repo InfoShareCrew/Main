@@ -15,7 +15,9 @@
         <div class="text-box uname"><span class="f-size-18 f-weight-6" th:text="${user.nickname}"></span></div>
         <div class="text-box intro"><span class="f-size-14" th:text="${user.intro}"></span></div>
         <div class="address">
-          <div class="text-box" th:if="addressList != null" th:each="address : ${addressList}"><a class="f-size-14" th:href="${address}" th:text="${address}" target="_blank"></a></div>
+          <div class="text-box" th:if="${addressList != null}" th:each="address : ${addressList}">
+            <a class="f-size-14" th:href="${address}" th:text="${address}" target="_blank"></a>
+          </div>
         </div>
       </div>
       <div class="setting-box" sec:authorize="isAuthenticated()" th:if="${user.email != null} and ${#authentication.getPrincipal().username} == ${user.email}">
@@ -38,10 +40,10 @@
       </div>
       <div class="post-list dp-flex-clmb">
         <!-- 활동 내역 표시 -->
-        <div class="post" th:each="log, iterStat : ${activityLogs}" th:if="${iterStat.index < 3}">
+        <div class="post" th:each="log, itemStat : ${activityLogs}" th:if="${itemStat.index < 3}">
           <div class="title">
             <a class="f-size-16 f-weight-6"
-               th:href="@{|/article/detail/${log.articleId}|}"
+               th:href="@{|/cafe/${log.cafeId}/detail/${log.articleId}|}"
                th:text="${log.articleTitle}"></a>
           </div>
           <div class="detail-box">
@@ -60,12 +62,13 @@
             </div>
           </div>
         </div>
+
       </div>
     </div>
     <div class="my-cafe-container">
       <div class="text-box"><span class="f-size-18 f-weight-6" th:text="${user.nickname} + '님이 가입한 & 개설한 카페'"></span></div>
       <div class="cafe-list">
-        <div class="post" th:each="cafe, iterStat : ${activityCafes}" th:if="${iterStat.index < 3}">
+        <div class="post" th:each="cafe, itemStat : ${activityCafes}" th:if="${itemStat.index < 3}">
           <div class="profile-img img-box">
             <img th:src="@{|/file/cafe/${cafe['profileImg'] != null ? cafe['profileImg'] : 'user_basic.png'}|}" alt="카페 프로필 사진">
           </div>

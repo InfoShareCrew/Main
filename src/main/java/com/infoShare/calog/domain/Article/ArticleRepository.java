@@ -44,7 +44,7 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
             @Param("boardName") String boardName,
             @Param("cafeId") Long cafeId,  // cafeId 파라미터 추가
             Pageable pageable);
-    
+
     Page<Article> findByTitleContainingOrContentContaining(String title, String content, Pageable pageable);
 
     Page<Article> findByTags_Name(String tagName, Pageable pageable);
@@ -58,6 +58,8 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
             "WHERE a.cafe.id = :cafeId " +
             "ORDER BY a.view DESC")
     List<Article> findTopPopularArticlesByCafeId(@Param("cafeId") Long cafeId, Pageable pageable);
+
+    Page<Article> findByTags_NameContainingIgnoreCaseAndBoardCategory_Name(String tag, String boardName, Pageable pageable);
 }
 
 //    @Query(

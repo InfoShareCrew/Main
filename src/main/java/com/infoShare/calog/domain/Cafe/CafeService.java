@@ -87,4 +87,10 @@ public class CafeService {
         siteUser.getCafe().add(cafe);
         this.userService.save(siteUser);
     }
+
+    public List<Cafe> findByName(String name) {
+        return cafeRepository.findByNameContainingIgnoreCase(name); // 카페 이름에 키워드가 포함된 경우를 찾기
+    }
+
+
 }

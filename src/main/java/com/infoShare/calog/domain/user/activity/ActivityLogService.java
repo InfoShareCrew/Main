@@ -13,9 +13,10 @@ public class ActivityLogService {
     private JdbcTemplate jdbcTemplate;
 
     public List<Map<String, Object>> getActivityLogsByUserId(Long userId, String sortType) {
-        String sql = "SELECT a.title AS articleTitle, c.name AS cafeName, a.view, a.content, a.id AS articleId, c.id AS cafeId, av.voter AS voter, co.comment AS comment " +
+        String sql = "SELECT a.title AS articleTitle, c.name AS cafeName, a.view, a.content, a.id AS articleId, c.id AS cafeId, " +
+                "COALESCE(av.voter, 0) AS voter, COALESCE(co.comment, 0) AS comment " +
                 "FROM article a " +
-                "JOIN cafe c " +
+                "JOIN cafe c ON a.cafe = c.id " +
                 "LEFT JOIN (SELECT article_id, COUNT(*) AS voter FROM article_voter GROUP BY article_id) av ON av.article_id = a.id " +
                 "LEFT JOIN (SELECT article_id, COUNT(*) AS comment FROM comment GROUP BY article_id) co ON co.article_id = a.id " +
                 "JOIN Site_User u ON a.author_id = u.id " +
@@ -24,7 +25,7 @@ public class ActivityLogService {
 
         // 정렬 방식에 따라 쿼리 수정
         if ("popular".equals(sortType)) {
-            sql += "ORDER BY COUNT(DISTINCT av.article_id) DESC"; // 인기순
+            sql += "ORDER BY a.view DESC"; // 조회수 기준으로 정렬
         } else {
             sql += "ORDER BY MAX(a.created_date) DESC"; // 최신순
         }

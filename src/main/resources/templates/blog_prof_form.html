@@ -28,10 +28,8 @@
         <textarea th:text="*{intro}" name="intro" id="intro" class="input f-size-14 f-weight-5"  rows="5" placeholder="소개글"></textarea>
       </div>
       <div class="address-box">
-<!--          address 문자열 타입으로 리스트로 바꾸기-->
-<!--          <div class="text-box" th:if="addressList != null" th:each="address : ${addressList}"><span class="f-size-14" th:text="${address}"></span></div>-->
         <label for="address">링크</label>
-        <input type="text" th:value="*{address}" name="address" id="address" class="input f-size-16 f-weight-5" placeholder="링크">
+        <input type="text" th:value="*{address}" name="address" id="address" class="input f-size-16 f-weight-5" placeholder="링크를 입력하세요 (여러 개 입력 시 ,로 구분)">
       </div>
       <div class="submit-box"><input type="submit" value="수정하기" class="btn btn-primary"></div>
     </form>

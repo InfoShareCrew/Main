@@ -43,18 +43,23 @@ public class ArticleController {
                        @RequestParam(value = "tag", required = false) String tag) {
         Page<Article> paging;
 
-        if (kw != null && !kw.isEmpty()) {
+        if (tag != null && !tag.isEmpty()) {
+            // 태그가 제공되었을 경우 해당 태그에 관련된 게시글 조회
+            paging = this.articleService.getArticlesByTag(tag, page);
+        } else if (kw != null && !kw.isEmpty()) {
             // 검색 기능 추가
             paging = this.articleService.searchArticles(kw, page, "공지사항");
         } else {
             // 기본 목록
             paging = this.articleService.getList(page);
         }
+
         model.addAttribute("paging", paging);
         model.addAttribute("kw", kw);
-        model.addAttribute("tag", tag);  // 태그 검색기능
+        model.addAttribute("tag", tag);  // 태그 검색 기능
         return "search_list";
     }
+
 
     @GetMapping("/detail/{id}")
     public String detail(Model model, @PathVariable(value = "id") Long id, CommentForm commentForm, Principal principal) {

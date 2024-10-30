@@ -1,5 +1,7 @@
 package com.infoShare.calog.domain.user.blog;
 
+import com.infoShare.calog.domain.Article.Article;
+import com.infoShare.calog.domain.Article.ArticleService;
 import com.infoShare.calog.domain.user.SiteUser;
 import com.infoShare.calog.domain.user.UserService;
 import com.infoShare.calog.domain.user.activity.ActivityLogService;
@@ -19,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/blog")
@@ -27,6 +30,7 @@ public class BlogController {
     private final BlogService blogService;
     private final UserService userService;
     private final UtilService utilService;
+    private final ArticleService articleService;
     private final ActivityLogService activityLogService;
 
     @Value("${custom.fileDirPath}")
@@ -44,27 +48,25 @@ public class BlogController {
                 .build();
     }
 
-    @GetMapping("/{email}")
+     @GetMapping("/{email}")
     public String userBlog(Model model, @PathVariable(value = "email") String email, @RequestParam(value = "sort", defaultValue = "latest") String sortType) {
         SiteUser user = this.userService.findByEmail(email);
         Long userId = this.userService.findUserIdByEmail(email);
 
         // 사용자 활동 로그 가져오기
-        List<Map<String, Object>> activityLogs = activityLogService.getActivityLogsByUserId(userId, sortType);
-
+        List<Map<String, Object>> activityLogs = activityLogService.getActivityLogsByUserId(userId, sortType); // 정렬 방식 반영
         List<Map<String, Object>> activityCafes = activityLogService.getActivityCafesByUserId(userId);
-        // 문자열로 저장되어 있는 사용자의 개인링크 첨부를 알고리즘으로 풀어 리스트로 html에 첨부
-        String address = user.getAddress();
-        List<String> addressList = new ArrayList<>();
-        if (address != null && user.getAddress().contains("::")) {
-            String[] parts = address.split("::");
-            addressList = new ArrayList<>(Arrays.asList(parts));
-            if (!addressList.isEmpty()) { // 리스트가 비어 있지 않은 경우에만
-                addressList.remove(addressList.size() - 1); // 마지막 비어있는 문자열 제거
-            }
-        } else {
-            addressList.add(address);
-        }
+
+         // 문자열로 저장된 개인 링크를 처리
+         String address = user.getAddress();
+         List<String> addressList = new ArrayList<>();
+
+         if (address != null && !address.isEmpty()) {
+             // 주소를 쉼표로 구분하여 리스트로 변환
+             addressList = Arrays.stream(address.split("\\s*,\\s*")) // 쉼표와 공백을 기준으로 분리
+                     .filter(part -> !part.isEmpty())
+                     .collect(Collectors.toList());
+         }
 
         model.addAttribute("addressList", addressList);
         model.addAttribute("user", user);
@@ -74,6 +76,7 @@ public class BlogController {
         model.addAttribute("sortType", sortType); // 현재 정렬 방식 추가
         return "blog_view";
     }
+
 
     @GetMapping("/edit/{userEmail}")
     @PreAuthorize("isAuthenticated()")
