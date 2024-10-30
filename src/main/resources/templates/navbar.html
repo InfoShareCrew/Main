@@ -19,6 +19,7 @@
     <div class="right-box">
       <a th:href="@{/user/login}" sec:authorize="isAnonymous()" class="f-size-14">로그인</a>
       <a th:href="@{/user/signup}" sec:authorize="isAnonymous()" class="f-size-14">회원가입</a>
+
       <div id="user-btn" sec:authorize="isAuthenticated()">
         <div>
           <div class="img-box">
