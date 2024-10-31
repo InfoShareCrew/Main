@@ -1,56 +1,80 @@
 <html layout:decorate="~{layout}">
-<div layout:fragment="content" class="main-contents dp-flex-clmb tag-list">
-  <table>
-    <thead>
-    <tr class="f-size-16 f-weight-6">
-      <th>번호</th>
-      <th style="width:40%;">제목</th>
-      <th>작성일</th>
-      <th>작성자</th>
-      <th>조회수</th>
-      <th>태그</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="article, loop : ${paging.content}" class="f-size-14">
-      <td th:text="${paging.totalElements - (paging.number * paging.size) - loop.index}"></td>
-      <td style="text-align: left; padding: 0 16px;">
-        <a th:href="@{|/cafe/${article.cafe.id}/detail/${article.id}|}" th:text="${article.title}"></a>
-        <span class="f-size-13 f-color-d3"
-              th:if="${#lists.size(article.commentList) > 0}"
-              th:text="|[${#lists.size(article.commentList)}]|">
-        </span>
-      </td>
-      <td th:text="${#temporals.format(article.createdDate, 'yyyy-MM-dd HH:mm')}"></td>
-      <td><span th:if="${article.author != null}" th:text="${article.author.nickname}"></span></td>
-      <td><span th:text="${article.view} != null ? ${article.view}:0"></span></td>
-      <td>
-          <span th:each="tag : ${article.tags}" class="tag">
-            <a th:href="@{/article/list(tag=${tag.name})}" th:text="${tag.name}"></a>
+<div layout:fragment="content" class="main-contents search-list">
+  <div th:replace="~{index_left_side :: leftSideFragment }"></div>
+  <div class="center">
+    <!-- 태그 검색 결과 테이블 -->
+    <table th:if="${paging}">
+      <thead>
+      <tr class="f-size-16 f-weight-6">
+        <th>번호</th>
+        <th style="width:40%;">제목</th>
+        <th>작성일</th>
+        <th>작성자</th>
+        <th>조회수</th>
+        <th>태그</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="article, loop : ${paging.content}" class="f-size-14">
+        <td th:text="${paging.totalElements - (paging.number * paging.size) - loop.index}"></td>
+        <td style="text-align: left; padding: 0 16px;">
+          <a th:href="@{|/cafe/${article.cafe.id}/detail/${article.id}|}" th:text="${article.title}"></a>
+          <span class="f-size-13 f-color-d3"
+                th:if="${#lists.size(article.commentList) > 0}"
+                th:text="|[${#lists.size(article.commentList)}]|">
           </span>
-      </td>
-    </tr>
-    </tbody>
-  </table>
+        </td>
+        <td th:text="${#temporals.format(article.createdDate, 'yyyy-MM-dd HH:mm')}"></td>
+        <td><span th:if="${article.author != null}" th:text="${article.author.nickname}"></span></td>
+        <td><span th:text="${article.view} != null ? ${article.view}:0"></span></td>
+        <td>
+            <span th:each="tag : ${article.tags}" class="tag">
+              <a th:href="@{/article/list(tag=${tag.name})}" th:text="${tag.name}"></a>
+            </span>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+    <!-- 페이징 -->
+    <div th:if="${paging}" class="pagination">
+      <ul>
+        <li class="" th:classappend="${!paging.hasPrevious()} ? 'disabled'">
+          <a th:href="@{|?page=${paging.number-1}|}" class="btn-primary" th:if="${paging.hasPrevious()}"><span>이전</span></a>
+          <span th:if="${!paging.hasPrevious()}" class="page-link"><span>이전</span></span>
+        </li>
+        <li th:each="page: ${#numbers.sequence(0, paging.totalPages-1)}"
+            th:if="${page >= paging.number-5 and page <= paging.number+5}"
+            th:classappend="${page==paging.number} ? 'active'" class="">
+          <a th:text="${page + 1}" th:href="@{|?page=${page}|}" class=""></a>
+        </li>
+        <li class="" th:classappend="${!paging.hasNext()} ? 'disabled'">
+          <a th:href="@{|?page=${paging.number+1}|}" class="btn-primary" th:if="${paging.hasNext()}"><span>다음</span></a>
+          <span th:if="${!paging.hasNext()}" class=""><span>다음</span></span>
+        </li>
+      </ul>
+    </div>
 
-  <!-- 페이징 -->
-  <div th:if="${!paging.isEmpty()}" class="pagination">
-    <ul>
-      <li class="" th:classappend="${!paging.hasPrevious()} ? 'disabled'">
-        <a th:href="@{|?page=${paging.number-1}|}" class="btn-primary" th:if="${paging.hasPrevious()}"><span>이전</span></a>
-        <span th:if="${!paging.hasPrevious()}" class="page-link"><span>이전</span></span>
-      </li>
-      <li th:each="page: ${#numbers.sequence(0, paging.totalPages-1)}"
-          th:if="${page >= paging.number-5 and page <= paging.number+5}"
-          th:classappend="${page==paging.number} ? 'active'" class="">
-        <a th:text="${page + 1}" th:href="@{|?page=${page}|}" class=""></a>
-      </li>
-      <li class="" th:classappend="${!paging.hasNext()} ? 'disabled'">
-        <a th:href="@{|?page=${paging.number+1}|}" class="btn-primary" th:if="${paging.hasNext()}"><span>다음</span></a>
-        <span th:if="${!paging.hasNext()}" class=""><span>다음</span></span>
-      </li>
-    </ul>
+    <!-- 카페 검색 결과 -->
+    <!-- 검색 결과 -->
+    <div class="cafe-search-results">
+      <div th:if="${error}" class="error-message">
+        <p th:text="${error}"></p>
+      </div>
+      <div class="results-box" th:if="${cafes}">
+        <div class="title"><span class="f-size-18 f-weight-6">카페 검색 결과</span></div>
+        <div class="cafe-list">
+          <a th:each="cafe : ${cafes}" th:href="@{|/cafe/${cafe.id}|}" class="cafe-box-1">
+            <div class="profile-img img-box">
+              <img th:src="@{|/file/${cafe.profileImg != null ? cafe.profileImg : 'cafe/user_basic.png'}|}" alt="카페 프로필 이미지" class="profile-img" />
+            </div>
+            <div class="content">
+              <div class="title"><span class="f-size-16 f-weight-6" th:text="${cafe.name}">카페이름</span></div>
+              <div class="intro"><span class="f-size-14 f-weight-5" th:text="${cafe.intro}">카페 소개글</span></div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
   </div>
-  <!-- <a class="btn-b" th:href="|/tags/list|">태그 목록</a> -->
 </div>
 </html>
