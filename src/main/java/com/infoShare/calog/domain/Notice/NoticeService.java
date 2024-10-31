@@ -1,6 +1,5 @@
 package com.infoShare.calog.domain.Notice;
 
-import com.infoShare.calog.domain.Article.Article;
 import com.infoShare.calog.domain.Cafe.Cafe;
 import com.infoShare.calog.domain.DataNotFoundException;
 import com.infoShare.calog.domain.user.SiteUser;

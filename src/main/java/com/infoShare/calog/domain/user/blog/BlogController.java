@@ -2,6 +2,8 @@ package com.infoShare.calog.domain.user.blog;
 
 import com.infoShare.calog.domain.Article.Article;
 import com.infoShare.calog.domain.Article.ArticleService;
+import com.infoShare.calog.domain.Cafe.Cafe;
+import com.infoShare.calog.domain.Cafe.CafeService;
 import com.infoShare.calog.domain.user.SiteUser;
 import com.infoShare.calog.domain.user.UserService;
 import com.infoShare.calog.domain.user.activity.ActivityLogService;
@@ -32,6 +34,7 @@ public class BlogController {
     private final UtilService utilService;
     private final ArticleService articleService;
     private final ActivityLogService activityLogService;
+    private final CafeService cafeService;
 
     @Value("${custom.fileDirPath}")
     private String fileDirPath;
@@ -48,33 +51,43 @@ public class BlogController {
                 .build();
     }
 
-     @GetMapping("/{email}")
-    public String userBlog(Model model, @PathVariable(value = "email") String email, @RequestParam(value = "sort", defaultValue = "latest") String sortType) {
+    @GetMapping("/{email}")
+    public String userBlog(Model model, @PathVariable(value = "email") String email, @RequestParam(value = "sort", defaultValue = "latest") String sortType, Principal principal) {
         SiteUser user = this.userService.findByEmail(email);
         Long userId = this.userService.findUserIdByEmail(email);
 
         // 사용자 활동 로그 가져오기
-        List<Map<String, Object>> activityLogs = activityLogService.getActivityLogsByUserId(userId, sortType); // 정렬 방식 반영
+        List<Map<String, Object>> activityLogs = activityLogService.getActivityLogsByUserId(userId, sortType);
         List<Map<String, Object>> activityCafes = activityLogService.getActivityCafesByUserId(userId);
 
-         // 문자열로 저장된 개인 링크를 처리
-         String address = user.getAddress();
-         List<String> addressList = new ArrayList<>();
+        // 사용자 카페 목록 가져오기
+        List<Cafe> cafeList = null;
+        List<Cafe> myCafeList = null;
+        if (principal != null) {
+            cafeList = this.cafeService.getMyList(principal.getName());
+            myCafeList = this.cafeService.getOwnList(principal.getName());
+        }
 
-         if (address != null && !address.isEmpty()) {
-             // 주소를 쉼표로 구분하여 리스트로 변환
-             addressList = Arrays.stream(address.split("\\s*,\\s*")) // 쉼표와 공백을 기준으로 분리
-                     .filter(part -> !part.isEmpty())
-                     .collect(Collectors.toList());
-         }
+        // 문자열로 저장된 개인 링크 처리
+        String address = user.getAddress();
+        List<String> addressList = new ArrayList<>();
+        if (address != null && !address.isEmpty()) {
+            addressList = Arrays.stream(address.split("\\s*,\\s*"))
+                    .filter(part -> !part.isEmpty())
+                    .collect(Collectors.toList());
+        }
 
+        // 모델에 추가
         model.addAttribute("addressList", addressList);
         model.addAttribute("user", user);
         model.addAttribute("fileDirPath", fileDirPath);
-        model.addAttribute("activityLogs", activityLogs); // 활동 로그 추가
-        model.addAttribute("activityCafes", activityCafes); // cafe 로그 추가
-        model.addAttribute("sortType", sortType); // 현재 정렬 방식 추가
-        return "blog_view";
+        model.addAttribute("activityLogs", activityLogs);
+        model.addAttribute("activityCafes", activityCafes);
+        model.addAttribute("sortType", sortType);
+        model.addAttribute("cafeList", cafeList); // 가입한 카페 목록 추가
+        model.addAttribute("myCafeList", myCafeList); // 개설한 카페 목록 추가
+
+        return "blog_view"; // 반환할 뷰 이름
     }
 
 

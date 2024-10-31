@@ -2,8 +2,6 @@ package com.infoShare.calog.domain.Comment;
 
 import com.infoShare.calog.domain.Article.Article;
 import com.infoShare.calog.domain.Article.ArticleService;
-import com.infoShare.calog.domain.Notice.NoticeService;
-import com.infoShare.calog.domain.Suggestion.service.SuggestionService;
 import com.infoShare.calog.domain.user.SiteUser;
 import com.infoShare.calog.domain.user.UserService;
 import jakarta.servlet.http.HttpServletRequest;
