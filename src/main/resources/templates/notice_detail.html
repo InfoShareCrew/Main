@@ -95,6 +95,7 @@
 <script layout:fragment="script" type='text/javascript'>
   $(document).ready(function() {
     var noticeId = [[${notice.id}]];
+    var cafeId = [[${cafe.id}]];
 
     $("#notice_recommend").on("click", function() {
       var _this = $(this);
@@ -104,7 +105,7 @@
       if (confirm(message)) {
         if (voted) {
           $.ajax({
-            url: "/notice/unvote/" + noticeId,
+            url: "/cafe/" + cafeId + "/notice/unvote/" + noticeId,
             type: "GET",
             success: function(response) {
               if (response.includes('<form') && response.includes('login')) {
@@ -120,7 +121,7 @@
           });
         } else {
           $.ajax({
-            url: "/notice/vote/" + noticeId,
+            url: "/cafe/" + cafeId + "/notice/vote/" + noticeId,
             type: "GET",
             success: function(response) {
               if (response.includes('<form') && response.includes('login')) {

@@ -13,7 +13,6 @@ import java.util.Set;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class BoardCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,9 +20,6 @@ public class BoardCategory {
 
     @Column(length = 200)
     private String name;
-
-    @OneToMany(mappedBy = "boardCategory")
-    private List<Article> articles;
 
     // BoardCategory와 Cafe 간의 ManyToOne 관계 설정
     @ManyToOne

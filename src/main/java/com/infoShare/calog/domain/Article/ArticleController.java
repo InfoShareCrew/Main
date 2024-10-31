@@ -94,8 +94,6 @@ public class ArticleController {
             return "article_form";
         }
         SiteUser author = this.userService.getUser(principal.getName());
-//        BoardCategory boardCategory = boardCategoryService.getCategoryByName(articleForm.getBoardName());
-//        this.articleService.createArticle(articleForm.getTitle(), articleForm.getContent(), author, boardCategory,articleForm.getTags());
         return "redirect:/article/list";
     }
 

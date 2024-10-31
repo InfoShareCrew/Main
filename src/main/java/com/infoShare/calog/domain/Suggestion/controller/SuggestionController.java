@@ -1,15 +1,14 @@
-package com.infoShare.calog.domain.Suggestion;
+package com.infoShare.calog.domain.Suggestion.controller;
 
-import com.infoShare.calog.domain.Article.Article;
-import com.infoShare.calog.domain.Article.ArticleService;
 import com.infoShare.calog.domain.Cafe.Cafe;
 import com.infoShare.calog.domain.Cafe.CafeService;
 import com.infoShare.calog.domain.Comment.CommentForm;
-import com.infoShare.calog.domain.Suggestion.Suggestion;
 import com.infoShare.calog.domain.Suggestion.SuggestionForm;
+import com.infoShare.calog.domain.Suggestion.service.SuggestionCommentService;
+import com.infoShare.calog.domain.Suggestion.service.SuggestionService;
+import com.infoShare.calog.domain.Suggestion.entity.Suggestion;
 import com.infoShare.calog.domain.user.SiteUser;
 import com.infoShare.calog.domain.user.UserService;
-import com.infoShare.calog.global.jpa.BaseEntity;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -28,6 +27,7 @@ import java.security.Principal;
 @RequestMapping("/cafe/{cafeId}/suggestion")
 public class SuggestionController {
     private final SuggestionService suggestionService;
+    private final SuggestionCommentService suggestionCommentService;
     private final UserService userService;
     private final CafeService cafeService;
 
@@ -49,6 +49,7 @@ public class SuggestionController {
         Cafe cafe = this.cafeService.getCafeById(cafeId);
 
         model.addAttribute("paging", paging);
+        model.addAttribute("suggestionCommentList", this.suggestionCommentService.list());
         model.addAttribute("cafe", cafe);
         return "suggestion_list";
     }
@@ -81,9 +82,9 @@ public class SuggestionController {
         }
 
         this.suggestionService.create(suggestionForm.getTitle(),
-                suggestionForm.getContent(),
-                this.userService.findByEmail(principal.getName()),
-                cafe);
+                                        suggestionForm.getContent(),
+                                        this.userService.findByEmail(principal.getName()),
+                                        cafe);
         return String.format("redirect:/cafe/%s/suggestion", cafeId);
     }
 
@@ -162,30 +163,4 @@ public class SuggestionController {
         this.suggestionService.delete(suggestion);
         return String.format("redirect:/cafe/%s/suggestion", cafeId);
     }
-
-    @PreAuthorize("isAuthenticated()")
-    @GetMapping("/vote/{id}")
-    @ResponseBody
-    public String vote(@PathVariable("id") Long id, Principal principal) {
-        Suggestion suggestion = this.suggestionService.getSuggestionById(id);
-        SiteUser siteUser = this.userService.getUser(principal.getName());
-
-        this.suggestionService.vote(suggestion, siteUser);
-
-        Integer count = suggestion.getVoter().size();
-        return count.toString();
-    }
-
-    @PreAuthorize("isAuthenticated()")
-    @GetMapping("/unvote/{id}")  //추천취소
-    @ResponseBody
-    public String cancelVote(@PathVariable("id") Long id, Principal principal) {
-        Suggestion suggestion = this.suggestionService.getSuggestionById(id);
-        SiteUser siteUser = this.userService.getUser(principal.getName());
-        this.suggestionService.cancelVote(suggestion, siteUser);
-
-        Integer count = suggestion.getVoter().size();
-        return count.toString();
-    }
 }
-

@@ -2,7 +2,7 @@ package com.infoShare.calog.domain.Comment;
 
 import com.infoShare.calog.domain.Article.Article;
 import com.infoShare.calog.domain.Notice.Notice;
-import com.infoShare.calog.domain.Suggestion.Suggestion;
+import com.infoShare.calog.domain.Suggestion.entity.Suggestion;
 import com.infoShare.calog.domain.user.SiteUser;
 import com.infoShare.calog.global.jpa.BaseEntity;
 import jakarta.persistence.Column;

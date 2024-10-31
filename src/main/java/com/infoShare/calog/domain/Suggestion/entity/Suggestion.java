@@ -1,9 +1,7 @@
-package com.infoShare.calog.domain.Notice;
+package com.infoShare.calog.domain.Suggestion.entity;
 
-import com.infoShare.calog.domain.BoardCategory.BoardCategory;
 import com.infoShare.calog.domain.Cafe.Cafe;
 import com.infoShare.calog.domain.Comment.Comment;
-import com.infoShare.calog.domain.Tag.Tag;
 import com.infoShare.calog.domain.user.SiteUser;
 import com.infoShare.calog.global.jpa.BaseEntity;
 import jakarta.persistence.*;
@@ -16,7 +14,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
-public class Notice extends BaseEntity {
+public class Suggestion extends BaseEntity {
     @Column(length = 200)
     private String title;
 
@@ -25,12 +23,13 @@ public class Notice extends BaseEntity {
 
     private Long view = 0L;
 
-    @OneToMany(mappedBy = "notice", cascade = CascadeType.REMOVE)
-    private List<Comment> commentList;
+    @ManyToOne
+    @JoinColumn(name = "cafe_id")
+    private Cafe cafe;
 
     @ManyToOne
     private SiteUser author;
 
-    @ManyToOne
-    private Cafe cafe;
+    @ManyToMany
+    Set<SiteUser> voter;
 }

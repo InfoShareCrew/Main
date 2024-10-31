@@ -31,9 +31,4 @@ public class NeighborService {
             throw new IllegalArgumentException("Current user is not a SiteUser");
         }
     }
-
-//    public List<SiteUser> getNeighborsByUserEmail(String email) {
-////         사용자 이메일에 해당하는 이웃 목록을 반환
-//        return userRepository.findByEmail(email).getNeighbor;
-//    }
 }

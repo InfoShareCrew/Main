@@ -61,9 +61,3 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
 
     Page<Article> findByTags_NameContainingIgnoreCaseAndBoardCategory_Name(String tag, String boardName, Pageable pageable);
 }
-
-//    @Query(
-//            "SELECT a FROM Article a " +
-//            "WHERE (a.title LIKE %:title% OR a.content LIKE %:content%) AND a.boardCategory.id = :boardCategoryId")
-//    Page<Article> findByTitleContainingOrContentContainingAndBoardCategoryId(
-//            String title, String content, Integer boardCategoryId, Pageable pageable);}

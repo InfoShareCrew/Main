@@ -75,5 +75,4 @@ public class CategoryService {
     public List<Category> getCategoriesByUser(SiteUser author) {
         return categoryRepository.findByAuthor(author);
     }
-
 }

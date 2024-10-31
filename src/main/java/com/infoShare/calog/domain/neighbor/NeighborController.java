@@ -38,9 +38,8 @@ public class NeighborController {
     @GetMapping("/add/{neighborEmail}")
     public String addNeighbor(@PathVariable(value = "neighborEmail") String neighborEmail,
                                                 Principal principal) {
-        SiteUser newNeighbor = neighborService.addNeighbor(userService.getUser(principal.getName()),
-                                                           userService.getUser(neighborEmail)
-        );
+        neighborService.addNeighbor(userService.getUser(principal.getName()),
+                                   userService.getUser(neighborEmail));
         return String.format("redirect:/blog/%s", neighborEmail);
     }
 

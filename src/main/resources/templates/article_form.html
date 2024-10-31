@@ -1,12 +1,10 @@
 <html layout:decorate="~{cafe_layout}">
 <div layout:fragment="content" class="container articleForm">
-  <div class="title-box">
-    <div class="text-box">
-      <a th:href="@{|/cafe/${cafe.id}/${boardName}|}" class="link f-size-16" th:text="|&gt; ${boardName}|"></a>
-    </div>
-    <div class="text-box">
-      <span class="f-size-18 f-weight-6">글 등록</span>
-    </div>
+  <div class="text-box">
+    <a th:href="@{|/cafe/${cafe.id}/${boardName}|}" class="link f-size-16" th:text="|&gt; ${boardName}|"></a>
+  </div>
+  <div class="text-box">
+    <span class="f-size-18 f-weight-6">글 등록</span>
   </div>
   <form method="post" th:object="${articleForm}" th:action="@{|/cafe/${cafe.id}/${boardName}/create|}">
     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />

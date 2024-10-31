@@ -31,10 +31,9 @@ public class BoardCategoryService {
     };
 
     public void create(Cafe cafe, String boardName) {
-        BoardCategory boardCategory = new BoardCategory().builder()
-                .name(boardName)
-                .cafe(cafe)
-                .build();
+        BoardCategory boardCategory = new BoardCategory();
+        boardCategory.setName(boardName);
+        boardCategory.setCafe(cafe);
         this.boardCategoryRepository.save(boardCategory);
     }
 }

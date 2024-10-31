@@ -61,7 +61,6 @@ public class CafeService {
         cafe.setManager(manager);
 
         this.cafeRepository.save(cafe);
-
         this.boardCategoryService.create(cafe, "free");
 
         return cafe;

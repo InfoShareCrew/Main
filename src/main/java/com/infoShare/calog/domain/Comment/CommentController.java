@@ -2,10 +2,8 @@ package com.infoShare.calog.domain.Comment;
 
 import com.infoShare.calog.domain.Article.Article;
 import com.infoShare.calog.domain.Article.ArticleService;
-import com.infoShare.calog.domain.Notice.Notice;
 import com.infoShare.calog.domain.Notice.NoticeService;
-import com.infoShare.calog.domain.Suggestion.Suggestion;
-import com.infoShare.calog.domain.Suggestion.SuggestionService;
+import com.infoShare.calog.domain.Suggestion.service.SuggestionService;
 import com.infoShare.calog.domain.user.SiteUser;
 import com.infoShare.calog.domain.user.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,8 +25,6 @@ import java.security.Principal;
 public class CommentController {
     private final CommentService commentService;
     private final ArticleService articleService;
-    private final SuggestionService suggestionService;
-    private final NoticeService noticeService;
     private final UserService userService;
 
     @PreAuthorize("isAuthenticated()")

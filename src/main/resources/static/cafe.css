@@ -32,13 +32,14 @@ body {display: flex;}
 .board-list .title-box {display: flex; justify-content: space-between;}
 .board-list form {display: flex; gap: 8px;}
 .board-list table tr {height: 40px; text-align: center;}
-.board-list table tr td {padding: 0 16px;}
+.board-list table tr td {padding: 8px 16px;}
 .board-list table thead tr {background-color: var(--x000000-5);}
-
+.board-list .suggest-title {display: flex; flex-direction: column; gap: 8px;}
 
 /***** 카페 게시판 상세 페이지 *****/
 .board-detail {flex-direction: column;}
 .board-detail .contents {display: flex; flex-direction: column; gap: 16px;}
+.board-detail .contents .title-box {display: flex; justify-content: space-between;}
 .board-detail .contents .author-box {display: flex; align-items: center; gap: 16px;}
 .author-box .img-box {width: 40px; height: 40px; border-radius: 20px;}
 .author-box .right-box {display: flex; flex-direction: column; gap: 4px;}

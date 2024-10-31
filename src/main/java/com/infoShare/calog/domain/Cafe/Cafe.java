@@ -3,7 +3,7 @@ package com.infoShare.calog.domain.Cafe;
 import java.util.HashSet;
 import com.infoShare.calog.domain.BoardCategory.BoardCategory;
 import com.infoShare.calog.domain.Category.Category;
-import com.infoShare.calog.domain.Suggestion.Suggestion;
+import com.infoShare.calog.domain.Suggestion.entity.Suggestion;
 import com.infoShare.calog.domain.user.SiteUser;
 import com.infoShare.calog.global.jpa.BaseEntity;
 import jakarta.persistence.*;
@@ -47,14 +47,4 @@ public class Cafe extends BaseEntity {
 
     @OneToMany(mappedBy = "cafe")
     private List<Suggestion> suggestions;
-
-//    @PrePersist
-//    public void initBoardCategories() {
-//        if (this.boardCategory == null || this.boardCategory.isEmpty()) {
-//            BoardCategory defaultCategory = new BoardCategory();
-//            defaultCategory.setName("자유게시판");
-//            this.boardCategory = new HashSet<>();
-//            this.boardCategory.add(defaultCategory);
-//        }
-//    }
 }

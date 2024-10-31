@@ -102,16 +102,10 @@ public class CafeController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
         }
 
-        // 대분류 및 소분류 카테고리 수정 로직 추가
-        //MajorCategory majorCategory = majorCategoryService.findById(cafeForm.getMajorCategoryId());
-       // MinorCategory minorCategory = minorCategoryService.findById(cafeForm.getMinorCategoryId());
-
         // 카페 정보 수정
         cafeForm.setName(cafe.getName());
         cafeForm.setIntro(cafe.getIntro());
         cafeForm.setProfileImg(cafe.getProfileImg());
-        //cafe.setMajorCategory(majorCategory);
-        //cafe.setMinorCategory(minorCategory);
 
         return "cafe_form";
     }
