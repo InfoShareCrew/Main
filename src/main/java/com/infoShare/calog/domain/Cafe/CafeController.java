@@ -316,10 +316,10 @@ public class CafeController {
 
         if (!cafes.isEmpty()) {
             model.addAttribute("cafes", cafes);
-            return "index"; // 검색 결과를 보여줄 페이지
+            return "search_list"; // 검색 결과를 보여줄 페이지
         } else {
             model.addAttribute("error", "카페를 찾을 수 없습니다.");
-            return "index"; // 검색 실패 시 보여줄 페이지
+            return "search_list"; // 검색 실패 시 보여줄 페이지
         }
     }
 }

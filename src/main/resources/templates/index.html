@@ -77,26 +77,6 @@
         </div>
       </div>
     </div>
-    <!-- 검색 결과 -->
-    <div class="search-results">
-      <div class="title"><span class="f-size-18 f-weight-6">카페 검색 결과</span></div>
-      <div th:if="${error}">
-        <p th:text="${error}" class="error-message"></p>
-      </div>
-      <div th:if="${cafes}">
-        <div th:each="cafe : ${cafes}">
-          <a th:href="@{|/cafe/${cafe.id}|}" class="cafe-box-1">
-            <div class="profile-img img-box">
-              <img th:src="@{|/file/${cafe.profileImg != null ? cafe.profileImg : 'cafe/user_basic.png'}|}" alt="카페 프로필 이미지" class="profile-img" />
-            </div>
-            <div class="content">
-              <div class="title"><span class="f-size-16 f-weight-6" th:text="${cafe.name}">카페이름</span></div>
-              <div class="intro"><span class="f-size-14 f-weight-5" th:text="${cafe.intro}">카페 소개글</span></div>
-            </div>
-          </a>
-        </div>
-      </div>
-    </div>
   </div>
   <div class="right-side"></div>
 </div>
