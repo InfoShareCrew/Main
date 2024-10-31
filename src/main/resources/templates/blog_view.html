@@ -65,38 +65,38 @@
       </div>
     </div>
     <!-- 내 카페 -->
-    <div class="my-cafe-box" sec:authorize="isAuthenticated()">
-      <div class="title"><span class="f-size-18 f-weight-6">내 카페</span></div>
-      <div class="category">
-        <div class="ctgr-box-in btn active" id="cafe-in" onclick="showCafes('in')"><span>가입한 카페</span></div>
-        <div class="ctgr-box-my btn" id="cafe-my" onclick="showCafes('my')"><span>내가 만든 카페</span></div>
-      </div>
-      <div class="cafe-list" id="cafe-in-list">
-        <div class="text-box" th:if="${cafeList == null or (cafeList.size() == 0)}"><span class="f-size-16">카페를 가입해 보세요!</span></div>
-        <a th:each="cafe : ${cafeList}" th:href="@{|/cafe/${cafe.id}|}" class="cafe-box-1">
-          <div class="profile-img img-box">
-            <img th:src="@{|/file/${cafe.profileImg != null ? cafe.profileImg : 'cafe/user_basic.png'}|}" alt="카페 프로필 사진">
-          </div>
-          <div class="content">
-            <div class="title"><span class="f-size-16 f-weight-6" th:text="${cafe.name}">카페이름1</span></div>
-            <div class="intro"><span class="f-size-14 f-weight-5" th:text="${cafe.intro}">카페 소개글</span></div>
-          </div>
-        </a>
-      </div>
-      <div class="cafe-list d-none" id="cafe-my-list">
-        <div class="text-box" th:if="${myCafeList == null or (myCafeList.size() == 0)}"><span class="f-size-16">카페를 만들어 보세요!</span></div>
-        <a th:each="cafe : ${myCafeList}" th:href="@{|/cafe/${cafe.id}|}" class="cafe-box-1">
-          <div class="profile-img img-box">
-            <img th:src="@{|/file/${cafe.profileImg != null ? cafe.profileImg : 'cafe/user_basic.png'}|}" alt="카페 프로필 사진">
-          </div>
-          <div class="content">
-            <div class="title"><span class="f-size-16 f-weight-6" th:text="${cafe.name}">카페이름1</span></div>
-            <div class="intro"><span class="f-size-14 f-weight-5" th:text="${cafe.intro}">카페 소개글</span></div>
-          </div>
-        </a>
-      </div>
+  <div class="my-cafe-box" sec:authorize="isAuthenticated()">
+    <div class="text-box"><span class="f-size-18 f-weight-6" th:text="${user.nickname} + '님이 가입한 & 개설한 카페'"></span></div>
+    <div class="category">
+      <div class="ctgr-box-in btn active" id="cafe-in" onclick="showCafes('in')"><span>가입한 카페</span></div>
+      <div class="ctgr-box-my btn" id="cafe-my" onclick="showCafes('my')"><span> 개설한 카페</span></div>
+    </div>
+    <div class="cafe-list" id="cafe-in-list">
+      <div class="text-box" th:if="${cafeList == null or (cafeList.size() == 0)}"><span class="f-size-16">가입한 카페가 없습니다.</span></div>
+      <a th:each="cafe : ${cafeList}" th:href="@{|/cafe/${cafe.id}|}" class="cafe-box-1">
+        <div class="profile-img img-box">
+          <img th:src="@{|/file/${cafe.profileImg != null ? cafe.profileImg : 'cafe/user_basic.png'}|}" alt="카페 프로필 사진">
+        </div>
+        <div class="content">
+          <div class="title"><span class="f-size-16 f-weight-6" th:text="${cafe.name}">카페이름1</span></div>
+          <div class="intro"><span class="f-size-14 f-weight-5" th:text="${cafe.intro}">카페 소개글</span></div>
+        </div>
+      </a>
+    </div>
+    <div class="cafe-list d-none" id="cafe-my-list">
+      <div class="text-box" th:if="${myCafeList == null or (myCafeList.size() == 0)}"><span class="f-size-16">개설한 카페가 없습니다.</span></div>
+      <a th:each="cafe : ${myCafeList}" th:href="@{|/cafe/${cafe.id}|}" class="cafe-box-1">
+        <div class="profile-img img-box">
+          <img th:src="@{|/file/${cafe.profileImg != null ? cafe.profileImg : 'cafe/user_basic.png'}|}" alt="카페 프로필 사진">
+        </div>
+        <div class="content">
+          <div class="title"><span class="f-size-16 f-weight-6" th:text="${cafe.name}">카페이름1</span></div>
+          <div class="intro"><span class="f-size-14 f-weight-5" th:text="${cafe.intro}">카페 소개글</span></div>
+        </div>
+      </a>
     </div>
   </div>
+</div>
   <div class="right-side"></div>
 </div>
 <!-- 자바 스크립트 -->

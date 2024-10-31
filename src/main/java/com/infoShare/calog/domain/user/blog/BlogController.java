@@ -52,7 +52,10 @@ public class BlogController {
     }
 
     @GetMapping("/{email}")
-    public String userBlog(Model model, @PathVariable(value = "email") String email, @RequestParam(value = "sort", defaultValue = "latest") String sortType, Principal principal) {
+    public String userBlog(Model model, @PathVariable(value = "email") String email,
+                           @RequestParam(value = "sort", defaultValue = "latest") String sortType,
+                           Principal principal) {
+        // 타겟 사용자 정보 가져오기
         SiteUser user = this.userService.findByEmail(email);
         Long userId = this.userService.findUserIdByEmail(email);
 
@@ -60,13 +63,9 @@ public class BlogController {
         List<Map<String, Object>> activityLogs = activityLogService.getActivityLogsByUserId(userId, sortType);
         List<Map<String, Object>> activityCafes = activityLogService.getActivityCafesByUserId(userId);
 
-        // 사용자 카페 목록 가져오기
-        List<Cafe> cafeList = null;
-        List<Cafe> myCafeList = null;
-        if (principal != null) {
-            cafeList = this.cafeService.getMyList(principal.getName());
-            myCafeList = this.cafeService.getOwnList(principal.getName());
-        }
+        // 타겟 사용자의 카페 목록 가져오기
+        List<Cafe> cafeList = this.cafeService.getMyList(email); // 가입한 카페 목록
+        List<Cafe> myCafeList = this.cafeService.getOwnList(email); // 개설한 카페 목록
 
         // 문자열로 저장된 개인 링크 처리
         String address = user.getAddress();
@@ -84,8 +83,8 @@ public class BlogController {
         model.addAttribute("activityLogs", activityLogs);
         model.addAttribute("activityCafes", activityCafes);
         model.addAttribute("sortType", sortType);
-        model.addAttribute("cafeList", cafeList); // 가입한 카페 목록 추가
-        model.addAttribute("myCafeList", myCafeList); // 개설한 카페 목록 추가
+        model.addAttribute("cafeList", cafeList); // 가입한 카페 목록
+        model.addAttribute("myCafeList", myCafeList); // 개설한 카페 목록
 
         return "blog_view"; // 반환할 뷰 이름
     }
