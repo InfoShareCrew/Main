@@ -62,56 +62,78 @@
             </div>
           </div>
         </div>
-
       </div>
     </div>
-    <div class="my-cafe-container">
-      <div class="text-box"><span class="f-size-18 f-weight-6" th:text="${user.nickname} + '님이 가입한 & 개설한 카페'"></span></div>
-      <div class="cafe-list">
-        <div class="post" th:each="cafe, itemStat : ${activityCafes}" th:if="${itemStat.index < 3}">
-          <div class="profile-img img-box">
-            <img th:src="@{|/file/${cafe.profile != null ? cafe.profile : 'cafe/user_basic.png'}|}" alt="카페 프로필 사진">
-          </div>
-          <div class="content-2 dp-flex-clmb">
-            <div class="title">
-              <a class="f-size-16 f-weight-6" th:href="@{|/cafe/${cafe.cafeId}|}" th:text="${cafe.Name}"></a>
-            </div>
-            <div class="full-w" th:text="${cafe.intro}"></div>
-            <div class="detail">
-              <div class="user-box">
-                <div class="img-box"><img th:src="@{/img/person.png}" alt="유저 아이콘"></div>
-                <div class="text-box"><span class="f-size-13">1000</span></div>
-              </div>
-              <div class="text-box"><span class="f-size-13">세부 카테고리</span></div>
-            </div>
-          </div>
+    <!-- 내 카페 -->
+  <div class="my-cafe-box" sec:authorize="isAuthenticated()">
+    <div class="text-box"><span class="f-size-18 f-weight-6" th:text="${user.nickname} + '님이 가입한 & 개설한 카페'"></span></div>
+    <div class="category">
+      <div class="ctgr-box-in btn active" id="cafe-in" onclick="showCafes('in')"><span>가입한 카페</span></div>
+      <div class="ctgr-box-my btn" id="cafe-my" onclick="showCafes('my')"><span> 개설한 카페</span></div>
+    </div>
+    <div class="cafe-list" id="cafe-in-list">
+      <div class="text-box" th:if="${cafeList == null or (cafeList.size() == 0)}"><span class="f-size-16">가입한 카페가 없습니다.</span></div>
+      <a th:each="cafe : ${cafeList}" th:href="@{|/cafe/${cafe.id}|}" class="cafe-box-1">
+        <div class="profile-img img-box">
+          <img th:src="@{|/file/${cafe.profileImg != null ? cafe.profileImg : 'cafe/user_basic.png'}|}" alt="카페 프로필 사진">
         </div>
-      </div>
+        <div class="content">
+          <div class="title"><span class="f-size-16 f-weight-6" th:text="${cafe.name}">카페이름1</span></div>
+          <div class="intro"><span class="f-size-14 f-weight-5" th:text="${cafe.intro}">카페 소개글</span></div>
+        </div>
+      </a>
+    </div>
+    <div class="cafe-list d-none" id="cafe-my-list">
+      <div class="text-box" th:if="${myCafeList == null or (myCafeList.size() == 0)}"><span class="f-size-16">개설한 카페가 없습니다.</span></div>
+      <a th:each="cafe : ${myCafeList}" th:href="@{|/cafe/${cafe.id}|}" class="cafe-box-1">
+        <div class="profile-img img-box">
+          <img th:src="@{|/file/${cafe.profileImg != null ? cafe.profileImg : 'cafe/user_basic.png'}|}" alt="카페 프로필 사진">
+        </div>
+        <div class="content">
+          <div class="title"><span class="f-size-16 f-weight-6" th:text="${cafe.name}">카페이름1</span></div>
+          <div class="intro"><span class="f-size-14 f-weight-5" th:text="${cafe.intro}">카페 소개글</span></div>
+        </div>
+      </a>
     </div>
   </div>
+</div>
   <div class="right-side"></div>
-  </div>
+</div>
 <!-- 자바 스크립트 -->
 <script layout:fragment="script" type='text/javascript'>
-$(document).ready(function() {
-  var currentUrl = window.location.href; // 현재 페이지의 URL 가져오기
-  var parts = currentUrl.split('='); // '='로 분리
+  $(document).ready(function() {
+    var currentUrl = window.location.href; // 현재 페이지의 URL 가져오기
+    var parts = currentUrl.split('='); // '='로 분리
 
-  if (parts.length > 1) { // '='가 있는 경우
-      var lastPart = parts[1]; // '=' 뒤의 부분 가져오기
-      // 'latest' 또는 'popular'인지 검사
-      if (lastPart === 'latest') {
-        $("#latest").addClass("active");
-        $("#latest").removeClass("disabled");
-        $("#popular").addClass("disabled");
-        $("#popular").removeClass("active");
-      } else if (lastPart === 'popular') {
-        $("#popular").addClass("active");
-        $("#popular").removeClass("disabled");
-        $("#latest").addClass("disabled");
-        $("#latest").removeClass("active");
+    if (parts.length > 1) { // '='가 있는 경우
+        var lastPart = parts[1]; // '=' 뒤의 부분 가져오기
+        // 'latest' 또는 'popular'인지 검사
+        if (lastPart === 'latest') {
+          $("#latest").addClass("active");
+          $("#latest").removeClass("disabled");
+          $("#popular").addClass("disabled");
+          $("#popular").removeClass("active");
+        } else if (lastPart === 'popular') {
+          $("#popular").addClass("active");
+          $("#popular").removeClass("disabled");
+          $("#latest").addClass("disabled");
+          $("#latest").removeClass("active");
+        }
+    }
+  });
+
+  function showCafes(type) {
+      if (type === 'in') {
+          document.getElementById('cafe-in-list').classList.remove('d-none');
+          document.getElementById('cafe-my-list').classList.add('d-none');
+          document.getElementById('cafe-in').classList.add('active');
+          document.getElementById('cafe-my').classList.remove('active');
+      } else {
+          document.getElementById('cafe-my-list').classList.remove('d-none');
+          document.getElementById('cafe-in-list').classList.add('d-none');
+          document.getElementById('cafe-my').classList.add('active');
+          document.getElementById('cafe-in').classList.remove('active');
       }
   }
-});
 </script>
 </html>

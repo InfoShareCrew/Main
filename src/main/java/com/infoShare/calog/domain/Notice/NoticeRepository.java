@@ -1,6 +1,5 @@
 package com.infoShare.calog.domain.Notice;
 
-import com.infoShare.calog.domain.Article.Article;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -1,16 +1,10 @@
 package com.infoShare.calog.domain.Notice;
 
-import com.infoShare.calog.domain.Article.Article;
-import com.infoShare.calog.domain.Article.ArticleService;
-import com.infoShare.calog.domain.BoardCategory.BoardCategory;
-import com.infoShare.calog.domain.BoardCategory.BoardCategoryService;
 import com.infoShare.calog.domain.Cafe.Cafe;
 import com.infoShare.calog.domain.Cafe.CafeService;
-import com.infoShare.calog.domain.Comment.Comment;
 import com.infoShare.calog.domain.Comment.CommentForm;
 import com.infoShare.calog.domain.user.SiteUser;
 import com.infoShare.calog.domain.user.UserService;
-import com.infoShare.calog.global.jpa.BaseEntity;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
