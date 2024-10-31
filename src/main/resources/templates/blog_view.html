@@ -70,7 +70,7 @@
       <div class="cafe-list">
         <div class="post" th:each="cafe, itemStat : ${activityCafes}" th:if="${itemStat.index < 3}">
           <div class="profile-img img-box">
-            <img th:src="@{|/file/cafe/${cafe['profileImg'] != null ? cafe['profileImg'] : 'user_basic.png'}|}" alt="카페 프로필 사진">
+            <img th:src="@{|/file/${cafe.profile != null ? cafe.profile : 'cafe/user_basic.png'}|}" alt="카페 프로필 사진">
           </div>
           <div class="content-2 dp-flex-clmb">
             <div class="title">
