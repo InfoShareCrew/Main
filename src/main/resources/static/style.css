@@ -126,6 +126,7 @@ nav > div {display: flex; width: 100%;}
 .personal-edit-container .intro-box > textarea {width: 100%; margin-left: 10px;}
 .personal-edit-container .address-box > input {width: 100%; margin-left: 10px;}
 .personal-edit-container .submit-box {justify-content: flex-end;}
+.personal-edit-container .address {display: flex; }
 
 
 /***** 이웃 *****/
